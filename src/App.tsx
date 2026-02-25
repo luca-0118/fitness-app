@@ -1,6 +1,7 @@
 import { useState } from "react";
 import reactLogo from "./assets/react.svg";
 import { invoke } from "@tauri-apps/api/core";
+import GreenAddButton from "./components/GreenAddButton.tsx";
 import "./App.css";
 
 function App() {
@@ -13,9 +14,9 @@ function App() {
   }
 
   return (
-    <main className="container">
+    <main>
       <h1>Welcome to Tauri + React</h1>
-
+        <GreenAddButton/>
       <div className="row">
         <a href="https://vite.dev" target="_blank">
           <img src="/vite.svg" className="logo vite" alt="Vite logo" />
