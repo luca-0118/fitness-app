@@ -1,8 +1,9 @@
-import "./App.css";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Header from "./components/Header.tsx";
+
 import GreenAddButton from "./components/GreenAddButton.tsx";
+import "./App.css";
+import Header from "./components/Header.tsx";
 import BottomNavBar from "./components/BottomNavBar.tsx";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import Home from "./pages/Home.tsx";
 import WorkoutOverview from "./pages/WorkoutOverview.tsx";
@@ -19,31 +20,30 @@ import Exercises from "./pages/Exercises.tsx";
 function App() {
   return (
     <BrowserRouter>
-      <div className="h-dvh grid grid-rows-[auto_1fr_auto]">
+      <>
         <Header/>
-        <main className="overflow-y-auto px-4">
-            <div className="max-w-md mx-auto">
-              <Routes>
-                <Route path="/" element={<Home />} />
-                <Route path="/workouts" element={<WorkoutOverview />} />
-                <Route path="/edit-workout" element={<EditWorkout />} />
-                <Route path="/add-exercises" element={<AddExercises />} />
-                <Route path="/session" element={<Session />} />
-                <Route path="/new-workout" element={<NewWorkout />} />
-                <Route path="/profile" element={<Profile />} />
-                <Route path="/history" element={<WorkoutHistory />} />
-                <Route path="/session-history" element={<SessionHistory />} />
-                <Route path="/kcal-tracker" element={<KcalTracker />} />
-                <Route path="/Exercises" element={<Exercises  />} />
-              </Routes>
-            </div>
+        <main>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/workouts" element={<WorkoutOverview />} />
+            <Route path="/edit-workout" element={<EditWorkout />} />
+            <Route path="/add-exercises" element={<AddExercises />} />
+            <Route path="/session" element={<Session />} />
+            <Route path="/new-workout" element={<NewWorkout />} />
+            <Route path="/profile" element={<Profile />} />
+            <Route path="/history" element={<WorkoutHistory />} />
+            <Route path="/session-history" element={<SessionHistory />} />
+            <Route path="/kcal-tracker" element={<KcalTracker />} />
+            <Route path="/Exercises" element={<Exercises  />} />
+          </Routes>
+          <GreenAddButton/>
         </main>
-        <GreenAddButton/>
-        <BottomNavBar/>
-      </div>
+      </>
+      <BottomNavBar/>
     </BrowserRouter>
   );
 }
+
 
 
 export default App;
