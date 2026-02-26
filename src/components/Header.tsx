@@ -21,7 +21,7 @@ export default function Header() {
 
    
     return (
-        <header className="text-[24px] font-bold text-[#F2F3F2] border-b-2 border-white text-center mx-auto py-2 w-[80%]">
+        <header className="text-[24px] font-bold text-[#F2F3F2] border-b-2 border-white text-center mx-auto py-2 w-[80%] my-2">
             <h1>{title}</h1>
         </header>
     
