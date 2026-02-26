@@ -22,9 +22,14 @@ export default function Header() {
 
   
     return (
-        <header className="text-[24px] font-bold text-[#F2F3F2] border-b-2 border-white text-center mx-auto py-2 w-[80%] my-2">
-            <h1>{title}</h1>
+        <header className="z-40 pt-4 shrink-0">
+          <div className="w-[85%] mx-auto text-center bg-[#161818]">
+            <h1 className="text-[24px] font-bold text-[#F2F3F2]">
+              {title}
+            </h1>
+
+            <div className="border-b-2 border-white mt-2"></div>
+          </div>
         </header>
-    
     )
 }

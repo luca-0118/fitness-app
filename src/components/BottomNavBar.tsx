@@ -7,7 +7,7 @@ import HomeSharpIcon from '@mui/icons-material/HomeSharp';
 
 export default function BottomNavBar() {
     return (
-        <footer className="fixed bottom-0 z-10 h-22 w-full bg-[#333737] border-t-2 border-[#565d5d] ">
+        <footer className="fixed bottom-0 z-10 h-22 w-full bg-[#333737] border-t-2 border-[#565d5d]">
             <nav className="grid grid-cols-4 h-full max-w-sm mx-auto">
                 <Link to="/" className="inline-flex flex-col items-center">
                     <HomeSharpIcon sx={{ fontSize: 40 }}/>

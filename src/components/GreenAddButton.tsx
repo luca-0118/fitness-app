@@ -7,7 +7,7 @@ export default function GreenAddButton({ to = "/new-workout" }) {
     return (
         <button
             onClick={() => navigate(to)}
-            className="fixed bottom-30 right-6 h-16 w-16 rounded-full bg-[#40C057] hover:bg-[#5AEA74] flex items-center justify-center z-50"
+            className="cursor-pointer fixed bottom-30 right-6 h-16 w-16 rounded-full bg-[#40C057] hover:bg-[#5AEA74] flex items-center justify-center z-50"
         >
             <AddIcon sx={{ fontSize: 49 }} />
         </button>

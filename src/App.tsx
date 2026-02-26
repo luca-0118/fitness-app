@@ -19,10 +19,9 @@ import ExerciseDescription from "./pages/ExerciseDescription.tsx";
 function App() {
   return (
       <BrowserRouter>
-        <div className="h-dvh">
-          <Header/>
-          <main className="overflow-y-auto px-4">
-            <div className="max-w-md mx-auto">
+        <div className="h-dvh flex flex-col overflow-hidden">
+          <Header />
+            <main className="flex-1 overflow-y-auto px-4 no-scrollbar">
               <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/workouts" element={<WorkoutOverview />} />
@@ -37,7 +36,6 @@ function App() {
                 <Route path="/exercises" element={<Exercises  />} />
                 <Route path="/exercise-description" element={<ExerciseDescription />} />
               </Routes>
-            </div>
           </main>
           <BottomNavBar/>
         </div>
