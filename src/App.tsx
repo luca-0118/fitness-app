@@ -12,6 +12,7 @@ import Session from "./pages/Session.tsx";
 import NewWorkout from "./pages/NewWorkout.tsx";
 import Profile from "./pages/Profile.tsx";
 import WorkoutHistory from "./pages/WorkoutHistory.tsx";
+import SessionHistory from "./pages/SessionHistory.tsx";
 
 function App() {
   return (
@@ -28,6 +29,7 @@ function App() {
             <Route path="/new-workout" element={<NewWorkout />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/history" element={<WorkoutHistory />} />
+            <Route path="/session-history" element={<SessionHistory />} />
           </Routes>
           <GreenAddButton/>
         </main>
