@@ -17,7 +17,7 @@ export default function BottomNavBar() {
                     <FitnessCenterIcon sx={{ fontSize: 40 }}/>
                     <p className="text-xs">Workout</p>
                 </Link>
-                <Link to="/" className="inline-flex flex-col items-center">
+                <Link to="/kcal-tracker" className="inline-flex flex-col items-center">
                     <RestaurantSharpIcon sx={{ fontSize: 40 }}/>
                     <p className="text-xs">Kcal</p>
                 </Link>

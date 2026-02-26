@@ -34,7 +34,7 @@ function App() {
                 <Route path="/history" element={<WorkoutHistory />} />
                 <Route path="/session-history" element={<SessionHistory />} />
                 <Route path="/kcal-tracker" element={<KcalTracker />} />
-                <Route path="/Exercises" element={<Exercises  />} />
+                <Route path="/exercises" element={<Exercises  />} />
               </Routes>
             </div>
           </main>

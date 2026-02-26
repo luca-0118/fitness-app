@@ -10,8 +10,8 @@ const pageTitles: Record<string, string> = {
   "/profile": "Profile",
   "/history": "Workout History",
   "/session-history": "Session History",
-  "/KcalTracker": "Kcal Tracker",
-  "/Exercises": "Exercises",
+  "/kcal-tracker": "Kcal Tracker",
+  "/exercises": "Exercises",
 };
 // This component will display the title of the current page based on the URL path
 export default function Header() {
@@ -19,7 +19,7 @@ export default function Header() {
 // Get the title for the current path, or default to "Page" if not found
   const title = pageTitles[location.pathname] || "Page";
 
-   
+  
     return (
         <header className="text-[24px] font-bold text-[#F2F3F2] border-b-2 border-white text-center mx-auto py-2 w-[80%] my-2">
             <h1>{title}</h1>
