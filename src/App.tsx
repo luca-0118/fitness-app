@@ -14,6 +14,8 @@ import NewWorkout from "./pages/NewWorkout.tsx";
 import Profile from "./pages/Profile.tsx";
 import WorkoutHistory from "./pages/WorkoutHistory.tsx";
 import SessionHistory from "./pages/SessionHistory.tsx";
+import KcalTracker from "./pages/KcalTracker.tsx";
+import Exercises from "./pages/Exercises.tsx";
 
 function App() {
   return (
@@ -31,6 +33,8 @@ function App() {
             <Route path="/profile" element={<Profile />} />
             <Route path="/history" element={<WorkoutHistory />} />
             <Route path="/session-history" element={<SessionHistory />} />
+            <Route path="/kcal-tracker" element={<KcalTracker />} />
+            <Route path="/Exercises" element={<Exercises  />} />
           </Routes>
           <GreenAddButton/>
         </main>
