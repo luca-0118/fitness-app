@@ -1,7 +1,6 @@
 import "./App.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Header from "./components/Header.tsx";
-import GreenAddButton from "./components/GreenAddButton.tsx";
 import BottomNavBar from "./components/BottomNavBar.tsx";
 
 import Home from "./pages/Home.tsx";
@@ -15,11 +14,12 @@ import WorkoutHistory from "./pages/WorkoutHistory.tsx";
 import SessionHistory from "./pages/SessionHistory.tsx";
 import KcalTracker from "./pages/KcalTracker.tsx";
 import Exercises from "./pages/Exercises.tsx";
+import ExerciseDescription from "./pages/ExerciseDescription.tsx";
 
 function App() {
   return (
       <BrowserRouter>
-        <div className="h-dvh grid grid-rows-[auto_1fr_auto]">
+        <div className="h-dvh">
           <Header/>
           <main className="overflow-y-auto px-4">
             <div className="max-w-md mx-auto">
@@ -35,10 +35,10 @@ function App() {
                 <Route path="/session-history" element={<SessionHistory />} />
                 <Route path="/kcal-tracker" element={<KcalTracker />} />
                 <Route path="/exercises" element={<Exercises  />} />
+                <Route path="/exercise-description" element={<ExerciseDescription />} />
               </Routes>
             </div>
           </main>
-          <GreenAddButton/>
           <BottomNavBar/>
         </div>
       </BrowserRouter>

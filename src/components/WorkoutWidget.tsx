@@ -8,7 +8,7 @@ interface WorkoutWidgetProps {
 export default function WorkoutWidget({ name }: WorkoutWidgetProps) {
     const navigate = useNavigate();
     return (
-        <button className="bg-[#1E1E1E] border-[#414141] border rounded-xl py-4 px-6 mb-3 flex w-full" onClick={() => navigate("/Session")}>
+        <button className="bg-[#1E1E1E] border-[#414141] border rounded-xl py-4 px-6 mb-3 flex w-full hover:bg-[#252525]" onClick={() => navigate("/session")}>
             <DragIndicatorIcon sx={{ fontSize: 40, color: "#F67631"}}/>
             <h2 className="text-lg font-semibold">{name}</h2>
         </button>
