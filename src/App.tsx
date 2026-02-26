@@ -3,6 +3,7 @@ import reactLogo from "./assets/react.svg";
 import { invoke } from "@tauri-apps/api/core";
 import GreenAddButton from "./components/GreenAddButton.tsx";
 import "./App.css";
+import Header from "./components/Header.tsx";
 
 function App() {
   const [greetMsg, setGreetMsg] = useState("");
@@ -15,7 +16,8 @@ function App() {
 
   return (
     <main>
-      <h1>Welcome to Tauri + React</h1>
+      <Header />
+      <h1>wokrout</h1>
         <GreenAddButton/>
       <div className="row">
         <a href="https://vite.dev" target="_blank">
