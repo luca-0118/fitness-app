@@ -2,6 +2,7 @@
 import GreenAddButton from "./components/GreenAddButton.tsx";
 import "./App.css";
 import Header from "./components/Header.tsx";
+import BottomNavBar from "./components/BottomNavBar.tsx";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import Home from "./pages/Home.tsx";
@@ -34,6 +35,7 @@ function App() {
           <GreenAddButton/>
         </main>
       </>
+      <BottomNavBar/>
     </BrowserRouter>
   );
 }
