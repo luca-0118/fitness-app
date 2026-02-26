@@ -1,5 +1,5 @@
 import { useLocation } from "react-router-dom";
-
+// Map of URL paths to page titles
 const pageTitles: Record<string, string> = {
   "/": "Home",
   "/workouts": "Workout Overview",
@@ -10,10 +10,10 @@ const pageTitles: Record<string, string> = {
   "/profile": "Profile",
   "/history": "Workout History",
 };
-
+// This component will display the title of the current page based on the URL path
 export default function Header() {
   const location = useLocation();
-
+// Get the title for the current path, or default to "Page" if not found
   const title = pageTitles[location.pathname] || "Page";
 
    
@@ -24,4 +24,3 @@ export default function Header() {
     
     )
 }
-// ¯\_(ツ)_/¯
