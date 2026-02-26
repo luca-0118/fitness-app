@@ -1,3 +1,4 @@
+mod errors;
 use std::sync::Mutex;
 use rusqlite::{Connection,Result};
 
@@ -37,20 +38,20 @@ fn greet(name: &str) -> String {
 }
 
 #[tauri::command]
-fn add_user(name: String, db: tauri::State<Db>) -> Result<String,String> {
+fn add_user(name: String, db: tauri::State<Db>) -> Result<String,errors::ApiError> {
     if name.trim().is_empty() {
-        return Err(format!("Error: no username given"));
+        return Err(errors::ApiError::InvalidInput);
     }
 
     //makes the function wait until it can sucessfully find the connection.
     //if found, lets us use it
-    let conn = db.conn.lock().map_err(|_| "DB lock poisoned")?;
+    let conn = db.conn.lock().map_err(|_| errors::ApiError::DatabaseError)?;
 
     conn.execute(
         "INSERT INTO users (name, age) VALUES (?1, ?2)",
         (&name, &32),
     )
-    .map_err(|e| e.to_string())?;
+    .map_err(|_e| errors::ApiError::DatabaseError)?;
 
     Ok(format!("User {} Successfully added!",{name}))
 }

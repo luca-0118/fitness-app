@@ -13,7 +13,7 @@ function App() {
       const message = await invoke<string>("add_user", { name });
       setGreetMsg(message);
     } catch (error: any) {
-      setGreetMsg(error);
+      setGreetMsg(error.message);
     }
   }
 
