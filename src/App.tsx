@@ -9,7 +9,7 @@ function App() {
     const [name, setName] = useState("");
 
     async function greet() {
-        const workouts = await API.list_workouts();
+        const workouts = await API.workouts.list();
         console.log(workouts);
     }
 
@@ -30,20 +30,47 @@ function App() {
             </div>
             <p>Click on the Tauri, Vite, and React logos to learn more.</p>
 
-            <form
-                className="row"
-                onSubmit={(e) => {
-                    e.preventDefault();
-                    greet();
-                }}
-            >
-                <input
-                    id="greet-input"
-                    onChange={(e) => setName(e.currentTarget.value)}
-                    placeholder="Enter a name..."
-                />
-                <button type="submit">Greet</button>
-            </form>
+            <div className="flex gap-16">
+                <button
+                    onClick={async (e) => {
+                        e.preventDefault();
+                        const workouts = await API.workouts.list();
+                        console.log(workouts);
+                    }}
+                >
+                    Query list
+                </button>
+                <button
+                    onClick={async (e) => {
+                        e.preventDefault();
+                        const resp = await API.workouts.create("TestWorkout", "This is a testworkout");
+                        console.log(resp);
+                    }}
+                >
+                    Create Workout
+                </button>
+                <button
+                    onClick={async (e) => {
+                        e.preventDefault();
+                        const resp = await API.exercises.create("testExercise", "random Desc");
+                        console.log(resp);
+                    }}
+                >
+                    Create Exercise
+                </button>
+                <button
+                    onClick={async (e) => {
+                        e.preventDefault();
+                        const resp = await API.workouts.linkExercise(
+                            "74383b41-e4ac-400b-8850-f92bcdc64116",
+                            "852633de-fc81-44b2-8369-da8465059c6c",
+                        );
+                        console.log(resp);
+                    }}
+                >
+                    Connect Exercise
+                </button>
+            </div>
             <p>{greetMsg}</p>
         </main>
     );

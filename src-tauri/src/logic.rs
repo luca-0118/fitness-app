@@ -46,3 +46,40 @@ pub fn create_workout(db: &Db, workout: dto::CreateWorkout) -> Result<bool, ApiE
 
     Ok(true)
 }
+
+pub fn link_exercise(db: &Db, link_exercise: dto::LinkExercise) -> Result<String, ApiError> {
+    let conn = db
+        .conn
+        .lock()
+        .map_err(|_| api::ApiError::FailedDbConnection)?;
+
+    conn.execute(
+        r#"
+        INSERT INTO WorkoutExercises (WorkoutId, ExerciseId)
+        VALUES (
+            (SELECT ID FROM Workouts WHERE Uuid = ?1),
+            (SELECT ID FROM Exercises WHERE Uuid = ?2)
+        )
+        "#,
+        (link_exercise.workout_uuid, link_exercise.exercise_uuid),
+    )?;
+
+    Ok(format!("exercise has been linked to workout"))
+}
+
+pub fn create_exercise(db: &Db, exercise: dto::CreateExercise) -> Result<bool, ApiError> {
+    let conn = db
+        .conn
+        .lock()
+        .map_err(|_| api::ApiError::FailedDbConnection)?;
+
+    let id = Uuid::new_v4();
+
+    conn.execute(
+        "INSERT INTO Exercises(Uuid,Name,Desc) VALUES (?1, ?2, ?3)",
+        (id.to_string(), exercise.name, exercise.desc),
+    )
+    .map_err(|_| api::ApiError::DatabaseError)?;
+
+    Ok(true)
+}

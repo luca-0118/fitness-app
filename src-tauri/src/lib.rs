@@ -32,6 +32,7 @@ pub fn run() {
     conn.execute(
         "CREATE TABLE IF NOT EXISTS Exercises(
                     ID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+                    Uuid TEXT NOT NULL,
                     Name TEXT NOT NULL,
                     Desc TEXT
                     )",
@@ -41,9 +42,11 @@ pub fn run() {
 
     //Workout exercises table
     // NOTE PRAGMA foreign_keys = ON; is required, otherwise foreign keys won't work.
+    conn.execute("PRAGMA foreign_keys = ON", [])
+        .expect("foreign keys disabled");
+
     conn.execute(
-        "PRAGMA foreign_keys = ON;
-            CREATE TABLE IF NOT EXISTS WorkoutExercises (
+        "CREATE TABLE IF NOT EXISTS WorkoutExercises (
             ID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
             WorkoutId INTEGER NOT NULL,
             ExerciseId INTEGER NOT NULL,
@@ -52,7 +55,7 @@ pub fn run() {
             )",
         [],
     )
-    .expect_err("failed to initialize schema WorkoutExercises");
+    .expect("failed to initialize schema WorkoutExercises");
 
     // Tauri building process
     tauri::Builder::default()
@@ -64,7 +67,9 @@ pub fn run() {
         .invoke_handler(tauri::generate_handler![
             greet,
             list_workouts,
-            create_workout
+            create_workout,
+            link_exercise,
+            create_exercise,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
@@ -106,5 +111,42 @@ fn create_workout(
     Ok(ApiResponse {
         ok: true,
         data: "new workout has been stored".to_string(),
+    })
+}
+
+#[tauri::command]
+fn link_exercise(
+    db: tauri::State<Db>,
+    link_exercise: dto::LinkExercise,
+) -> Result<api::ApiResponse<String>, api::ApiErrorResponse> {
+    // checks if both exercise Id and workout Id are given.
+    if link_exercise.exercise_uuid.is_empty() || link_exercise.workout_uuid.is_empty() {
+        return Err(api::ApiError::InvalidInput.into());
+    }
+
+    let resp = logic::link_exercise(&db, link_exercise)?;
+
+    Ok(ApiResponse {
+        ok: true,
+        data: resp,
+    })
+}
+
+#[tauri::command]
+fn create_exercise(
+    db: tauri::State<Db>,
+    exercise: dto::CreateExercise,
+) -> Result<api::ApiResponse<String>, api::ApiErrorResponse> {
+    // Early exit if the values are empty.
+    // Desc can be empty
+    if exercise.name.trim().is_empty() {
+        return Err(api::ApiError::InvalidInput.into());
+    }
+
+    logic::create_exercise(&db, exercise)?;
+
+    Ok(ApiResponse {
+        ok: true,
+        data: "Exercise has been created".to_string(),
     })
 }
