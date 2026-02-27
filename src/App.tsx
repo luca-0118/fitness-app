@@ -21,7 +21,7 @@ function App() {
       <BrowserRouter>
         <div className="h-dvh flex flex-col overflow-hidden">
           <Header />
-            <main className="flex-1 overflow-y-auto px-4 no-scrollbar">
+            <main className="flex-1 overflow-y-auto no-scrollbar">
               <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/workouts" element={<WorkoutOverview />} />

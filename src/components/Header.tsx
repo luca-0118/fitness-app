@@ -23,7 +23,7 @@ export default function Header() {
   
     return (
         <header className="z-40 pt-4 shrink-0">
-          <div className="w-[85%] mx-auto text-center bg-[#161818]">
+          <div className="w-[90%] mx-auto text-center bg-[#161818]">
             <h1 className="text-[24px] font-bold text-[#F2F3F2]">
               {title}
             </h1>

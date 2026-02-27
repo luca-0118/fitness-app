@@ -36,8 +36,32 @@ const WeeklyCaloriesChart: React.FC<WeeklyCaloriesChartProps> = ({
             borderColor: '#414141',
         },
         tooltip: {
-            y: {
-                formatter: (val: number) => val + ' kcal',
+            enabled: true,
+            fillSeriesColor: false, // marker color is custom
+            custom: ({ series, seriesIndex, dataPointIndex, w }) => {
+                const value = series[seriesIndex][dataPointIndex];
+                const color = w.config.colors[dataPointIndex] || '#F67631';
+                const day = w.config.xaxis.categories[dataPointIndex];
+                return `
+          <div style="
+            padding: 8px 12px; 
+            background: #1E1E1E; 
+            border-radius: 8px; 
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+          ">
+            <span style="
+              display: inline-block;
+              width: 12px;
+              height: 12px;
+              background: ${color};
+              border-radius: 50%;
+            "></span>
+            <strong>${day}:</strong> ${value} kcal
+          </div>
+        `;
             },
         },
     };

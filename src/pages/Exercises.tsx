@@ -1,5 +1,4 @@
 import ExerciseOverviewWidget from "../components/ExerciseOverviewWidget.tsx";
-import ExerciseWidget from "../components/ExerciseWidget.tsx";
 import SaveIcon from '@mui/icons-material/Save';
 
 export default function Exercises() { /* muk data, moet uiteindelijk een GET API worden*/
@@ -20,11 +19,6 @@ export default function Exercises() { /* muk data, moet uiteindelijk een GET API
             <div className="pb-24">
                 {exercises.map((exercise) => (
                     <ExerciseOverviewWidget key={exercise.id} name={exercise.name} />
-                ))}
-            </div>
-            <div className="pb-24">
-                {exercises.map((exercise) => (
-                    <ExerciseWidget key={exercise.id} name={exercise.name} />
                 ))}
             </div>
         </div>
