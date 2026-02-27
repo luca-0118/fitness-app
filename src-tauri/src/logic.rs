@@ -29,11 +29,6 @@ pub fn list_workouts(db: &Db) -> Result<Vec<dto::Workout>, ApiError> {
 
 //creates a new workout
 pub fn create_workout(db: &Db, workout: dto::Workout) -> Result<bool, ApiError> {
-    // Early exit if the values are empty.
-    if workout.name.trim().is_empty() {
-        return Err(api::ApiError::InvalidInput);
-    }
-
     let conn = db
         .conn
         .lock()

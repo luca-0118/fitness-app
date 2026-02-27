@@ -94,6 +94,12 @@ fn create_workout(
     db: tauri::State<Db>,
     workout: dto::Workout,
 ) -> Result<api::ApiResponse<String>, api::ApiErrorResponse> {
+    // Early exit if the values are empty.
+    // Desc can be empty
+    if workout.name.trim().is_empty() {
+        return Err(api::ApiError::InvalidInput.into());
+    }
+
     logic::create_workout(&db, workout)?;
 
     Ok(ApiResponse {
