@@ -3,6 +3,7 @@ use crate::{
     dto::{self, Workout},
     Db,
 };
+use uuid::Uuid;
 
 // calls all the available workouts from the database
 pub fn list_workouts(db: &Db) -> Result<Vec<dto::Workout>, ApiError> {
@@ -12,14 +13,15 @@ pub fn list_workouts(db: &Db) -> Result<Vec<dto::Workout>, ApiError> {
         .map_err(|_| api::ApiError::FailedDbConnection)?;
 
     let mut stmt = conn.prepare(
-        "SELECT Name, Desc
+        "SELECT Uuid, Name, Desc
         FROM Workouts",
     )?;
 
     let workout_iter = stmt.query_map([], |row| {
         Ok(dto::Workout {
-            name: row.get(0)?,
-            desc: row.get(1)?,
+            uuid: row.get(0)?,
+            name: row.get(1)?,
+            desc: row.get(2)?,
         })
     })?;
     let workouts: Result<Vec<Workout>, rusqlite::Error> = workout_iter.collect();
@@ -28,15 +30,17 @@ pub fn list_workouts(db: &Db) -> Result<Vec<dto::Workout>, ApiError> {
 }
 
 //creates a new workout
-pub fn create_workout(db: &Db, workout: dto::Workout) -> Result<bool, ApiError> {
+pub fn create_workout(db: &Db, workout: dto::CreateWorkout) -> Result<bool, ApiError> {
     let conn = db
         .conn
         .lock()
         .map_err(|_| api::ApiError::FailedDbConnection)?;
 
+    let id = Uuid::new_v4();
+
     conn.execute(
-        "INSERT INTO Workouts(Name,Desc) VALUES (?1, ?2)",
-        (workout.name, workout.desc),
+        "INSERT INTO Workouts(Uuid,Name,Desc) VALUES (?1, ?2, ?3)",
+        (id.to_string(), workout.name, workout.desc),
     )
     .map_err(|_| api::ApiError::DatabaseError)?;
 

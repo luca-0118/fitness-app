@@ -1,7 +1,7 @@
 use rusqlite::Connection;
 use std::sync::Mutex;
 
-use crate::api::{ApiError, ApiResponse};
+use crate::api::ApiResponse;
 mod api;
 mod dto;
 mod logic;
@@ -20,6 +20,7 @@ pub fn run() {
     conn.execute(
         "CREATE TABLE IF NOT EXISTS Workouts (
             ID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+            Uuid TEXT NOT NULL,
             Name TEXT NOT NULL,
             Desc TEXT
             );",
@@ -92,7 +93,7 @@ fn list_workouts(
 #[tauri::command]
 fn create_workout(
     db: tauri::State<Db>,
-    workout: dto::Workout,
+    workout: dto::CreateWorkout,
 ) -> Result<api::ApiResponse<String>, api::ApiErrorResponse> {
     // Early exit if the values are empty.
     // Desc can be empty
