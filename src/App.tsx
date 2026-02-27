@@ -9,8 +9,8 @@ function App() {
     const [name, setName] = useState("");
 
     async function greet() {
-        // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
-        console.log(await API.list_workouts());
+        const workouts = await API.list_workouts();
+        console.log(workouts);
     }
 
     return (
