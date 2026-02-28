@@ -65,7 +65,6 @@ pub fn run() {
         .plugin(tauri_plugin_opener::init())
         // Add all frontend functions here
         .invoke_handler(tauri::generate_handler![
-            greet,
             list_workouts,
             create_workout,
             link_exercise,
@@ -73,12 +72,6 @@ pub fn run() {
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
-}
-
-// Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
-#[tauri::command]
-fn greet(name: &str) -> String {
-    format!("Hello, {}! You've been greeted from Rust!", name)
 }
 
 #[tauri::command]

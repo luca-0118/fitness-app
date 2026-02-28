@@ -1,18 +1,8 @@
-import { useState } from "react";
 import reactLogo from "./assets/react.svg";
-import { invoke } from "@tauri-apps/api/core";
 import "./App.css";
 import API from "./classes/api";
 
 function App() {
-    const [greetMsg, setGreetMsg] = useState("");
-    const [name, setName] = useState("");
-
-    async function greet() {
-        const workouts = await API.workouts.list();
-        console.log(workouts);
-    }
-
     return (
         <main className="container">
             <h1>Welcome to Tauri + React</h1>
@@ -62,8 +52,8 @@ function App() {
                     onClick={async (e) => {
                         e.preventDefault();
                         const resp = await API.workouts.linkExercise(
-                            "74383b41-e4ac-400b-8850-f92bcdc64116",
-                            "852633de-fc81-44b2-8369-da8465059c6c",
+                            "2f4e04fe-808c-473a-9b3a-6711f61e043b",
+                            "5e20e2a3-25d7-42b4-9862-3024abadf3a3",
                         );
                         console.log(resp);
                     }}
@@ -71,7 +61,6 @@ function App() {
                     Connect Exercise
                 </button>
             </div>
-            <p>{greetMsg}</p>
         </main>
     );
 }

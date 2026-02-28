@@ -27,6 +27,8 @@ export default class workoutAPI {
             workout_uuid: _workoutID,
             exercise_uuid: _exerciseID,
         };
+
         const result = await ApiClient.send<string>("link_exercise", { linkExercise });
+        return ApiClient.assertOk(result);
     }
 }
