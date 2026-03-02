@@ -23,7 +23,7 @@ function App() {
           <Header />
             <main className="flex-1 overflow-y-auto no-scrollbar">
               <Routes>
-                <Route path="/" element={<Home />} />
+                <Route path="/" element={<Session />} />
                 <Route path="/workouts" element={<WorkoutOverview />} />
                 <Route path="/edit-workout" element={<EditWorkout />} />
                 <Route path="/add-exercises" element={<AddExercises />} />

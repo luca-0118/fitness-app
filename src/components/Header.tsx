@@ -1,4 +1,5 @@
 import { useLocation } from "react-router-dom";
+import SaveButton from "./SaveButton";
 // Map of URL paths to page titles
 const pageTitles: Record<string, string> = {
   "/": "Home",
@@ -25,9 +26,8 @@ export default function Header() {
         <header className="z-40 pt-4 shrink-0">
           <div className="w-[90%] mx-auto text-center bg-[#161818]">
             <h1 className="text-[24px] font-bold text-[#F2F3F2]">
-              {title}
+              {title} <SaveButton />
             </h1>
-
             <div className="border-b-2 border-white mt-2"></div>
           </div>
         </header>
