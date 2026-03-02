@@ -3,6 +3,7 @@ import PlayCircleOutlineIcon from '@mui/icons-material/PlayCircleOutline';
 import PauseCircleOutlineIcon from '@mui/icons-material/PauseCircleOutline';
 import StopCircleOutlinedIcon from '@mui/icons-material/StopCircleOutlined';
 import FlagCircleOutlinedIcon from '@mui/icons-material/FlagCircleOutlined';
+import RestartAltIcon from '@mui/icons-material/RestartAlt';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
@@ -88,14 +89,22 @@ export default function StopWatch({ onTimerChange }: StopWatchProps) {
                 </button>
                 <button 
                     className="w-14 h-14 rounded-full border-4 border-yellow-500 bg-gray-900 text-yellow-500 hover:bg-yellow-500 hover:text-white transition-colors flex items-center justify-center"
-                    disabled={!isActive}
-                    onClick={() => setLaps([...laps, timeInMs])}
+                    disabled={timeInMs === 0}
+                    onClick={() => {
+                        if (isActive) {
+                            setLaps([...laps, timeInMs]);
+                        } else {
+                            setTimeInMs(0);
+                            setLaps([]);
+                        }
+                    }}
                 >
-                    <FlagCircleOutlinedIcon fontSize="large" />
+                    {isActive ? <FlagCircleOutlinedIcon fontSize="large" /> : <RestartAltIcon fontSize="large" />}
                 </button>
                 <button 
                     className="w-14 h-14 rounded-full border-4 border-red-500 bg-gray-900 text-red-500 hover:bg-red-500 hover:text-white transition-colors flex items-center justify-center"
-                    onClick={() => { setTimeInMs(0); setLaps([]); setIsActive(false); }}
+                    disabled={timeInMs === 0}
+                    onClick={() => setIsActive(false)}
                 >
                     <StopCircleOutlinedIcon fontSize="large" />
                 </button>
