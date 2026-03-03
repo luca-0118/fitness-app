@@ -1,5 +1,6 @@
 use rusqlite::Connection;
 use std::sync::Mutex;
+mod get_exercise_by_id;
 
 use crate::api::ApiResponse;
 mod api;
@@ -69,6 +70,7 @@ pub fn run() {
             create_workout,
             link_exercise,
             create_exercise,
+            get_exercise_by_id::return_exercise
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

@@ -1,4 +1,5 @@
 use serde::Serialize;
+use crate::api;
 
 #[derive(Debug, Serialize)]
 pub struct Exercise {
@@ -16,7 +17,7 @@ pub struct Error {
 }
 
 #[tauri::command]
-pub fn return_exercise(exercise_id: &str) -> Result<Exercise, Error> {
+pub fn return_exercise(exercise_id: &str) -> Result<api::ApiResponse<Exercise>, api::ApiErrorResponse> {
     let connection = rusqlite::Connection::open("test.db").unwrap();
     let mut query = connection
         .prepare("SELECT * FROM exercises WHERE exerciseid = ?1")
@@ -33,16 +34,20 @@ pub fn return_exercise(exercise_id: &str) -> Result<Exercise, Error> {
         let equipments: String = row.get(5).unwrap();
         let secondary_muscles: String = row.get(6).unwrap();
 
-        return Ok(Exercise{
+        let exercise = Exercise{
         name: name,
         gif_url: gif_url,
         target_muscles: target_muscles,
         body_parts: body_parts,
         equipments: equipments,
         secondary_muscles: secondary_muscles
+        };
+
+        return Ok(api::ApiResponse {
+            ok: true,
+            data: exercise
         })
     }
-    else {return Err(Error { ok: false });
+    else {return Err(api::ApiError::InvalidInput.into())}
     }
-}
 
