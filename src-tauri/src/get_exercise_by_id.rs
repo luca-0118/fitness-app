@@ -1,15 +1,22 @@
-#[derive(Debug)]
+use serde::Serialize;
+
+#[derive(Debug, Serialize)]
 pub struct Exercise {
     name: String,
     gif_url: String,
     target_muscles: String,
     body_parts: String, 
     equipments: String,
-    secondary_muscles: String
+    secondary_muscles: String,
+}
+
+#[derive(Debug, Serialize)]
+pub struct Error {
+    ok: bool,
 }
 
 #[tauri::command]
-pub fn return_exercise(exercise_id: &str) -> Exercise {
+pub fn return_exercise(exercise_id: &str) -> Result<Exercise, Error> {
     let connection = rusqlite::Connection::open("test.db").unwrap();
     let mut query = connection
         .prepare("SELECT * FROM exercises WHERE exerciseid = ?1")
@@ -26,22 +33,16 @@ pub fn return_exercise(exercise_id: &str) -> Exercise {
         let equipments: String = row.get(5).unwrap();
         let secondary_muscles: String = row.get(6).unwrap();
 
-        return Exercise{
+        return Ok(Exercise{
         name: name,
         gif_url: gif_url,
         target_muscles: target_muscles,
         body_parts: body_parts,
         equipments: equipments,
         secondary_muscles: secondary_muscles
-        }
+        })
     }
-    else {return Exercise{
-    name: "fout".to_string(),
-    gif_url: "fout".to_string(),
-    target_muscles: "fout".to_string(),
-    body_parts: "fout".to_string(), 
-    equipments: "fout".to_string(),
-    secondary_muscles: "fout".to_string()
+    else {return Err(Error { ok: false });
+    }
 }
-}
-}
+
