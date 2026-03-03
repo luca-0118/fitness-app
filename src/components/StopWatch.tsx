@@ -60,7 +60,7 @@ export default function StopWatch({ onTimerChange }: StopWatchProps) {
     };
 
     return (
-        <div className="flex flex-col items-center justify-center relative border-2 border-gray-600 rounded-lg p-6 pt-12">
+        <div className="flex flex-col items-center justify-center relative w-87 bg-[#1E1E1E] border-2 border-[#565d5d] rounded-lg p-6 pt-12">
             <button 
                 className="absolute top-2 left-2 text-orange-500 hover:text-orange-400 transition-colors z-10"
                 onClick={handleMenuClick}
@@ -75,7 +75,7 @@ export default function StopWatch({ onTimerChange }: StopWatchProps) {
                 <MenuItem onClick={() => handleTimerSwitch('stopwatch')}>Stopwatch</MenuItem>
                 <MenuItem onClick={() => handleTimerSwitch('countdown')}>Countdown Timer</MenuItem>
             </Menu>
-            <div className="border-2 border-gray-500 rounded-lg p-4 mb-4 w-56 text-center">
+            <div className="border-2 border-[#565d5d] rounded-lg p-4 mb-4 w-56 text-center">
                 <div className="text-3xl font-bold text-white font-mono">
                     {formatTime(timeInMs)}
                 </div>
