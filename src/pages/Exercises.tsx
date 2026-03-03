@@ -1,5 +1,5 @@
 import ExerciseOverviewWidget from "../components/ExerciseOverviewWidget.tsx";
-
+import Header from "../components/Header.tsx";
 
 export default function Exercises() { /* muk data, moet uiteindelijk een GET API worden*/
     const exercises = [
@@ -12,12 +12,15 @@ export default function Exercises() { /* muk data, moet uiteindelijk een GET API
 
   
       return (
-        <div className="flex">
-            <div className="pb-24">
-                {exercises.map((exercise) => (
-                    <ExerciseOverviewWidget key={exercise.id} name={exercise.name} />
-                ))}
-            </div>
-        </div>
+          <>
+              <Header />
+                <div className="flex">
+                    <div className="pb-24">
+                        {exercises.map((exercise) => (
+                        <ExerciseOverviewWidget key={exercise.id} name={exercise.name} />
+                        ))}
+                    </div>
+                </div>
+          </>
     );
 }

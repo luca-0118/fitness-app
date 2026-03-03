@@ -1,4 +1,5 @@
 import ExerciseWidget from "../components/ExerciseWidget.tsx";
+import HeaderSave from "../components/HeaderSave.tsx";
 
 export default function AddExercises() { /* mock data, moet uiteindelijk een GET API worden*/
   const exercises = [
@@ -10,10 +11,13 @@ export default function AddExercises() { /* mock data, moet uiteindelijk een GET
   ];
 
   return (
+      <>
+      <HeaderSave />
       <div className="pb-24">
         {exercises.map((exercise) => (
             <ExerciseWidget key={exercise.id} name={exercise.name} />
         ))}
       </div>
+      </>
   );
 }

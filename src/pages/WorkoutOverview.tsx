@@ -3,6 +3,7 @@ import GreenAddButton from "../components/GreenAddButton.tsx";
 import { useState } from "react";
 import { DragDropProvider } from '@dnd-kit/react';
 import { move } from '@dnd-kit/helpers';
+import Header from "../components/Header.tsx";
 
 export default function WorkoutOverview() { /* mock data, moet uiteindelijk een GET API worden*/
   const [workouts, setWorkouts] = useState([
@@ -19,16 +20,19 @@ export default function WorkoutOverview() { /* mock data, moet uiteindelijk een 
   ]);
 
   return (
-      <div>
-        <DragDropProvider onDragEnd={(event) => { setWorkouts((workouts) => move(workouts, event)); }}>
-          <ul className="pb-24 pt-2">
-            {workouts.map((workout, index) => (
-              <WorkoutWidget key={workout.id} id={workout.id} index={index} name={workout.name} />
-            ))}
-          </ul>
-        </DragDropProvider>
-        <GreenAddButton to="/new-workout"/>
-      </div>
+      <>
+          <Header />
+          <div>
+            <DragDropProvider onDragEnd={(event) => { setWorkouts((workouts) => move(workouts, event)); }}>
+                <ul className="pb-24 pt-2">
+                    {workouts.map((workout, index) => (
+                        <WorkoutWidget key={workout.id} id={workout.id} index={index} name={workout.name} />
+                    ))}
+                </ul>
+                </DragDropProvider>
+            <GreenAddButton to="/new-workout"/>
+          </div>
+      </>
   );
 }
 

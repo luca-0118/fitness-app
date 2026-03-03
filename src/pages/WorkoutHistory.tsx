@@ -1,4 +1,5 @@
 import WorkoutHistoryWidget from "../components/WorkoutHistoryWidget.tsx";
+import Header from "../components/Header.tsx";
 
 export default function WorkoutHistory() {
     const workoutHistory = [
@@ -15,12 +16,15 @@ export default function WorkoutHistory() {
     ];
 
     return (
-        <div>
-            <div className="pb-24 pt-2">
-                {workoutHistory.map((workoutHistory) => (
-                    <WorkoutHistoryWidget key={workoutHistory.id} name={workoutHistory.name} />
-                ))}
+        <>
+            <Header />
+            <div>
+                <div className="pb-24 pt-2">
+                    {workoutHistory.map((workoutHistory) => (
+                        <WorkoutHistoryWidget key={workoutHistory.id} name={workoutHistory.name} />
+                    ))}
+                </div>
             </div>
-        </div>
+        </>
   );
 }
