@@ -1,7 +1,7 @@
 use serde::Serialize;
 use thiserror::Error;
 
-#[derive(Serialize)]
+#[derive(Debug, Serialize)]
 pub struct ApiResponse<T>
 where
     T: Serialize,
@@ -9,7 +9,7 @@ where
     pub ok: bool,
     pub data: T,
 }
-#[derive(Serialize)]
+#[derive(Debug, Serialize)]
 pub struct ApiErrorResponse {
     pub ok: bool,
     #[serde(rename = "type")]

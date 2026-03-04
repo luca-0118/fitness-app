@@ -11,11 +11,6 @@ pub struct Exercise {
     secondary_muscles: String,
 }
 
-#[derive(Debug, Serialize)]
-pub struct Error {
-    ok: bool,
-}
-
 #[tauri::command]
 pub fn return_exercise(exercise_id: &str) -> Result<api::ApiResponse<Exercise>, api::ApiErrorResponse> {
     let connection = rusqlite::Connection::open("test.db").unwrap();
@@ -42,7 +37,7 @@ pub fn return_exercise(exercise_id: &str) -> Result<api::ApiResponse<Exercise>, 
         equipments: equipments,
         secondary_muscles: secondary_muscles
         };
-
+        
         return Ok(api::ApiResponse {
             ok: true,
             data: exercise
@@ -50,4 +45,3 @@ pub fn return_exercise(exercise_id: &str) -> Result<api::ApiResponse<Exercise>, 
     }
     else {return Err(api::ApiError::InvalidInput.into())}
     }
-
