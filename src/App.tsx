@@ -1,5 +1,6 @@
 import "./App.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Header from "./components/Header.tsx";
 import BottomNavBar from "./components/BottomNavBar.tsx";
 
 import Home from "./pages/Home.tsx";
@@ -19,6 +20,7 @@ function App() {
   return (
       <BrowserRouter>
         <div className="h-dvh flex flex-col overflow-hidden">
+          <Header />
             <main className="flex-1 overflow-y-auto no-scrollbar">
               <Routes>
                 <Route path="/" element={<Home />} />

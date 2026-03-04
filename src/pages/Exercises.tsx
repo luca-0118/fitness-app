@@ -12,15 +12,12 @@ export default function Exercises() { /* muk data, moet uiteindelijk een GET API
 
   
       return (
-          <>
-              <Header />
-                <div className="flex">
-                    <div className="pb-24">
-                        {exercises.map((exercise) => (
-                        <ExerciseOverviewWidget key={exercise.id} name={exercise.name} />
-                        ))}
-                    </div>
-                </div>
-          </>
+        <div className="flex">
+            <div className="pb-24">
+                {exercises.map((exercise) => (
+                    <ExerciseOverviewWidget key={exercise.id} name={exercise.name} />
+                ))}
+            </div>
+        </div>
     );
 }

@@ -3,7 +3,7 @@ import CountDownTimer from "../components/CountDownTimer";
 import StopWatch from "../components/StopWatch";
 import Header from "../components/Header.tsx";
 import Plusknop from "../components/plusknop.tsx";
-import Sets from "../components/sets.tsx";
+import Sets from "../components/Sets.tsx";
 import CurrentExercise from "../components/CurrentExercise.tsx";
 
 export default function Session() {
