@@ -75,7 +75,8 @@ pub fn run() {
             create_workout,
             link_exercise,
             create_exercise,
-            get_exercise_by_id::return_exercise
+            get_exercise_by_id::return_exercise,
+            get_all_exercises::get_all_exercises,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
