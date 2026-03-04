@@ -14,11 +14,13 @@ import SessionHistory from "./pages/SessionHistory.tsx";
 import KcalTracker from "./pages/KcalTracker.tsx";
 import Exercises from "./pages/Exercises.tsx";
 import ExerciseDescription from "./pages/ExerciseDescription.tsx";
+import Header from "./components/Header.tsx";
 
 function App() {
   return (
       <BrowserRouter>
         <div className="h-dvh flex flex-col overflow-hidden">
+          <Header />
             <main className="flex-1 overflow-y-auto no-scrollbar">
               <Routes>
                 <Route path="/" element={<Home />} />

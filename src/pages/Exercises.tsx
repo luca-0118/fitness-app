@@ -1,8 +1,8 @@
 import { useState } from "react";
 import ExerciseOverviewWidget from "../components/ExerciseOverviewWidget.tsx";
-import Header from "../components/Header.tsx";
 import { DragDropProvider } from '@dnd-kit/react';
 import { move } from '@dnd-kit/helpers';
+import StartSessionButton from "../components/StartSessionButton.tsx";
 
 export default function Exercises() { /* muk data, moet uiteindelijk een GET API worden*/
     const [exercises, setExercises] = useState([
@@ -11,18 +11,27 @@ export default function Exercises() { /* muk data, moet uiteindelijk een GET API
         { id: 3, name: "Deadlift" },
         { id: 4, name: "Rows" },
         { id: 5, name: "Lat Pulldowns" },
+        { id: 6, name: "Leg Press" },
+        { id: 7, name: "Lunges" },
+        { id: 8, name: "Hip Thrusts" },
+        { id: 9, name: "Bicep Curls" },
+        { id: 10, name: "Pullups" },
     ]);
 
     return (
-        <div>
-            <Header/>
-            <DragDropProvider onDragEnd={(event) => { setExercises((exercises) => move(exercises, event)); }}>
-                <ul className="pb-24 pt-2">
-                    {exercises.map((exercise, index) => (
-                        <ExerciseOverviewWidget key={exercise.id} id={exercise.id} index={index} name={exercise.name} />
-                    ))}
-                </ul>
-            </DragDropProvider>
-        </div>
+        <>
+            <div className="pb-18 pt-2">
+                <DragDropProvider onDragEnd={(event) => { setExercises((exercises) => move(exercises, event)); }}>
+                    <ul>
+                        {exercises.map((exercise, index) => (
+                            <ExerciseOverviewWidget key={exercise.id} id={exercise.id} index={index} name={exercise.name} />
+                        ))}
+                    </ul>
+                </DragDropProvider>
+                <div className="absolute bottom-0 pb-24 w-full opacity-[80%]">
+                    <StartSessionButton/>
+                </div>
+            </div>
+        </>
     );
 }
