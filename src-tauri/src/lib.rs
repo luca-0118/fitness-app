@@ -14,7 +14,7 @@ struct Db {
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
-    search_exercise::search_exercise("barbell").unwrap();
+    println!("{:?}", search_exercise::search_exercise("chin").unwrap());
 
     let conn = Connection::open("../public/workoutbase.sqlite")
         .expect("Failed to open or create database");
