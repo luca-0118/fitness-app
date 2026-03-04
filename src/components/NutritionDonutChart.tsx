@@ -3,10 +3,10 @@ import Chart from 'react-apexcharts';
 import { ApexOptions } from 'apexcharts';
 
 export const NutritionDonutChart: React.FC = () => {
-    const series = [
-        60, 40,          // Outer ring (Consumed, Remaining)
-        30, 30, 30      // Inner ring (Macros)
-    ];
+    const series = [1200, 800, 30, 30, 30];
+    const labels = ['Cal Consumed', 'Cal Remaining', 'Carbs', 'Fats', 'Proteins'];
+    const colors = ['#F67631', '#E0E0E0', '#DC143C', '#4DA3FF', '#32CD32'];
+    const units = ['cal', 'cal', 'g', 'g', 'g'];
 
     const options: ApexOptions = {
         chart: {
@@ -14,69 +14,37 @@ export const NutritionDonutChart: React.FC = () => {
             background: 'transparent',
             toolbar: { show: false },
         },
-        labels: [
-            'Consumed',
-            'Remaining',
-            'Carbs',
-            'Fats',
-            'Proteins',
-        ],
-        colors: [
-            '#F67631',
-            '#E0E0E0',
-            '#DC143C',
-            '#4DA3FF',
-            '#32CD32',
-        ],
+        labels,
+        colors,
         plotOptions: {
             radialBar: {
-                inverseOrder: false,
-                hollow: {
-                    size: '35%',
-                },
-                track: {
-                    background: '#1E1E1E',
-                    margin: 4,
-                },
+                hollow: { size: '35%' },
+                track: { background: '#2A2A2A', margin: 6, strokeWidth: '100%' },
                 dataLabels: {
-                    show: true,
-                    name: {
-                        show: true,
-                        color: '#ffffff',
-                        fontSize: '14px',
-                    },
+                    name: { show: true, color: '#ffffff', fontSize: '14px' },
                     value: {
                         show: true,
                         color: '#ffffff',
                         fontSize: '18px',
                         fontWeight: 600,
-                        formatter: (val: number) => `${val}%`,
+                        formatter: (val: number, opts?: any) => {
+                            const idx = opts?.dataPointIndex ?? 0;
+                            return `${val} ${units[idx]}`;
+                        }
                     },
-                    total: {
-                        show: false,
-                        formatter: (w) => {
-                            const total = w.globals.seriesTotals.reduce(
-                                (a: number, b: number) => a + b,
-                                0
-                            );
-                            return total + ' cal';
-                        },
-                    },
+                    total: { show: false },
                 },
             },
         },
-        stroke: {
-            lineCap: 'round',
-        },
-        legend: {
-            show: false,
-        },
+        stroke: { lineCap: 'round' },
+        legend: { show: false },
         tooltip: {
             enabled: false,
             custom: ({ series, seriesIndex, w }) => {
                 const value = series[seriesIndex];
-                const color = w.config.colors?.[seriesIndex];
                 const label = w.config.labels?.[seriesIndex];
+                const color = w.config.colors?.[seriesIndex];
+                const unit = units[seriesIndex];
 
                 return `
           <div style="
@@ -92,28 +60,22 @@ export const NutritionDonutChart: React.FC = () => {
               width:12px;
               height:12px;
               background:${color};
-              border-radius:50%;">
-            </span>
-            <strong>${label}:</strong> ${value}%
+              border-radius:50%;"></span>
+            <strong>${label}:</strong> ${value} ${unit}
           </div>
         `;
             },
         },
     };
 
-    const legendItems = options.labels?.map((label, i) => ({
+    const legendItems = labels.map((label, i) => ({
         label,
-        color: options.colors?.[i] as string,
+        color: colors[i],
     }));
 
     return (
-        <div style={{ width: '100%', textAlign: 'center' , color: 'white'}}>
-            <Chart
-                options={options}
-                series={series}
-                type="radialBar"
-                height={300}
-            />
+        <div style={{ width: '100%', textAlign: 'center', color: 'white' }}>
+            <Chart options={options} series={series} type="radialBar" height={300} />
 
             <div
                 style={{
@@ -124,15 +86,8 @@ export const NutritionDonutChart: React.FC = () => {
                     gap: 12,
                 }}
             >
-                {legendItems?.map((item, idx) => (
-                    <div
-                        key={idx}
-                        style={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            gap: 6,
-                        }}
-                    >
+                {legendItems.map((item, idx) => (
+                    <div key={idx} style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
             <span
                 style={{
                     display: 'inline-block',

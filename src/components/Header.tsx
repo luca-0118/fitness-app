@@ -1,5 +1,6 @@
-import { useLocation } from "react-router-dom";
-import SaveButton from "./SaveButton";
+import { useLocation, useNavigate } from "react-router-dom";
+import SaveButton from "./SaveButton.tsx";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 // Map of URL paths to page titles
 const pageTitles: Record<string, string> = {
   "/": "Home",
@@ -15,21 +16,44 @@ const pageTitles: Record<string, string> = {
   "/exercises": "Exercises",
   "/exercise-description": "Exercise Description",
 };
+
+const routesWithSave = [
+  "/edit-workout",
+  "/add-exercises",
+  "/new-workout",
+];
+
 // This component will display the title of the current page based on the URL path
 export default function Header() {
   const location = useLocation();
+  const navigate = useNavigate();
 // Get the title for the current path, or default to "Page" if not found
   const title = pageTitles[location.pathname] || "Page";
 
-  
+  const showSave = routesWithSave.includes(location.pathname);
+  const showBack = location.pathname !== "/";
+
     return (
-        <header className="z-40 pt-4 shrink-0">
-          <div className="w-[90%] mx-auto text-center bg-[#161818]">
-            <h1 className="text-[24px] font-bold text-[#F2F3F2]">
-              {title} <SaveButton />
+        <header className="z-40 pt-4 shrink-0 w-[90%] mx-auto">
+          <div className="relative flex items-center">
+            {showBack && (
+                <button
+                    onClick={() => navigate(-1)}
+                    className="absolute left-0 cursor-pointer"
+                >
+                  <ArrowBackIcon sx={{ fontSize: 32 }} />
+                </button>
+            )}
+            <h1 className="text-[24px] font-bold text-[#F2F3F2] mx-auto">
+              {title}
             </h1>
-            <div className="border-b-2 border-white mt-2"></div>
+            {showSave && (
+                <div className="absolute right-0">
+                  <SaveButton />
+                </div>
+            )}
           </div>
+            <div className="border-b-2 border-white mt-2"></div>
         </header>
     )
 }

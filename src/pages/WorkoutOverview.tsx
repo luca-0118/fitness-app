@@ -19,16 +19,18 @@ export default function WorkoutOverview() { /* mock data, moet uiteindelijk een 
   ]);
 
   return (
-      <div>
-        <DragDropProvider onDragEnd={(event) => { setWorkouts((workouts) => move(workouts, event)); }}>
-          <ul className="pb-24 pt-2">
-            {workouts.map((workout, index) => (
-              <WorkoutWidget key={workout.id} id={workout.id} index={index} name={workout.name} />
-            ))}
-          </ul>
-        </DragDropProvider>
-        <GreenAddButton to="/new-workout"/>
-      </div>
+      <>
+          <div>
+            <DragDropProvider onDragEnd={(event) => { setWorkouts((workouts) => move(workouts, event)); }}>
+                <ul className="pt-2">
+                    {workouts.map((workout, index) => (
+                        <WorkoutWidget key={workout.id} id={workout.id} index={index} name={workout.name} />
+                    ))}
+                </ul>
+                </DragDropProvider>
+            <GreenAddButton to="/new-workout"/>
+          </div>
+      </>
   );
 }
 
