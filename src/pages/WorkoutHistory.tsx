@@ -15,12 +15,14 @@ export default function WorkoutHistory() {
     ];
 
     return (
-        <div>
-            <div className="pb-24 pt-2">
-                {workoutHistory.map((workoutHistory) => (
-                    <WorkoutHistoryWidget key={workoutHistory.id} name={workoutHistory.name} />
-                ))}
+        <>
+            <div>
+                <div className="pt-2">
+                    {workoutHistory.map((workoutHistory) => (
+                        <WorkoutHistoryWidget key={workoutHistory.id} name={workoutHistory.name} />
+                    ))}
+                </div>
             </div>
-        </div>
+        </>
   );
 }
