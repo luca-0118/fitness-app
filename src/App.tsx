@@ -14,7 +14,6 @@ import SessionHistory from "./pages/SessionHistory.tsx";
 import KcalTracker from "./pages/KcalTracker.tsx";
 import Exercises from "./pages/Exercises.tsx";
 import ExerciseDescription from "./pages/ExerciseDescription.tsx";
-import Header from "./components/Header.tsx";
 
 function App() {
   return (

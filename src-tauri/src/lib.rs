@@ -1,5 +1,7 @@
 use rusqlite::Connection;
 use std::sync::Mutex;
+mod get_exercise_by_id;
+mod get_all_exercises;
 
 use crate::api::ApiResponse;
 mod api;
@@ -11,6 +13,7 @@ struct Db {
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
+
     let conn = Connection::open("../public/workoutbase.sqlite")
         .expect("Failed to open or create database");
 
@@ -57,6 +60,9 @@ pub fn run() {
     )
     .expect("failed to initialize schema WorkoutExercises");
 
+
+
+
     // Tauri building process
     tauri::Builder::default()
         .manage(Db {
@@ -69,6 +75,8 @@ pub fn run() {
             create_workout,
             link_exercise,
             create_exercise,
+            get_exercise_by_id::return_exercise,
+            get_all_exercises::get_all_exercises,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
