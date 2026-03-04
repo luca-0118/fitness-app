@@ -1,5 +1,6 @@
 import "./App.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { WorkoutProvider } from "./Context/WorkoutContext";
 import Header from "./components/Header";
 import BottomNavBar from "./components/BottomNavBar.tsx";
 
@@ -18,28 +19,30 @@ import ExerciseDescription from "./pages/ExerciseDescription.tsx";
 
 function App() {
   return (
-      <BrowserRouter>
-        <div className="h-dvh flex flex-col overflow-hidden">
-          <Header />
-            <main className="flex-1 overflow-y-auto no-scrollbar">
-              <Routes>
-                <Route path="/" element={<Home />} />
-                <Route path="/workouts" element={<WorkoutOverview />} />
-                <Route path="/edit-workout" element={<EditWorkout />} />
-                <Route path="/add-exercises" element={<AddExercises />} />
-                <Route path="/session" element={<Session />} />
-                <Route path="/new-workout" element={<NewWorkout />} />
-                <Route path="/profile" element={<Profile />} />
-                <Route path="/history" element={<WorkoutHistory />} />
-                <Route path="/session-history" element={<SessionHistory />} />
-                <Route path="/kcal-tracker" element={<KcalTracker />} />
-                <Route path="/exercises" element={<Exercises  />} />
-                <Route path="/exercise-description" element={<ExerciseDescription />} />
-              </Routes>
-          </main>
-          <BottomNavBar/>
-        </div>
-      </BrowserRouter>
+      <WorkoutProvider>
+        <BrowserRouter>
+          <div className="h-dvh flex flex-col overflow-hidden">
+            <Header />
+              <main className="flex-1 overflow-y-auto no-scrollbar">
+                <Routes>
+                  <Route path="/" element={<Home />} />
+                  <Route path="/workouts" element={<WorkoutOverview />} />
+                  <Route path="/edit-workout" element={<EditWorkout />} />
+                  <Route path="/add-exercises" element={<AddExercises />} />
+                  <Route path="/session" element={<Session />} />
+                  <Route path="/new-workout" element={<NewWorkout />} />
+                  <Route path="/profile" element={<Profile />} />
+                  <Route path="/history" element={<WorkoutHistory />} />
+                  <Route path="/session-history" element={<SessionHistory />} />
+                  <Route path="/kcal-tracker" element={<KcalTracker />} />
+                  <Route path="/exercises" element={<Exercises  />} />
+                  <Route path="/exercise-description" element={<ExerciseDescription />} />
+                </Routes>
+              </main>
+            <BottomNavBar/>
+          </div>
+        </BrowserRouter>
+      </WorkoutProvider>
   );
 }
 

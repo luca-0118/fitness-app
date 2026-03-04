@@ -1,26 +1,36 @@
-import ExerciseWidget from "../components/ExerciseWidget.tsx";
+import { useWorkout } from "../Context/WorkoutContext";
+import ExerciseWidget from "../components/ExerciseWidget";
+import { useNavigate } from "react-router-dom";
 
-export default function AddExercises() { /* mock data, moet uiteindelijk een GET API worden*/
-  const exercises = [
-      { id: 1, name: "Leg Extension" },
-      { id: 2, name: "Barbell press" },
-      { id: 3, name: "Deadlift" },
-      { id: 4, name: "Rows" },
-      { id: 5, name: "Lat Pulldowns" },
-      { id: 6, name: "Leg Press" },
-      { id: 7, name: "Lunges" },
-      { id: 8, name: "Hip Thrusts" },
-      { id: 9, name: "Bicep Curls" },
-      { id: 10, name: "Pullups" },
-  ];
+export default function AddExercises() {
+    const { addExercise } = useWorkout();
+    const navigate = useNavigate();
 
-  return (
-      <>
-        <div>
+    const exercises = [
+        "Leg Extension",
+        "Barbell Press",
+        "Deadlift",
+        "Rows",
+        "Lat Pulldowns",
+        "Leg Press",
+        "Lunges",
+        "Hip Thrusts",
+        "Bicep Curls",
+        "Pullups",
+    ];
+
+    return (
+        <div className="p-4 ">
             {exercises.map((exercise) => (
-                <ExerciseWidget key={exercise.id} name={exercise.name} />
+                <ExerciseWidget
+                    key={exercise}
+                    name={exercise}
+                    onSelect={() => {
+                        addExercise(exercise);
+                        navigate(-1); // go back to previous page
+                    }}
+                />
             ))}
         </div>
-      </>
-  );
+    );
 }
