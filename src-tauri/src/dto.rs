@@ -32,10 +32,3 @@ pub struct CreateExercise {
     pub name: String,
     pub desc: Option<String>,
 }
-
-#[derive(Debug, Serialize, Deserialize)]
-pub struct Exercise {
-    pub uuid: String,
-    pub name: String,
-    pub desc: Option<String>,
-}
