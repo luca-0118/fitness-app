@@ -13,23 +13,11 @@ type fuckMuksLib = {
 };
 
 export default function WorkoutOverview() {
-    const [workouts, setWorkouts] = useState<fuckMuksLib[]>([
-        {
-            id: "SKLDJFSJKLDFHSDLF",
-            name: "josh",
-            desc: "josh1",
-        },
-        {
-            id: "hksjdfhaslfd",
-            name: "josh2",
-            desc: "josh1",
-        },
-    ]);
+    const [workouts, setWorkouts] = useState<fuckMuksLib[]>([]);
     useEffect(() => {
         const getWorkouts = async () => {
             //beautifully wrapped API call.
             const workoutList = await API.workouts.list();
-            console.log(workouts)
             // I have to remap the response because muks lib requires an ID
             const remappedWorkout: fuckMuksLib[] = workoutList.map((workout) => {
                 return {
@@ -38,7 +26,6 @@ export default function WorkoutOverview() {
                     desc: workout.desc,
                 };
             });
-            console.log(remappedWorkout)
             // only set if there's an actual workout saved. Allows for fake data.
             if (remappedWorkout.length >= 1) {
                 setWorkouts(remappedWorkout);

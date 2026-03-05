@@ -58,6 +58,5 @@ export function WorkoutProvider({ children }: { children: ReactNode }) {
 export function useWorkout(): WorkoutContextProps {
     const context = useContext(WorkoutContext);
     if (!context) throw new Error("useWorkout must be used within WorkoutProvider");
-    console.log(context);
     return context;
 }

@@ -14,7 +14,6 @@ export default function Exercises() {
     useEffect(() => {
         const getData = async () => {
             const hi = await API.workouts.detailed(selectedWorkout);
-            console.log(hi);
             if (typeof hi === "string") {
                 return;
             }
