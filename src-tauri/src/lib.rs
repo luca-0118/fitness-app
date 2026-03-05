@@ -20,8 +20,9 @@ pub fn run() {
     // Creates database tables
 
     // Workout table
+    conn.execute("DROP TABLE IF EXISTS Workouts",[]).expect("bruh (error: failed to drop table Workouts)");
     conn.execute(
-        "CREATE TABLE IF NOT EXISTS Workouts (
+        "CREATE TABLE Workouts (
             ID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
             Uuid TEXT NOT NULL,
             Name TEXT NOT NULL,
@@ -31,25 +32,14 @@ pub fn run() {
     )
     .expect("failed to initialize schema Workouts");
 
-    // Exercises table
-    conn.execute(
-        "CREATE TABLE IF NOT EXISTS Exercises(
-                    ID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-                    Uuid TEXT NOT NULL,
-                    Name TEXT NOT NULL,
-                    Desc TEXT
-                    )",
-        [],
-    )
-    .expect("failed to initialize schema Exercises");
-
     //Workout exercises table
     // NOTE PRAGMA foreign_keys = ON; is required, otherwise foreign keys won't work.
     conn.execute("PRAGMA foreign_keys = ON", [])
         .expect("foreign keys disabled");
 
+    conn.execute("DROP TABLE IF EXISTS WorkoutExercises",[]).expect("bruh (error: failed to drop table WorkoutExercises)");
     conn.execute(
-        "CREATE TABLE IF NOT EXISTS WorkoutExercises (
+        "CREATE TABLE WorkoutExercises (
             ID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
             WorkoutId INTEGER NOT NULL,
             ExerciseId INTEGER NOT NULL,

@@ -28,7 +28,7 @@ export default function Exercises() { /* muk data, moet uiteindelijk een GET API
                         ))}
                     </ul>
                 </DragDropProvider>
-                <div className="absolute bottom-0 pb-24 w-full opacity-[80%]">
+                <div className="absolute bottom-0 pb-24 w-full opacity-80">
                     <StartSessionButton/>
                 </div>
             </div>

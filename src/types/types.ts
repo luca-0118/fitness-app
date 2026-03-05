@@ -1,7 +1,7 @@
 type backendFunctions = "create_workout" | "list_workouts" | "link_exercise" | "create_exercise";
 
 interface WorkoutDTO {
-    UUID: string;
+    uuid: string;
     name: string;
     desc?: string;
 }
