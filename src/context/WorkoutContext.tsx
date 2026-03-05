@@ -4,24 +4,29 @@ import { createContext, useContext, useState, ReactNode } from "react";
 interface WorkoutContextProps {
     workoutName: string;
     setWorkoutName: (name: string) => void;
-    exercises: string[];
-    addExercise: (name: string) => void;
-    removeExercise: (name: string) => void;
+    exercises: Iworkout[];
+    addExercise: (workout: Iworkout) => void;
+    removeExercise: (workout: Iworkout) => void;
     clearWorkout: () => void;
 }
 
 const WorkoutContext = createContext<WorkoutContextProps | undefined>(undefined);
 
+export type Iworkout = {
+    id: string;
+    name: string;
+};
+
 export function WorkoutProvider({ children }: { children: ReactNode }) {
     const [workoutName, setWorkoutName] = useState("");
-    const [exercises, setExercises] = useState<string[]>([]);
+    const [exercises, setExercises] = useState<Iworkout[]>([]);
 
-    const addExercise = (name: string) => {
-        if (!exercises.includes(name)) setExercises([...exercises, name]);
+    const addExercise = (workout: Iworkout) => {
+        if (!exercises.includes(workout)) setExercises([...exercises, workout]);
     };
 
-    const removeExercise = (name: string) => {
-        setExercises(exercises.filter((ex) => ex !== name));
+    const removeExercise = (workout: Iworkout) => {
+        setExercises(exercises.filter((ex) => ex !== workout));
     };
 
     const clearWorkout = () => {
@@ -30,14 +35,17 @@ export function WorkoutProvider({ children }: { children: ReactNode }) {
     };
 
     return (
-        <WorkoutContext.Provider value={{ workoutName, setWorkoutName, exercises, addExercise, removeExercise, clearWorkout }}>
+        <WorkoutContext.Provider
+            value={{ workoutName, setWorkoutName, exercises, addExercise, removeExercise, clearWorkout }}
+        >
             {children}
         </WorkoutContext.Provider>
     );
 }
 
-export function useWorkout() {
+export function useWorkout(): WorkoutContextProps {
     const context = useContext(WorkoutContext);
     if (!context) throw new Error("useWorkout must be used within WorkoutProvider");
+    console.log(context);
     return context;
 }

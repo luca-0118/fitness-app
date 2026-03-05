@@ -18,7 +18,12 @@ export default function NewWorkout() {
                 <h2 className="font-bold text-[#F2F3F2] text-center mb-2 border-b-2">Selected Exercises:</h2>
                 <ul className="text-center">
                     {exercises.map((ex) => (
-                        <li className="border p-4 my-2 bg-[#1E1E1E] border-[#414141] rounded-xl hover:bg-[#252525] font-bold" key={ex}>{ex}</li>
+                        <li
+                            className="border p-4 my-2 bg-[#1E1E1E] border-[#414141] rounded-xl hover:bg-[#252525] font-bold"
+                            key={ex.name}
+                        >
+                            {ex.name}
+                        </li>
                     ))}
                 </ul>
             </div>

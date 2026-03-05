@@ -1,7 +1,7 @@
 use rusqlite::Connection;
 use std::sync::Mutex;
-mod get_exercise_by_id;
 mod get_all_exercises;
+mod get_exercise_by_id;
 
 use crate::api::ApiResponse;
 mod api;
@@ -13,14 +13,18 @@ struct Db {
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
-
+    // FIXME THIS CONNECTION IS USED BY EVERY SINGLE QUERY. IT ALLOWS US TO EASILY CHANGE QUERIES.
+    // IT NEEDS TO BE LIKE THIS TO EASILY CHANGE IT.
     let conn = Connection::open("../public/workoutbase.sqlite")
         .expect("Failed to open or create database");
 
-    // Creates database tables
+    conn.execute("DROP TABLE IF EXISTS WorkoutExercises", [])
+        .expect("failed to drop table WorkoutExercises");
 
     // Workout table
-    conn.execute("DROP TABLE IF EXISTS Workouts",[]).expect("bruh (error: failed to drop table Workouts)");
+    conn.execute("DROP TABLE IF EXISTS Workouts", [])
+        .expect("failed to drop table Workouts)");
+
     conn.execute(
         "CREATE TABLE Workouts (
             ID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
@@ -37,21 +41,17 @@ pub fn run() {
     conn.execute("PRAGMA foreign_keys = ON", [])
         .expect("foreign keys disabled");
 
-    conn.execute("DROP TABLE IF EXISTS WorkoutExercises",[]).expect("bruh (error: failed to drop table WorkoutExercises)");
     conn.execute(
         "CREATE TABLE WorkoutExercises (
             ID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
             WorkoutId INTEGER NOT NULL,
             ExerciseId INTEGER NOT NULL,
             FOREIGN KEY (WorkoutId) REFERENCES Workouts(ID),
-            FOREIGN KEY (ExerciseId) REFERENCES Exercises(ID)
+            FOREIGN KEY (ExerciseId) REFERENCES exercises(exerciseId)
             )",
         [],
     )
     .expect("failed to initialize schema WorkoutExercises");
-
-
-
 
     // Tauri building process
     tauri::Builder::default()
@@ -67,6 +67,7 @@ pub fn run() {
             create_exercise,
             get_exercise_by_id::return_exercise,
             get_all_exercises::get_all_exercises,
+            get_workout
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
@@ -97,11 +98,11 @@ fn create_workout(
         return Err(api::ApiError::InvalidInput.into());
     }
 
-    logic::create_workout(&db, workout)?;
+    let response = logic::create_workout(&db, workout)?;
 
     Ok(ApiResponse {
         ok: true,
-        data: "new workout has been stored".to_string(),
+        data: response.to_string(),
     })
 }
 
@@ -139,5 +140,17 @@ fn create_exercise(
     Ok(ApiResponse {
         ok: true,
         data: "Exercise has been created".to_string(),
+    })
+}
+#[tauri::command]
+fn get_workout(
+    db: tauri::State<Db>,
+    _workout_uuid: String,
+) -> Result<api::ApiResponse<dto::IdetailedWorkoutDTO>, api::ApiErrorResponse> {
+    let response = logic::get_workout(&db, _workout_uuid)?;
+
+    Ok(ApiResponse {
+        ok: true,
+        data: response,
     })
 }

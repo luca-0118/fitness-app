@@ -32,3 +32,16 @@ pub struct CreateExercise {
     pub name: String,
     pub desc: Option<String>,
 }
+
+#[derive(Debug, Serialize)]
+pub struct IdetailedWorkoutDTO {
+    pub uuid: String,
+    pub name: String,
+    pub exercises: Vec<ExerciseDTO>,
+}
+#[derive(Debug, Serialize)]
+pub struct ExerciseDTO {
+    pub id: String,
+    pub name: String,
+    pub data: String,
+}

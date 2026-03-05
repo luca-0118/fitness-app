@@ -1,20 +1,17 @@
 import ExerciseWidget from "../components/ExerciseWidget";
-import { invoke } from '@tauri-apps/api/core'
-import { useEffect, useState } from 'react'
+import { useEffect, useState } from "react";
 import { useWorkout } from "../context/WorkoutContext";
-import {useNavigate} from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import API from "../classes/api";
 
-
-
 export default function AddExercises() {
-    const [allExercises, setAllExercise] = useState<Exercise[]>([]);
+    const [allExercises, setAllExercise] = useState<ExerciseDTO[]>([]);
     const { addExercise } = useWorkout();
     const navigate = useNavigate();
 
     async function fetchExercises() {
-        const result = await invoke<ApiSucess<Exercise[]>>('get_all_exercises');
-        setAllExercise(result.data);
+        const result = await API.exercises.list();
+        setAllExercise(result);
     }
 
     useEffect(() => {
@@ -25,15 +22,17 @@ export default function AddExercises() {
         <>
             <div>
                 {allExercises.map((exercise) => {
-                    return <ExerciseWidget 
-                        key={exercise.id} 
-                        name={exercise.name}
-                        gif={exercise.data}
-                        onSelect={() => {
-                            addExercise(exercise.name);
-                            navigate(-1);
-                        }}
-                    />
+                    return (
+                        <ExerciseWidget
+                            key={exercise.id}
+                            name={exercise.name}
+                            gif={exercise.data}
+                            onSelect={() => {
+                                addExercise({ id: exercise.id, name: exercise.name });
+                                navigate(-1);
+                            }}
+                        />
+                    );
                 })}
             </div>
         </>
