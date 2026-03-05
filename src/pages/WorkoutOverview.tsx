@@ -13,7 +13,6 @@ type fuckMuksLib = {
 };
 
 export default function WorkoutOverview() {
-    /* mock data, moet uiteindelijk een GET API worden*/
     const [workouts, setWorkouts] = useState<fuckMuksLib[]>([]);
 
     useEffect(() => {
