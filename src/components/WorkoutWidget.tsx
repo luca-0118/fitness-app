@@ -5,7 +5,7 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { useSortable } from '@dnd-kit/react/sortable';
 
 interface WorkoutWidgetProps {
-    id: string;
+    id: number;
     index: number;
     name: string;
 }

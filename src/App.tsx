@@ -1,6 +1,5 @@
 import "./App.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { WorkoutProvider } from "./Context/WorkoutContext";
 import Header from "./components/Header";
 import BottomNavBar from "./components/BottomNavBar.tsx";
 
@@ -19,7 +18,6 @@ import ExerciseDescription from "./pages/ExerciseDescription.tsx";
 
 function App() {
   return (
-      <WorkoutProvider>
         <BrowserRouter>
           <div className="h-dvh flex flex-col overflow-hidden">
             <Header />
@@ -42,7 +40,6 @@ function App() {
             <BottomNavBar/>
           </div>
         </BrowserRouter>
-      </WorkoutProvider>
   );
 }
 
