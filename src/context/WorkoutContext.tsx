@@ -1,5 +1,5 @@
 // src/context/WorkoutContext.tsx
-import { createContext, useContext, useState, ReactNode } from "react";
+import { createContext, useContext, useState, ReactNode, SetStateAction } from "react";
 
 interface WorkoutContextProps {
     workoutName: string;
@@ -8,6 +8,8 @@ interface WorkoutContextProps {
     addExercise: (workout: Iworkout) => void;
     removeExercise: (workout: Iworkout) => void;
     clearWorkout: () => void;
+    selectedWorkout: string;
+    setSelectedWorkout: (value: SetStateAction<string>) => void;
 }
 
 const WorkoutContext = createContext<WorkoutContextProps | undefined>(undefined);
@@ -20,6 +22,7 @@ export type Iworkout = {
 export function WorkoutProvider({ children }: { children: ReactNode }) {
     const [workoutName, setWorkoutName] = useState("");
     const [exercises, setExercises] = useState<Iworkout[]>([]);
+    const [selectedWorkout, setSelectedWorkout] = useState<string>("");
 
     const addExercise = (workout: Iworkout) => {
         if (!exercises.includes(workout)) setExercises([...exercises, workout]);
@@ -36,7 +39,16 @@ export function WorkoutProvider({ children }: { children: ReactNode }) {
 
     return (
         <WorkoutContext.Provider
-            value={{ workoutName, setWorkoutName, exercises, addExercise, removeExercise, clearWorkout }}
+            value={{
+                workoutName,
+                setWorkoutName,
+                exercises,
+                addExercise,
+                removeExercise,
+                clearWorkout,
+                selectedWorkout,
+                setSelectedWorkout,
+            }}
         >
             {children}
         </WorkoutContext.Provider>

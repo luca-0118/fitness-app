@@ -2,12 +2,14 @@ import { useEffect, useState } from "react";
 import CountDownTimer from "../components/CountDownTimer";
 import StopWatch from "../components/StopWatch";
 import API from "../classes/api";
+import { useWorkout } from "../context/WorkoutContext";
 
 export default function Session() {
+    const { selectedWorkout } = useWorkout();
     // example of how to use it.
     useEffect(() => {
         const lol = async () => {
-            const respon = await API.workouts.detailed("c8c71277-7cee-4348-8e5e-2a14515a2a32"); //FIXME gather this through the start button for example. get the workout UUID(id).
+            const respon = await API.workouts.detailed(selectedWorkout);
             console.log(respon);
         };
         lol();

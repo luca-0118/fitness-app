@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import DragIndicatorIcon from "@mui/icons-material/DragIndicator";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { useSortable } from "@dnd-kit/react/sortable";
+import { useWorkout } from "../context/WorkoutContext";
 
 interface WorkoutWidgetProps {
     id: string;
@@ -15,6 +16,12 @@ export default function WorkoutWidget({ id, index, name }: WorkoutWidgetProps) {
     const [element, setElement] = useState<HTMLElement | null>(null);
     const handleRef = useRef<HTMLButtonElement | null>(null);
     const { isDragging } = useSortable({ id, index, element, handle: handleRef });
+    const { setSelectedWorkout } = useWorkout();
+
+    const handleNavigation = () => {
+        setSelectedWorkout(id);
+        navigate("/exercises");
+    };
 
     return (
         <li
@@ -26,7 +33,7 @@ export default function WorkoutWidget({ id, index, name }: WorkoutWidgetProps) {
                 <DragIndicatorIcon sx={{ fontSize: 40, color: "#F67631" }} />
             </button>
 
-            <button className="text-left cursor-pointer w-full h-full py-4" onClick={() => navigate("/exercises")}>
+            <button className="text-left cursor-pointer w-full h-full py-4" onClick={() => handleNavigation()}>
                 <h2 className="text-lg font-semibold">{name}</h2>
             </button>
 
