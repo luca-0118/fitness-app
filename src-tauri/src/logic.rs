@@ -3,6 +3,7 @@ use crate::{
     dto::{self, Workout},
     Db,
 };
+
 use uuid::Uuid;
 
 // calls all the available workouts from the database
@@ -30,7 +31,7 @@ pub fn list_workouts(db: &Db) -> Result<Vec<dto::Workout>, ApiError> {
 }
 
 //creates a new workout
-pub fn create_workout(db: &Db, workout: dto::CreateWorkout) -> Result<bool, ApiError> {
+pub fn create_workout(db: &Db, workout: dto::CreateWorkout) -> Result<String, ApiError> {
     let conn = db
         .conn
         .lock()
@@ -40,11 +41,11 @@ pub fn create_workout(db: &Db, workout: dto::CreateWorkout) -> Result<bool, ApiE
 
     conn.execute(
         "INSERT INTO Workouts(Uuid,Name,Desc) VALUES (?1, ?2, ?3)",
-        (id.to_string(), workout.name, workout.desc),
+        (&id.to_string(), workout.name, workout.desc),
     )
     .map_err(|_| api::ApiError::DatabaseError)?;
 
-    Ok(true)
+    Ok(id.to_string())
 }
 
 pub fn link_exercise(db: &Db, link_exercise: dto::LinkExercise) -> Result<String, ApiError> {
@@ -53,12 +54,13 @@ pub fn link_exercise(db: &Db, link_exercise: dto::LinkExercise) -> Result<String
         .lock()
         .map_err(|_| api::ApiError::FailedDbConnection)?;
 
+    // FIXME, this is sub-optimal, ideally, every id needs to be UUID.
     conn.execute(
         r#"
         INSERT INTO WorkoutExercises (WorkoutId, ExerciseId)
         VALUES (
             (SELECT ID FROM Workouts WHERE Uuid = ?1),
-            (SELECT ID FROM Exercises WHERE Uuid = ?2)
+            (SELECT exerciseid FROM Exercises WHERE exerciseid = ?2)
         )
         "#,
         (link_exercise.workout_uuid, link_exercise.exercise_uuid),
@@ -82,4 +84,42 @@ pub fn create_exercise(db: &Db, exercise: dto::CreateExercise) -> Result<bool, A
     .map_err(|_| api::ApiError::DatabaseError)?;
 
     Ok(true)
+}
+
+pub fn get_workout(db: &Db, workout_uuid: String) -> Result<dto::IdetailedWorkoutDTO, ApiError> {
+    let conn = db
+        .conn
+        .lock()
+        .map_err(|_| api::ApiError::FailedDbConnection)?;
+
+    // Get the workout info
+    let workout = conn.query_row(
+        "SELECT Uuid, Name FROM Workouts WHERE Uuid = ?1",
+        [&workout_uuid],
+        |row| Ok((row.get::<_, String>(0)?, row.get::<_, String>(1)?)),
+    )?;
+
+    // Get the exercises for this workout
+    let mut stmt = conn.prepare(
+        "SELECT e.exerciseid, e.name, e.gifUrl
+        FROM WorkoutExercises we
+        INNER JOIN Exercises e ON e.exerciseid = we.ExerciseId
+        WHERE we.WorkoutId = (SELECT ID FROM Workouts WHERE Uuid = ?1)",
+    )?;
+
+    let exercises_iter = stmt.query_map([&workout_uuid], |row| {
+        Ok(dto::ExerciseDTO {
+            id: row.get(0)?,
+            name: row.get(1)?,
+            data: row.get(2)?,
+        })
+    })?;
+
+    let exercises: Result<Vec<dto::ExerciseDTO>, rusqlite::Error> = exercises_iter.collect();
+
+    Ok(dto::IdetailedWorkoutDTO {
+        uuid: workout.0,
+        name: workout.1,
+        exercises: exercises?,
+    })
 }
