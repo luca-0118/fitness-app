@@ -1,67 +1,74 @@
 import WorkoutWidget from "../components/WorkoutWidget";
 import GreenAddButton from "../components/GreenAddButton.tsx";
 import { useState, useEffect } from "react";
-import { DndContext, type DragEndEvent } from "@dnd-kit/core";
-import { arrayMove } from "@dnd-kit/sortable";
-import { ApiClient } from "../classes/api.ts";
+import API from "../classes/api.ts";
+import { DragDropProvider } from "@dnd-kit/react";
+import { move } from "@dnd-kit/helpers";
 
-interface Workout {
-    uuid: string;
+// I quite genuinely have to remap my UUID to id because of muks lib. I hate libs.
+type fuckMuksLib = {
+    id: string;
     name: string;
     desc?: string;
-}
+};
 
 export default function WorkoutOverview() {
-    const [workouts, setWorkouts] = useState<Workout[]>([]);
-    const [loading, setLoading] = useState(true);
+    /* mock data, moet uiteindelijk een GET API worden*/
+    const [workouts, setWorkouts] = useState<fuckMuksLib[]>([]);
 
     useEffect(() => {
-        const fetchWorkouts = async () => {
-            try {
-                const result = await ApiClient.send<Workout[]>("list_workouts");
-                const data = ApiClient.assertOk(result);
-                setWorkouts(data);
-                console.log("Fetched workouts:", data);
-            } catch (error) {
-                console.error("Failed to fetch workouts:", error);
-            } finally {
-                setLoading(false);
+        const getWorkouts = async () => {
+            //beautifully wrapped API call.
+            const workoutList = await API.workouts.list();
+
+            // I have to remap the response because muks lib requires an ID
+            const remappedWorkout: fuckMuksLib[] = workoutList.map((workout) => {
+                return {
+                    id: workout.UUID,
+                    name: workout.name,
+                    desc: workout.desc,
+                };
+            });
+
+            // only set if there's an actual workout saved. Allows for fake data.
+            if (remappedWorkout.length >= 1) {
+                setWorkouts(remappedWorkout);
             }
         };
-
-        void fetchWorkouts();
+        // just calls this above ^
+        getWorkouts();
     }, []);
 
-    if (loading) return <h2 className="[24px] font-bold text-[#F2F3F2] text-center pt-8 h-screen w-screen">Loading workouts...</h2>;
+    if (!workouts) return <h1>Loading....</h1>;
+
+    // if the list is still empty, return a incentive to create an workout.
+    if (Object.keys(workouts).length < 1)
+        return (
+            <div>
+                <ul className="pt-2 text-center text-gray-400">
+                    <li>No workouts yet. Create a new one!</li>
+                </ul>
+                <GreenAddButton to="/new-workout" />
+            </div>
+        );
 
     return (
-        <div>
-            <DndContext
-                onDragEnd={(event: DragEndEvent) => {
-                    const { active, over } = event;
-
-                    if (over && active.id !== over.id) {
-                        setWorkouts((items) => {
-                            const oldIndex = items.findIndex(i => i.uuid === active.id);
-                            const newIndex = items.findIndex(i => i.uuid === over.id);
-                            return arrayMove(items, oldIndex, newIndex);
-                        });
-                    }
-                }}
-            >
-                <ul className="pt-2">
-                    {workouts.map((workout, index) => (
-                        <WorkoutWidget
-                            key={workout.uuid}
-                            id={workout.uuid}
-                            index={index}
-                            name={workout.name}
-                        />
-                    ))}
-                </ul>
-            </DndContext>
-
-            <GreenAddButton to="/new-workout" />
-        </div>
+        <>
+            <div>
+                <DragDropProvider
+                    onDragEnd={(event) => {
+                        // #TODO add local backend ordering.
+                        setWorkouts((work) => move(work, event));
+                    }}
+                >
+                    <ul className="pt-2">
+                        {workouts.map((workout, index) => (
+                            <WorkoutWidget key={workout.id} id={workout.id} index={index} name={workout.name} />
+                        ))}
+                    </ul>
+                </DragDropProvider>
+                <GreenAddButton to="/new-workout" />
+            </div>
+        </>
     );
 }
