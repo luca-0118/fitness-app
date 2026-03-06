@@ -1,4 +1,7 @@
-use crate::api::{self, ApiError};
+use crate::{
+    api::{self, ApiError},
+    Db,
+};
 use serde::Serialize;
 
 #[derive(Debug, Serialize)]
@@ -9,10 +12,17 @@ pub struct Exercise {
 }
 
 #[tauri::command]
-pub fn get_all_exercises() -> Result<api::ApiResponse<Vec<Exercise>>, api::ApiErrorResponse> {
-    let conn = rusqlite::Connection::open("test.db").map_err(ApiError::from)?;
+pub fn get_all_exercises(
+    db: tauri::State<Db>,
+) -> Result<api::ApiResponse<Vec<Exercise>>, api::ApiErrorResponse> {
+    let conn = db
+        .conn
+        .lock()
+        .map_err(|_| api::ApiError::FailedDbConnection)?;
 
-    let mut stmt = conn.prepare("select * from exercises").map_err(ApiError::from)?;
+    let mut stmt = conn
+        .prepare("select * from exercises")
+        .map_err(ApiError::from)?;
 
     let exercises: Vec<Exercise> = stmt
         .query_map([], |row| {

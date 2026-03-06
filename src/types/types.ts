@@ -1,15 +1,22 @@
-type backendFunctions = "create_workout" | "list_workouts" | "link_exercise" | "create_exercise";
+/* eslint-disable @typescript-eslint/no-unused-vars */
+type backendFunctions =
+    | "create_workout"
+    | "list_workouts"
+    | "link_exercise"
+    | "create_exercise"
+    | "get_all_exercises"
+    | "get_workout";
 
 interface WorkoutDTO {
-    UUID?: string;
+    uuid: string;
     name: string;
     desc?: string;
 }
 
 interface ExerciseDTO {
-    UUID?: string;
+    id: string;
     name: string;
-    desc?: string;
+    data: string;
 }
 
 interface linkExerciseDTO {
@@ -30,4 +37,11 @@ interface ApiReponse {
 interface ApiSucess<T> extends ApiReponse {
     ok: true;
     data: T;
+}
+
+interface IdetailedWorkoutDTO {
+    uuid: string;
+    name: string;
+    desc: string;
+    exercises: ExerciseDTO[];
 }
