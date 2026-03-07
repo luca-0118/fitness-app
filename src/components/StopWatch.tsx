@@ -74,6 +74,7 @@ export default function StopWatch({ onTimerChange }: StopWatchProps) {
             >
                 <MenuItem onClick={() => handleTimerSwitch('stopwatch')}>Stopwatch</MenuItem>
                 <MenuItem onClick={() => handleTimerSwitch('countdown')}>Countdown Timer</MenuItem>
+                <MenuItem onClick={() => handleTimerSwitch('tabata')}>Tabata Timer</MenuItem>
             </Menu>
             <div className="border-2 border-[#565d5d] rounded-lg p-4 mb-4 w-56 text-center">
                 <div className="text-3xl font-bold text-white font-mono">

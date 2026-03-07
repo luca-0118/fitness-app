@@ -89,6 +89,7 @@ export default function CountDownTimer({ onTimerChange }: CountDownTimerProps) {
         >
           <MenuItem onClick={() => handleTimerSwitch('stopwatch')}>Stopwatch</MenuItem>
           <MenuItem onClick={() => handleTimerSwitch('countdown')}>Countdown Timer</MenuItem>
+          <MenuItem onClick={() => handleTimerSwitch('tabata')}>Tabata Timer</MenuItem>
         </Menu>
         {!hasStarted && (
           <div className="mb-6">

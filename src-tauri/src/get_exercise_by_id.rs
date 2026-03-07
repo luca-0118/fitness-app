@@ -28,7 +28,7 @@ pub fn return_exercise(
     let mut rows = query.query([exercise_id]).unwrap();
 
     if let Some(row) = rows.next().unwrap() {
-        let id: String = row.get(0).unwrap();
+        let _id: String = row.get(0).unwrap();
         let name: String = row.get(1).unwrap();
         let gif_url: String = row.get(2).unwrap();
         let target_muscles: String = row.get(3).unwrap();
