@@ -15,7 +15,7 @@ export default function Sets({ setNumber = 1, onDelete }: SetsProps) {
         <div className="border-t border-[#565d5d] pt-4 mt-3">
             <div className="flex items-center justify-between mb-4">
                 <h3 className="text-white text-lg font-semibold">Set {setNumber}</h3>
-                {onDelete && setNumber > 1 && (
+                {onDelete && setNumber > 3 && (
                     <button
                         onClick={onDelete}
                         className="text-red-500 hover:text-red-400 cursor-pointer transition-colors"

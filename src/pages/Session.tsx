@@ -20,7 +20,7 @@ export default function Session() {
     const exercises = state?.exercises || [];
 
     useEffect(() => {
-        setNumSetsByExercise(Array(exercises.length).fill(1));
+        setNumSetsByExercise(Array(exercises.length).fill(3));
         setExpandedByExercise(Array(exercises.length).fill(false));
     }, [exercises.length]);
 
@@ -51,7 +51,7 @@ export default function Session() {
                             }}
                         >
                             {Array.from(
-                                { length: numSetsByExercise[exerciseIndex] || 1 },
+                                { length: numSetsByExercise[exerciseIndex] || 3 },
                                 (_, setIndex) => (
                                     <Sets
                                         key={setIndex + 1}
@@ -60,7 +60,7 @@ export default function Session() {
                                             const next = [...numSetsByExercise];
                                             next[exerciseIndex] = Math.max(
                                                 1,
-                                                (next[exerciseIndex] || 1) - 1,
+                                                (next[exerciseIndex] || 3) - 1,
                                             );
                                             setNumSetsByExercise(next);
                                         }}
@@ -72,7 +72,7 @@ export default function Session() {
                                 onClick={() => {
                                     const next = [...numSetsByExercise];
                                     next[exerciseIndex] =
-                                        (next[exerciseIndex] || 1) + 1;
+                                        (next[exerciseIndex] || 3) + 1;
                                     setNumSetsByExercise(next);
                                 }}
                                 className="mt-3 w-77 h-12 rounded-full bg-[#2e2e2e] hover:bg-[#3a3a3a]  justify-center transition-colors"
