@@ -1,26 +1,40 @@
-import ExerciseWidget from "../components/ExerciseWidget.tsx";
+import ExerciseWidget from "../components/ExerciseWidget";
+import { useEffect, useState } from "react";
+import { useWorkout } from "../context/WorkoutContext";
+import { useNavigate } from "react-router-dom";
+import API from "../classes/api";
 
-export default function AddExercises() { /* mock data, moet uiteindelijk een GET API worden*/
-  const exercises = [
-      { id: 1, name: "Leg Extension" },
-      { id: 2, name: "Barbell press" },
-      { id: 3, name: "Deadlift" },
-      { id: 4, name: "Rows" },
-      { id: 5, name: "Lat Pulldowns" },
-      { id: 6, name: "Leg Press" },
-      { id: 7, name: "Lunges" },
-      { id: 8, name: "Hip Thrusts" },
-      { id: 9, name: "Bicep Curls" },
-      { id: 10, name: "Pullups" },
-  ];
+export default function AddExercises() {
+    const [allExercises, setAllExercise] = useState<ExerciseDTO[]>([]);
+    const { addExercise } = useWorkout();
+    const navigate = useNavigate();
 
-  return (
-      <>
-        <div>
-            {exercises.map((exercise) => (
-                <ExerciseWidget key={exercise.id} name={exercise.name} />
-            ))}
-        </div>
-      </>
-  );
+    async function fetchExercises() {
+        const result = await API.exercises.list();
+        setAllExercise(result);
+    }
+
+    useEffect(() => {
+        fetchExercises();
+    }, []);
+
+    return (
+        <>
+            <div>
+                {allExercises.map((exercise) => {
+                    return (
+                        <ExerciseWidget
+                            key={exercise.id}
+                            name={exercise.name}
+                            gif={exercise.data}
+                            onSelect={() => {
+                                addExercise({ id: exercise.id, name: exercise.name });
+                                navigate(-1);
+                            }}
+                        />
+                    );
+                })}
+            </div>
+        </>
+    );
 }
