@@ -6,6 +6,19 @@ This template should help get you started developing with Tauri, React and Types
 
 - [VS Code](https://code.visualstudio.com/) + [Tauri](https://marketplace.visualstudio.com/items?itemName=tauri-apps.tauri-vscode) + [rust-analyzer](https://marketplace.visualstudio.com/items?itemName=rust-lang.rust-analyzer)
 
+## Testing on a mobile simulation
+
+### Prerequisites
+
+To test on a virtual mobile phone. We will have to download the tools to do so.
+Our project is built with Java(kotlin) in order to have a mobile version. You will have to download java 21. (Newer versions aren't supported https://adoptium.net/en-GB/temurin/releases?version=21 ).
+
+For the mobile development part, we are using android studio. This gives us the sdk and virtual mobile built in. https://developer.android.com/studio
+
+Once you've downloaded android studio, make sure you have downloaded an android SDK through it or seperately.
+
+after that you can run the command `npm run tauri android dev`.
+
 ## Building project to APK
 
 ### Prerequisites
