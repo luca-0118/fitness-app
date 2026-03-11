@@ -5,7 +5,19 @@ import { move } from "@dnd-kit/helpers";
 import StartSessionButton from "../components/StartSessionButton.tsx";
 import API from "../classes/api.ts";
 import { useWorkout } from "../context/WorkoutContext.tsx";
-
+import {PointerSensor, PointerActivationConstraints, DragDropManager} from '@dnd-kit/dom';
+const manager = new DragDropManager({
+    sensors: [
+        PointerSensor.configure({
+            activationConstraints: [
+                new PointerActivationConstraints.Delay({
+                    value: 150,
+                    tolerance: {x: 5, y: 5},
+                }),
+            ]
+        })
+    ]
+});
 export default function Exercises() {
     /* muk data, moet uiteindelijk een GET API worden*/
     const [exercises, setExercises] = useState<ExerciseDTO[]>([]);
@@ -30,7 +42,7 @@ export default function Exercises() {
     return (
         <>
             <div className="pb-18 pt-2">
-                <DragDropProvider
+                <DragDropProvider manager={manager}
                     onDragEnd={(event) => {
                         setExercises((exercises) => move(exercises, event));
                     }}
