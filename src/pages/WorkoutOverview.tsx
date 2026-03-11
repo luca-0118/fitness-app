@@ -9,10 +9,9 @@ const manager = new DragDropManager({
     sensors: [
         PointerSensor.configure({
             activationConstraints: [
-                new PointerActivationConstraints.Distance({value: 5}),
                 new PointerActivationConstraints.Delay({
-                    value: 200,
-                    tolerance: {x: 10, y: 5},
+                    value: 150,
+                    tolerance: {x: 5, y: 5},
                 }),
             ]
         })
