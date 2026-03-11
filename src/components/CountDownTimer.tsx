@@ -75,7 +75,7 @@ export default function CountDownTimer({ onTimerChange }: CountDownTimerProps) {
 
   return (
     <>
-      <div className="flex flex-col items-center justify-center relative border-2 border-gray-600 rounded-lg p-6 pt-12">
+      <div className="flex flex-col items-center justify-center  w-87 bg-[#1E1E1E] border-2 border-[#565d5d] rounded-lg p-6 pt-12">
         <button 
           className="absolute top-2 left-2 text-orange-500 hover:text-orange-400 transition-colors z-10"
           onClick={handleMenuClick}
@@ -89,6 +89,7 @@ export default function CountDownTimer({ onTimerChange }: CountDownTimerProps) {
         >
           <MenuItem onClick={() => handleTimerSwitch('stopwatch')}>Stopwatch</MenuItem>
           <MenuItem onClick={() => handleTimerSwitch('countdown')}>Countdown Timer</MenuItem>
+          <MenuItem onClick={() => handleTimerSwitch('tabata')}>Tabata Timer</MenuItem>
         </Menu>
         {!hasStarted && (
           <div className="mb-6">
@@ -97,7 +98,7 @@ export default function CountDownTimer({ onTimerChange }: CountDownTimerProps) {
                 <select 
                   value={hours} 
                   onChange={(e) => handleTimeChange(Number(e.target.value), minutes, seconds)}
-                  className="px-3 py-2 border-2 border-gray-600 rounded-lg bg-gray-800 text-white text-xl font-semibold mb-1 cursor-pointer hover:border-gray-500 focus:outline-none focus:border-blue-500"
+                  className="px-3 py-2 border-2 border-[#565d5d] rounded-lg bg-gray-800 text-white text-xl font-semibold mb-1 cursor-pointer hover:border-gray-500 focus:outline-none focus:border-blue-500"
                   disabled={isActive}
                 >
                   {[...Array(24)].map((_, i) => (
@@ -110,7 +111,7 @@ export default function CountDownTimer({ onTimerChange }: CountDownTimerProps) {
                 <select 
                   value={minutes} 
                   onChange={(e) => handleTimeChange(hours, Number(e.target.value), seconds)}
-                  className="px-3 py-2 border-2 border-gray-600 rounded-lg bg-gray-800 text-white text-xl font-semibold mb-1 cursor-pointer hover:border-gray-500 focus:outline-none focus:border-blue-500"
+                  className="px-3 py-2 border-2 border-[#565d5d] rounded-lg bg-gray-800 text-white text-xl font-semibold mb-1 cursor-pointer hover:border-gray-500 focus:outline-none focus:border-blue-500"
                   disabled={isActive}
                 >
                   {[...Array(60)].map((_, i) => (
@@ -123,7 +124,7 @@ export default function CountDownTimer({ onTimerChange }: CountDownTimerProps) {
                 <select 
                   value={seconds} 
                   onChange={(e) => handleTimeChange(hours, minutes, Number(e.target.value))}
-                  className="px-3 py-2 border-2 border-gray-600 rounded-lg bg-gray-800 text-white text-xl font-semibold mb-1 cursor-pointer hover:border-gray-500 focus:outline-none focus:border-blue-500"
+                  className="px-3 py-2 border-2 border-[#565d5d] rounded-lg bg-gray-800 text-white text-xl font-semibold mb-1 cursor-pointer hover:border-gray-500 focus:outline-none focus:border-blue-500"
                   disabled={isActive}
                 >
                   {[...Array(60)].map((_, i) => (
@@ -136,7 +137,7 @@ export default function CountDownTimer({ onTimerChange }: CountDownTimerProps) {
           </div>
         )}
         
-        <div className="border-2 border-gray-500 rounded-lg p-4 mb-4 w-56 text-center">
+        <div className="border-2 border-[#565d5d] rounded-lg p-4 mb-4 w-56 text-center">
           <div className="text-3xl font-bold text-white font-mono">
             {formatTime(timeLeftMs)}
           </div>
