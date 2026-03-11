@@ -1,5 +1,5 @@
 import { useWorkout } from "../context/WorkoutContext";
-import GreenAddButton from "../components/GreenAddButton";
+import AddExerciseButton from "../components/AddExerciseButton.tsx";
 
 export default function NewWorkout() {
     const { workoutName, setWorkoutName, exercises } = useWorkout();
@@ -13,9 +13,8 @@ export default function NewWorkout() {
                 onChange={(e) => setWorkoutName(e.target.value)}
                 className="border p-2 rounded w-full bg-[#1E1E1E] border-[#414141]"
             />
-            <GreenAddButton to="/add-exercises" />
             <div className="mt-4">
-                <h2 className="font-bold text-[#F2F3F2] text-center mb-2 border-b-2">Selected Exercises:</h2>
+                <h2 className="font-bold text-[#F2F3F2] text-center mb-2 border-b-2 border-[#414141]">Selected Exercises:</h2>
                 <ul className="text-center">
                     {exercises.map((ex) => (
                         <li
@@ -26,6 +25,7 @@ export default function NewWorkout() {
                         </li>
                     ))}
                 </ul>
+                <AddExerciseButton to="/add-exercises" />
             </div>
         </div>
     );

@@ -1,9 +1,9 @@
-import GreenAddButton from "../components/GreenAddButton.tsx";
+import AddExerciseButton from "../components/AddExerciseButton.tsx";
 
 export default function EditWorkout() {
   return (
     <>
-      <GreenAddButton to="/exercises"/>
+      <AddExerciseButton to="/exercises"/>
     </>
   );
 }
