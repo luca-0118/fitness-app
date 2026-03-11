@@ -14,6 +14,7 @@ interface WorkoutDTO {
 }
 
 interface ExerciseDTO {
+    instanceId: number;
     id: string;
     name: string;
     data: string;
