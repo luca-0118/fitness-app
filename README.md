@@ -31,27 +31,41 @@ To build this project into an APK, you need to create a keystore file for signin
 
 1. **Generate a keystore** (if you don't have one):
 
-    ```bash
-    keytool -genkey -v -keystore keystore.jks -storetype JKS -keyalg RSA -keysize 2048 -validity 10000 -alias upload
-    ```
+   ```bash
+   keytool -genkey -v -keystore keystore.jks -storetype JKS -keyalg RSA -keysize 2048 -validity 10000 -alias upload
+   ```
 
 2. **Move the keystore** to the project:
 
-    ```bash
-    mv keystore.jks src-tauri/gen/android/keystore.jks
-    ```
+   ```bash
+   mv keystore.jks src-tauri/gen/android/keystore.jks
+   ```
 
 3. **Create** `src-tauri/gen/android/keystore.properties` with:
 
-    ```properties
-    password=YOUR_PASSWORD
-    keyAlias=upload
-    storeFile=keystore.jks
-    ```
+   ```properties
+   password=YOUR_PASSWORD
+   keyAlias=upload
+   storeFile=keystore.jks
+   ```
 
 4. **Build the APK**:
-    ```bash
-    npm run tauri android build --apk
-    ```
+   ```bash
+   npm run tauri android build --apk
+   ```
 
 > **Note:** The `keystore.jks` and `keystore.properties` files are gitignored. Each team member needs to create or obtain these files separately.
+
+## Building project to IPA
+
+1. **Run the build**:
+
+```
+ npm run build
+```
+
+2. **Run the tauri build for ios**
+
+```
+npm run tauri ios build -- --export-method debugging
+```
