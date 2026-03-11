@@ -13,28 +13,19 @@ export default function Exercises() {
 
     useEffect(() => {
         const getData = async () => {
+            
             const hi = await API.workouts.detailed(selectedWorkout);
             if (typeof hi === "string") {
                 return;
             }
-
-            setExercises(hi.exercises);
+            setExercises(
+            hi.exercises.map((exercise: ExerciseDTO, index: number) => ({
+                ...exercise,
+                instanceId: index
+            })));
         };
         getData();
     }, []);
-
-    // const [exercises, setExercises] = useState([
-    //     { id: 1, name: "Leg Extension" },
-    //     { id: 2, name: "Barbell press" },
-    //     { id: 3, name: "Deadlift" },
-    //     { id: 4, name: "Rows" },
-    //     { id: 5, name: "Lat Pulldowns" },
-    //     { id: 6, name: "Leg Press" },
-    //     { id: 7, name: "Lunges" },
-    //     { id: 8, name: "Hip Thrusts" },
-    //     { id: 9, name: "Bicep Curls" },
-    //     { id: 10, name: "Pullups" },
-    // ]);
 
     return (
         <>
@@ -47,8 +38,8 @@ export default function Exercises() {
                     <ul>
                         {exercises.map((exercise, index) => (
                             <ExerciseOverviewWidget
-                                key={exercise.id}
-                                id={exercise.id}
+                                key={exercise.instanceId}
+                                id={exercise.instanceId.toString()}
                                 index={index}
                                 name={exercise.name}
                             />
