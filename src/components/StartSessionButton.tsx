@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom";
+import API from "../classes/api";
 
 interface StartSessionButtonProps {
     exercises?: ExerciseDTO[];
@@ -7,7 +8,9 @@ interface StartSessionButtonProps {
 export default function StartSessionButton({ exercises }: StartSessionButtonProps) {
     const navigate = useNavigate();
     const handleStart = () => {
-        navigate("/session", { state: { exercises } });
+        API.session.start().then (() => {
+            navigate("/session", { state: { exercises } });
+        })
     };
     return (
         <>

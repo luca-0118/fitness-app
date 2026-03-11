@@ -5,7 +5,8 @@ type backendFunctions =
     | "link_exercise"
     | "create_exercise"
     | "get_all_exercises"
-    | "get_workout";
+    | "get_workout"
+    | "start_session";
 
 interface WorkoutDTO {
     uuid: string;
