@@ -8,8 +8,8 @@ interface StartSessionButtonProps {
 export default function StartSessionButton({ exercises }: StartSessionButtonProps) {
     const navigate = useNavigate();
     const handleStart = () => {
-        API.session.start().then (() => {
-            navigate("/session", { state: { exercises } });
+        API.session.start().then ((resp) => {
+            if (resp) navigate("/session", { state: { exercises } });
         })
     };
     return (

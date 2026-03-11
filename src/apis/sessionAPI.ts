@@ -15,13 +15,13 @@ export default  class sessionAPI {
             data: "testUserSessionId9823743987329859857984343985874343575439854373443435",
         } 
 
-        const sessionId =   ApiClient.assertOk(resp);
-
-        if (!resp.ok || sessionId) return false; 
+        const sessionId = ApiClient.assertOk(resp);
+        
+        if (!resp.ok || !sessionId) return false; 
 
         localStorage.setItem("workoutSessionId",sessionId);
 
-        if (!!localStorage.getItem("workoutSessionId")) return false;
+        if (!localStorage.getItem("workoutSessionId")) return false;
 
         return true;
     }
