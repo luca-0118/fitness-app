@@ -6,20 +6,20 @@ import { DragDropProvider } from "@dnd-kit/react";
 import { move } from "@dnd-kit/helpers";
 
 // I quite genuinely have to remap my UUID to id because of muks lib. I hate libs.
-type fuckMuksLib = {
+type dndLibModifier = {
     id: string;
     name: string;
     desc?: string;
 };
 
 export default function WorkoutOverview() {
-    const [workouts, setWorkouts] = useState<fuckMuksLib[]>([]);
+    const [workouts, setWorkouts] = useState<dndLibModifier[]>([]);
     useEffect(() => {
         const getWorkouts = async () => {
             //beautifully wrapped API call.
             const workoutList = await API.workouts.list();
             // I have to remap the response because muks lib requires an ID
-            const remappedWorkout: fuckMuksLib[] = workoutList.map((workout) => {
+            const remappedWorkout: dndLibModifier[] = workoutList.map((workout) => {
                 return {
                     id: workout.uuid,
                     name: workout.name,
