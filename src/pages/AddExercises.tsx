@@ -3,9 +3,12 @@ import { useEffect, useState } from "react";
 import { useWorkout } from "../context/WorkoutContext";
 import { useNavigate } from "react-router-dom";
 import API from "../classes/api";
+import SearchBar from "../components/SearchBar";
 
 export default function AddExercises() {
     const [allExercises, setAllExercise] = useState<ExerciseDTO[]>([]);
+    const [searchText, setSearchText] = useState("");
+    const [activeQuery, setActiveQuery] = useState("");
     const { addExercise } = useWorkout();
     const navigate = useNavigate();
 
@@ -18,10 +21,23 @@ export default function AddExercises() {
         fetchExercises();
     }, []);
 
+    useEffect(() => {
+        setActiveQuery(searchText);
+    }, [searchText]);
+
+    const filteredExercises = allExercises.filter((exercise) =>
+        exercise.name.toLowerCase().includes(activeQuery.toLowerCase()),
+    );
+
     return (
         <>
+            <SearchBar
+                value={searchText}
+                onChange={setSearchText}
+                onSearch={() => setActiveQuery(searchText)}
+            />
             <div>
-                {allExercises.map((exercise) => {
+                {filteredExercises.map((exercise) => {
                     return (
                         <ExerciseWidget
                             key={exercise.id}
