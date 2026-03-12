@@ -2,6 +2,7 @@ use rusqlite::Connection;
 use std::sync::Mutex;
 mod get_all_exercises;
 mod get_exercise_by_id;
+mod get_exercises_by_muscle;
 
 use crate::api::ApiResponse;
 mod api;
@@ -13,6 +14,7 @@ struct Db {
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
+
     // FIXME THIS CONNECTION IS USED BY EVERY SINGLE QUERY. IT ALLOWS US TO EASILY CHANGE QUERIES.
     // IT NEEDS TO BE LIKE THIS TO EASILY CHANGE IT.
     let conn = Connection::open("../public/workoutbase.sqlite")
@@ -55,6 +57,7 @@ pub fn run() {
 
     // Tauri building process
     tauri::Builder::default()
+    
         .manage(Db {
             conn: Mutex::new(conn),
         })
@@ -71,6 +74,7 @@ pub fn run() {
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
+    
 }
 
 #[tauri::command]
