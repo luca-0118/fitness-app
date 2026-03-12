@@ -55,10 +55,8 @@ export default function WorkoutOverview() {
         <>
             <div>
                 <DragDropProvider manager={manager}
-                <DragDropProvider manager={manager}
                     onDragEnd={(event) => {
                         // #TODO add local backend ordering.
-                        setWorkouts((workout) => move(workout, event));
                         setWorkouts((workout) => move(workout, event));
                     }}
                 >

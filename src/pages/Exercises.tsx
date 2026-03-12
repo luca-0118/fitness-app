@@ -40,7 +40,6 @@ export default function Exercises() {
         <>
             <div className="pb-18 pt-2">
                 <DragDropProvider manager={manager}
-                <DragDropProvider manager={manager}
                     onDragEnd={(event) => {
                         setExercises((exercises) => move(exercises, event));
                     }}
@@ -48,8 +47,6 @@ export default function Exercises() {
                     <ul>
                         {exercises.map((exercise, index) => (
                             <ExerciseOverviewWidget
-                                key={exercise.instanceId}
-                                id={exercise.instanceId.toString()}
                                 key={exercise.instanceId}
                                 id={exercise.instanceId.toString()}
                                 index={index}
