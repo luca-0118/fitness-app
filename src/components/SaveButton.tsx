@@ -1,9 +1,11 @@
 import SaveIcon from "@mui/icons-material/Save";
 import API from "../classes/api";
 import { useWorkout } from "../context/WorkoutContext";
+import {useNavigate} from "react-router-dom";
 
 export default function SaveButton() {
     const { workoutName, exercises } = useWorkout();
+    const navigate = useNavigate()
 
     async function handleSave() {
         const workoutUuid = await API.workouts.create(workoutName);
@@ -13,6 +15,7 @@ export default function SaveButton() {
             const resp = await API.workouts.linkExercise(workoutUuid, exercise.id);
             console.log(resp);
         });
+        navigate(-1)
     }
 
     return (

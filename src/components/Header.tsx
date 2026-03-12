@@ -19,7 +19,6 @@ const pageTitles: Record<string, string> = {
 
 const routesWithSave = [
   "/edit-workout",
-  "/add-exercises",
   "/new-workout",
 ];
 
@@ -34,7 +33,7 @@ export default function Header() {
   const showBack = location.pathname !== "/";
 
     return (
-        <header className="z-40 pt-4 shrink-0 w-[90%] mx-auto">
+        <header className="z-40 pt-6 shrink-0 w-[90%] mx-auto">
           <div className="relative flex items-center">
             {showBack && (
                 <button
@@ -53,7 +52,7 @@ export default function Header() {
                 </div>
             )}
           </div>
-            <div className="border-b-2 border-white mt-2"></div>
+            <div className="border-b-2 border-[#414141] mt-2"></div>
         </header>
     )
 }
