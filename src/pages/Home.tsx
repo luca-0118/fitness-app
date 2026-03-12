@@ -2,6 +2,7 @@ import { useNavigate } from "react-router-dom";
 import {NutritionDonutChart} from "../components/NutritionDonutChart";
 import WeightLineChart from "../components/WeightLineChart.tsx";
 import WeeklyCaloriesChart from "../components/WeeklyCaloriesChart.tsx";
+import Header from "../components/Header.tsx";
 
 export default function Home() {
     const navigate = useNavigate();

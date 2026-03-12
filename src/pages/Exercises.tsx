@@ -5,7 +5,19 @@ import { move } from "@dnd-kit/helpers";
 import StartSessionButton from "../components/StartSessionButton.tsx";
 import API from "../classes/api.ts";
 import { useWorkout } from "../context/WorkoutContext.tsx";
-
+import {PointerSensor, PointerActivationConstraints, DragDropManager} from '@dnd-kit/dom';
+const manager = new DragDropManager({
+    sensors: [
+        PointerSensor.configure({
+            activationConstraints: [
+                new PointerActivationConstraints.Delay({
+                    value: 150,
+                    tolerance: {x: 5, y: 5},
+                }),
+            ]
+        })
+    ]
+});
 export default function Exercises() {
     /* muk data, moet uiteindelijk een GET API worden*/
     const [exercises, setExercises] = useState<ExerciseDTO[]>([]);
@@ -13,33 +25,24 @@ export default function Exercises() {
 
     useEffect(() => {
         const getData = async () => {
+            
             const hi = await API.workouts.detailed(selectedWorkout);
             if (typeof hi === "string") {
                 return;
             }
-
-            setExercises(hi.exercises);
+            setExercises(
+            hi.exercises.map((exercise: ExerciseDTO, index: number) => ({
+                ...exercise,
+                instanceId: index
+            })));
         };
         getData();
     }, []);
 
-    // const [exercises, setExercises] = useState([
-    //     { id: 1, name: "Leg Extension" },
-    //     { id: 2, name: "Barbell press" },
-    //     { id: 3, name: "Deadlift" },
-    //     { id: 4, name: "Rows" },
-    //     { id: 5, name: "Lat Pulldowns" },
-    //     { id: 6, name: "Leg Press" },
-    //     { id: 7, name: "Lunges" },
-    //     { id: 8, name: "Hip Thrusts" },
-    //     { id: 9, name: "Bicep Curls" },
-    //     { id: 10, name: "Pullups" },
-    // ]);
-
     return (
         <>
             <div className="pb-18 pt-2">
-                <DragDropProvider
+                <DragDropProvider manager={manager}
                     onDragEnd={(event) => {
                         setExercises((exercises) => move(exercises, event));
                     }}
@@ -47,8 +50,8 @@ export default function Exercises() {
                     <ul>
                         {exercises.map((exercise, index) => (
                             <ExerciseOverviewWidget
-                                key={exercise.id}
-                                id={exercise.id}
+                                key={exercise.instanceId}
+                                id={exercise.instanceId.toString()}
                                 index={index}
                                 name={exercise.name}
                             />
@@ -56,7 +59,7 @@ export default function Exercises() {
                     </ul>
                 </DragDropProvider>
                 <div className="absolute bottom-0 pb-24 w-full opacity-80">
-                    <StartSessionButton />
+                    <StartSessionButton exercises={exercises} />
                 </div>
             </div>
         </>
