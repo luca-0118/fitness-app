@@ -17,10 +17,16 @@ export default function Exercises() {
     useEffect(() => {
         const getData = async () => {
             
+            
             const hi = await API.workouts.detailed(selectedWorkout);
             if (typeof hi === "string") {
                 return;
             }
+            setExercises(
+            hi.exercises.map((exercise: ExerciseDTO, index: number) => ({
+                ...exercise,
+                instanceId: index
+            })));
             setExercises(
             hi.exercises.map((exercise: ExerciseDTO, index: number) => ({
                 ...exercise,
@@ -34,6 +40,7 @@ export default function Exercises() {
         <>
             <div className="pb-18 pt-2">
                 <DragDropProvider manager={manager}
+                <DragDropProvider manager={manager}
                     onDragEnd={(event) => {
                         setExercises((exercises) => move(exercises, event));
                     }}
@@ -41,6 +48,8 @@ export default function Exercises() {
                     <ul>
                         {exercises.map((exercise, index) => (
                             <ExerciseOverviewWidget
+                                key={exercise.instanceId}
+                                id={exercise.instanceId.toString()}
                                 key={exercise.instanceId}
                                 id={exercise.instanceId.toString()}
                                 index={index}

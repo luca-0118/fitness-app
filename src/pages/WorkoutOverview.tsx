@@ -47,7 +47,7 @@ export default function WorkoutOverview() {
                 <ul className="pt-2 text-center text-gray-400">
                     <li>No workouts yet. Create a new one!</li>
                 </ul>
-                <GreenAddButton to="/new-workout" />
+                <WorkoutAddButton to="/new-workout" />
             </div>
         );
 
@@ -55,8 +55,10 @@ export default function WorkoutOverview() {
         <>
             <div>
                 <DragDropProvider manager={manager}
+                <DragDropProvider manager={manager}
                     onDragEnd={(event) => {
                         // #TODO add local backend ordering.
+                        setWorkouts((workout) => move(workout, event));
                         setWorkouts((workout) => move(workout, event));
                     }}
                 >
@@ -66,7 +68,7 @@ export default function WorkoutOverview() {
                         ))}
                     </ul>
                 </DragDropProvider>
-                <GreenAddButton to="/new-workout" />
+                <WorkoutAddButton to="/new-workout" />
             </div>
         </>
     );

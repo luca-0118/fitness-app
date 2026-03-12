@@ -1,5 +1,4 @@
 import { useNavigate } from "react-router-dom";
-import AddIcon from '@mui/icons-material/Add';
 
 export default function GreenAddButton({ to = "/new-workout" }) {
     const navigate = useNavigate();
@@ -7,9 +6,9 @@ export default function GreenAddButton({ to = "/new-workout" }) {
     return (
         <button
             onClick={() => navigate(to)}
-            className="cursor-pointer fixed bottom-30 right-6 h-16 w-16 rounded-full bg-[#40C057] hover:bg-[#5AEA74] flex items-center justify-center z-50"
+            className="cursor-pointer mx-auto sticky bottom-2 h-16 justify-center items-center font-bold w-[90%] rounded-full bg-[#40C057] hover:bg-[#5AEA74] flex z-50"
         >
-            <AddIcon sx={{ fontSize: 49 }} />
+            New Workout
         </button>
     );
 }
