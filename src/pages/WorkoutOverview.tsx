@@ -1,5 +1,5 @@
 import WorkoutWidget from "../components/WorkoutWidget";
-import GreenAddButton from "../components/GreenAddButton.tsx";
+import WorkoutAddButton from "../components/WorkoutAddButton.tsx";
 import { useState, useEffect } from "react";
 import API from "../classes/api.ts";
 import { DragDropProvider } from "@dnd-kit/react";
@@ -56,7 +56,7 @@ export default function WorkoutOverview() {
                 <ul className="pt-2 text-center text-gray-400">
                     <li>No workouts yet. Create a new one!</li>
                 </ul>
-                <GreenAddButton to="/new-workout" />
+                <WorkoutAddButton to="/new-workout" />
             </div>
         );
 
@@ -75,7 +75,7 @@ export default function WorkoutOverview() {
                         ))}
                     </ul>
                 </DragDropProvider>
-                <GreenAddButton to="/new-workout" />
+                <WorkoutAddButton to="/new-workout" />
             </div>
         </>
     );
