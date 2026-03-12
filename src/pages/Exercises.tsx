@@ -1,24 +1,15 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import ExerciseOverviewWidget from "../components/ExerciseOverviewWidget.tsx";
 import { DragDropProvider } from "@dnd-kit/react";
 import { move } from "@dnd-kit/helpers";
 import StartSessionButton from "../components/StartSessionButton.tsx";
 import API from "../classes/api.ts";
 import { useWorkout } from "../context/WorkoutContext.tsx";
-import {PointerSensor, PointerActivationConstraints, DragDropManager} from '@dnd-kit/dom';
-const manager = new DragDropManager({
-    sensors: [
-        PointerSensor.configure({
-            activationConstraints: [
-                new PointerActivationConstraints.Delay({
-                    value: 150,
-                    tolerance: {x: 5, y: 5},
-                }),
-            ]
-        })
-    ]
-});
+import { DndManagerdelay } from "../components/DndManager.tsx";
+
 export default function Exercises() {
+    const manager = useMemo(() => DndManagerdelay(), []);
+
     /* muk data, moet uiteindelijk een GET API worden*/
     const [exercises, setExercises] = useState<ExerciseDTO[]>([]);
     const { selectedWorkout } = useWorkout();
