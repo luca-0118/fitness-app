@@ -70,6 +70,7 @@ pub fn run() {
             create_exercise,
             get_exercise_by_id::return_exercise,
             get_all_exercises::get_all_exercises,
+            get_exercises_by_muscle::get_exercises_by_muscle,
             get_workout
         ])
         .run(tauri::generate_context!())

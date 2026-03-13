@@ -9,12 +9,12 @@ pub struct Exercise {
 }
 
 #[tauri::command]
-pub fn get_exercises_by_muscle(Muscle: &str) -> Result<api::ApiResponse<Vec<Exercise>>, api::ApiErrorResponse> {
+pub fn get_exercises_by_muscle(muscle: String) -> Result<api::ApiResponse<Vec<Exercise>>, api::ApiErrorResponse> {
     let conn = rusqlite::Connection::open("test.db").map_err(ApiError::from)?;
 
     let query = format!(
         "SELECT * FROM exercises WHERE targetMuscles = '[\"{}\"]'",
-        Muscle
+        muscle
     );
 
     let mut stmt = conn.prepare(&query).map_err(ApiError::from)?;
