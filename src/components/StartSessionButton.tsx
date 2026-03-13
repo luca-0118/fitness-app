@@ -3,12 +3,13 @@ import API from "../classes/api";
 
 interface StartSessionButtonProps {
     exercises?: ExerciseDTO[];
+    workoutId: string;
 }
 
-export default function StartSessionButton({ exercises }: StartSessionButtonProps) {
+export default function StartSessionButton({ exercises, workoutId }: StartSessionButtonProps) {
     const navigate = useNavigate();
     const handleStart = () => {
-        API.session.start().then ((resp) => {
+        API.session.start(workoutId).then ((resp) => {
             if (resp) navigate("/session", { state: { exercises } });
         })
     };
