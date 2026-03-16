@@ -53,31 +53,29 @@ interface IdetailedWorkoutDTO {
 }
 
 interface ISessionState {
-  workout_name: String;
-  session_uuid: String;
-  start_time: String;
-  end_time: String;
-  exercises: SessionExercises[];
+    workout_name: string,
+    workout_uuid: string,
+    session_uuid: string,
+    start_time: string,
+    end_time: string,
+    exercises: ISessionExercises[]
 }
 
-interface SessionExercises {
-  exercise_id: String;
-  name: String;
-  reps: Number;
-  weight: Number;
-  time_completed: String;
+interface ISessionExercises {
+    exercise_id: string,
+    gif_url: string,
+    name: string,
+    sets: ISessionSets[]
+}
+interface ISessionSets {
+    reps: number,
+    weight: number,
+    time_completed: string
 }
 
 interface ISetUpdate {
-    exercise_id: String,
-    set_nr: Number,
-    reps: Number,
-    weight: Number,
-}
-
-interface ISetUpdate {
-    exercise_id: String,
-    set_nr: Number,
-    reps: Number,
-    weight: Number,
+    exercise_id: string,
+    set_nr: number,
+    reps: number,
+    weight: number,
 }
