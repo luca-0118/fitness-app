@@ -1,14 +1,16 @@
+use std::collections::btree_map::Range;
 use std::sync::Mutex;
 use tauri::webview::cookie::time::{format_description, UtcDateTime};
 use uuid::Uuid;
 use crate::{Db, SessionExercises, SessionState, api, models, services};
 use crate::logic;
+use crate::models;
 
 
 
 #[tauri::command]
 pub fn start_session(
-    session: tauri::State<Mutex<SessionState>>,
+    session: tauri::State<Mutex<models::Session>>,
     db: tauri::State<Db>,
     workout_id: String,
 ) -> Result<api::ApiResponse<String>, api::ApiErrorResponse>  {
@@ -17,25 +19,37 @@ pub fn start_session(
     let format_desc = format_description::parse("[year]-[month]-[day] [hour]:[minute]:[second]").expect("Unable to parse format");
 
 
-    let mut exercises: Vec<SessionExercises> = Vec::new();
+    let mut exercises: Vec<models::SessionExercise> = Vec::new();
     // maps each exercise into a new object we can use during the workout.
     current_workout.exercises.iter().for_each(|exercise| {
-        exercises.push(SessionExercises {
+        // Creates the three originally default sets
+        // #TODO get this from new field in database.
+        let mut sets: Vec<models::Set> = Vec::new();
+        for i in 0..3 {
+            sets.push(models::Set{
+                reps: 0,
+                weight:0,
+                time_completed: String::new()
+            });
+        }
+
+        // adds the exercise to the sessionExercises
+        exercises.push(models::SessionExercise {
             exercise_id: exercise.exercise_id.clone(),
             name: exercise.name.clone(),
-            reps: 0,
-            weight: 0,
-            time_completed: String::new(),
-        })
+            gif_url: exercise.gif_url.clone(),
+            sets: sets
+        });
     });
 
     // creates the session object we keep in memory
-    let session_state:  SessionState = SessionState {
-        workout_name: current_workout.name.clone(),
+    let session_state:  models::Session = models::Session{
         session_uuid: Uuid::new_v4().to_string(),
-        start_time: UtcDateTime::now().format(&format_desc).unwrap(),
-        end_time: UtcDateTime::now().format(&format_desc).unwrap(),
-        exercises,
+        workout_uuid: current_workout.uuid.clone(),
+        workout_name: current_workout.name.clone(),
+        start_time: UtcDateTime::now().to_string(),
+        end_time: String::new(),
+        exercises: exercises
     };
 
     // adds the session to our active memory.
@@ -49,8 +63,8 @@ pub fn start_session(
 
 #[tauri::command]
 pub fn get_session(
-    session: tauri::State<Mutex<SessionState>>
-) -> SessionState {
+    session: tauri::State<Mutex<models::Session>>
+) -> models::Session {
     let session_state = session.lock().unwrap();
 
     session_state.clone()
