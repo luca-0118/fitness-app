@@ -5,7 +5,9 @@ type backendFunctions =
     | "link_exercise"
     | "create_exercise"
     | "get_all_exercises"
-    | "get_workout";
+    | "get_workout"
+    | "start_session"
+    | "get_session";
 
 interface WorkoutDTO {
     uuid: string;
@@ -45,4 +47,20 @@ interface IdetailedWorkoutDTO {
     name: string;
     desc: string;
     exercises: ExerciseDTO[];
+}
+
+interface ISessionState {
+    workout_name: String,
+    session_uuid: String,
+    start_time: String,
+    end_time: String,
+    exercises: SessionExercises[]
+}
+
+interface SessionExercises {
+    exercise_id: String,
+    name: String,
+    reps: Number,
+    weight: Number,
+    time_completed: String
 }
