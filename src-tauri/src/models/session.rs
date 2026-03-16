@@ -1,0 +1,26 @@
+use serde::{Deserialize, Serialize};
+use tauri::webview::cookie::time::UtcDateTime;
+
+#[derive(Serialize,Deserialize,Clone)]
+pub struct Session {
+    pub session_uuid: String,
+    pub workout_uuid: String,
+    pub workout_name: String,
+    pub start_time: UtcDateTime,
+    pub end_time: UtcDateTime,
+    pub exercises: Vec<Exercise>
+}
+
+#[derive(Serialize,Deserialize,Clone)]
+pub struct Exercise {
+    pub exercise_id: String,
+    pub name: String,
+    pub sets: Vec<Set>
+}
+
+#[derive(Serialize,Deserialize,Clone)]
+pub struct Set {
+    pub reps: i32,
+    pub weight: i32,
+    pub time_completed: UtcDateTime
+}

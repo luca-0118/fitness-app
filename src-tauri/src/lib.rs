@@ -45,9 +45,10 @@ pub fn run() {
         })
 
         //Used for future state management.
-        .manage(Mutex::new( SessionState{
-            workout_name: String::new(),
+        .manage(Mutex::new( models::Session{
             session_uuid: String::new(),
+            workout_uuid: String::new(),
+            workout_name: String::new(),
             start_time: String::new(),
             end_time:String::new(),
             exercises: Vec::new(),
