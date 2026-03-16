@@ -1,9 +1,34 @@
 
+use std::path::PathBuf;
+
 use rusqlite::Connection;
+use tauri::{App, Manager};
+
+pub fn instantiate(app: &mut App) -> PathBuf {
+            let db_path = app.path().resolve(
+                "workoutbase.sqlite",
+                tauri::path::BaseDirectory::AppLocalData,
+            ).expect("pathbuf not found");
+
+            // Check if database already exists
+            if !db_path.exists() {
+                // Ensure the parent directory exists
+                if let Some(parent) = db_path.parent() {
+                    std::fs::create_dir_all(parent).expect("directory couldn't be created.");
+                }
+
+                // Embed and write the template database
+                let template_bytes = include_bytes!("../resources/workoutbase.sqlite");
+                std::fs::write(&db_path, template_bytes)
+                    .expect("Failed to write database template");
+            }
+
+            db_path
+}
 
 // Logic for establishing a connection.
-pub fn establish_connection() -> Connection {
-    Connection::open("../public/workoutbase.sqlite")
+pub fn establish_connection(dbpath: &PathBuf) -> Connection {
+    Connection::open(dbpath)
         .expect("Failed to open or create database")
 }
 

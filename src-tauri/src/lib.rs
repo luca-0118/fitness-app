@@ -1,4 +1,5 @@
 use rusqlite::Connection;
+use tauri::Manager;
 use std::sync::Mutex;
 
 mod api;
@@ -32,16 +33,27 @@ pub struct SessionExercises {
 pub fn run() {
     // FIXME THIS CONNECTION IS USED BY EVERY SINGLE QUERY. IT ALLOWS US TO EASILY CHANGE QUERIES.
     // IT NEEDS TO BE LIKE THIS TO EASILY CHANGE IT.
-    let conn = services::database::establish_connection();
 
     // sets up the default structure of the database.
-    services::database::migrate(&conn);
+    
 
     // Tauri building process
     tauri::Builder::default()
-        //the default connection to the database
-        .manage(Db {
-            conn: Mutex::new(conn),
+        .setup(|app| {
+            // Creates database file in appdata, allows it to be mutable
+            let dbpath = services::database::instantiate(app);
+            
+            //Connects to database.
+            let conn = services::database::establish_connection(&dbpath);
+            
+            // Adds all the required tables.
+            services::database::migrate(&conn);
+
+            app.manage(Db {
+                conn: Mutex::new(conn),
+            });
+            
+            Ok(())
         })
 
         //Used for future state management.
@@ -52,6 +64,7 @@ pub fn run() {
             end_time:String::new(),
             exercises: Vec::new(),
         }))
+
 
         .plugin(tauri_plugin_opener::init())
 
