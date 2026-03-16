@@ -6,14 +6,15 @@ pub struct Session {
     pub session_uuid: String,
     pub workout_uuid: String,
     pub workout_name: String,
-    pub start_time: UtcDateTime,
-    pub end_time: UtcDateTime,
+    pub start_time: String,
+    pub end_time: String,
     pub exercises: Vec<Exercise>
 }
 
 #[derive(Serialize,Deserialize,Clone)]
 pub struct Exercise {
     pub exercise_id: String,
+    pub gif_url: String,
     pub name: String,
     pub sets: Vec<Set>
 }
@@ -22,5 +23,5 @@ pub struct Exercise {
 pub struct Set {
     pub reps: i32,
     pub weight: i32,
-    pub time_completed: UtcDateTime
+    pub time_completed: String
 }
