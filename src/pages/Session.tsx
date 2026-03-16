@@ -3,7 +3,6 @@ import { useLocation } from "react-router-dom";
 import CountDownTimer from "../components/CountDownTimer";
 import StopWatch from "../components/StopWatch";
 import TabataTimer from "../components/TabataTimer";
-import Sets from "../components/Sets.tsx";
 import CurrentExercise from "../components/CurrentExercise.tsx";
 import Plusknop from "../components/plusknop.tsx";
 import API from "../classes/api.ts";
@@ -14,24 +13,27 @@ interface SessionState {
 
 export default function Session() {
     const [selectedTimer, setSelectedTimer] = useState("stopwatch");
-    const [numSetsByExercise, setNumSetsByExercise] = useState<number[]>([]);
     const [expandedByExercise, setExpandedByExercise] = useState<boolean[]>([]);
     const location = useLocation();
     const state = location.state as SessionState | null;
     const exercises = state?.exercises || [];
+    const [session,setSession] = useState<ISessionState>();
 
     useEffect(() => {
-        setNumSetsByExercise(Array(exercises.length).fill(3));
         setExpandedByExercise(Array(exercises.length).fill(false));
 
         const getState = async () => {
             const resp = await API.session.get();
             console.log(resp);
+            if (typeof resp !== "string") {
+            setSession(resp);
+            }
         }
         getState();
 
     }, [exercises.length]);
 
+    if (!session) return <h1>loadin....</h1>
     return (
         <>
             <div className="w-full flex flex-col items-center pt-6 pb-24">
@@ -46,11 +48,10 @@ export default function Session() {
                         <p className="text-white">No exercises selected.</p>
                     </div>
                 ) : (
-                    exercises.map((exercise, exerciseIndex) => (
+                    session.exercises.map((exercise, exerciseIndex) => (
                         <CurrentExercise
-                            key={exercise.id}
-                            exerciseName={exercise.name}
-                            exerciseImage={exercise.data}
+                            key={exercise.exercise_id}
+                            exerciseData={exercise}
                             isExpanded={expandedByExercise[exerciseIndex] || false}
                             onToggle={() => {
                                 const next = [...expandedByExercise];
@@ -58,31 +59,7 @@ export default function Session() {
                                 setExpandedByExercise(next);
                             }}
                         >
-                            {Array.from(
-                                { length: numSetsByExercise[exerciseIndex] || 3 },
-                                (_, setIndex) => (
-                                    <Sets
-                                        key={setIndex + 1}
-                                        setNumber={setIndex + 1}
-                                        onDelete={() => {
-                                            const next = [...numSetsByExercise];
-                                            next[exerciseIndex] = Math.max(
-                                                1,
-                                                (next[exerciseIndex] || 3) - 1,
-                                            );
-                                            setNumSetsByExercise(next);
-                                        }}
-                                    />
-                                ),
-                            )}
-
                             <Plusknop
-                                onClick={() => {
-                                    const next = [...numSetsByExercise];
-                                    next[exerciseIndex] =
-                                        (next[exerciseIndex] || 3) + 1;
-                                    setNumSetsByExercise(next);
-                                }}
                                 className="mt-3 w-77 h-12 rounded-full bg-[#2e2e2e] hover:bg-[#3a3a3a]  justify-center transition-colors"
                                 iconSize={32}
                             />
