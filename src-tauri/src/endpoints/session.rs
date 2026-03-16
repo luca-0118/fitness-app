@@ -1,9 +1,10 @@
 use std::collections::btree_map::Range;
 use std::sync::Mutex;
+use serde::{Deserialize, Serialize};
 use tauri::webview::cookie::time::{format_description, UtcDateTime};
 use uuid::Uuid;
-use crate::{api, services, Db, SessionExercises, SessionState};
-use crate::api::{ApiError, ApiResponse};
+use crate::{api, services, Db};
+use crate::api::{ApiResponse};
 use crate::logic;
 use crate::models;
 
@@ -29,7 +30,7 @@ pub fn start_session(
         for i in 0..3 {
             sets.push(models::Set{
                 reps: 0,
-                weight:0,
+                weight:0.0,
                 time_completed: String::new()
             });
         }
@@ -75,12 +76,12 @@ pub fn get_session(
 }
 
 
-#[derive(Debug)]
+#[derive(Debug,Serialize,Deserialize)]
 pub struct SetUpdateDTO {
     pub exercise_id: String,
     pub set_nr: usize,
     pub reps: i32,
-    pub weight: i32,
+    pub weight: f32,
 }
 #[tauri::command]
 pub fn update_set(

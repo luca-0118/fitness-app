@@ -22,6 +22,6 @@ pub struct Exercise {
 #[derive(Serialize,Deserialize,Clone)]
 pub struct Set {
     pub reps: i32,
-    pub weight: i32,
+    pub weight: f32,
     pub time_completed: String
 }

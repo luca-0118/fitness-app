@@ -10,23 +10,6 @@ mod services;
 struct Db {
     conn: Mutex<Connection>,
 }
-#[derive(serde::Serialize,serde::Deserialize,Clone)]
-pub struct SessionState {
-    workout_name: String,
-    session_uuid: String,
-    start_time: String,
-    end_time: String,
-    exercises: Vec<SessionExercises>
-}
-
-#[derive(serde::Serialize,serde::Deserialize,Clone)]
-pub struct SessionExercises {
-    exercise_id: String,
-    name: String,
-    reps: i32,
-    weight: i32,
-    time_completed: String
-}
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
@@ -66,6 +49,7 @@ pub fn run() {
             endpoints::workout::link_exercise,
             endpoints::session::start_session,
             endpoints::session::get_session,
+            endpoints::session::update_set
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
