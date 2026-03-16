@@ -43,7 +43,14 @@ export default function AddExercises() {
     return (
         <>
             <div>
-                <div className="overflow-x-scroll flex">
+                <div className="overflow-x-scroll flex
+                [&::-webkit-scrollbar-thumb]:bg-neutral-500
+                [&::-webkit-scrollbar]:bg-neutral-700
+
+
+                "
+                >
+
                     <button className="p-5 " onClick={() => setMuscle("biceps")}> <img className=" min-w-15 w-15 h-15 contain-content" src={bicep} alt="" /></button>
                     <button className="p-5" onClick={() => setMuscle("triceps")}><img className="min-w-15 w-15 contain-content h-15" src={tricep} alt="" /></button>
                     <button className="p-5" onClick={() => setMuscle("pectorals")}><img className="min-w-15 w-15 contain-content" src={chest} alt="" /></button>
