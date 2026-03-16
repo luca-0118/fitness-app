@@ -33,4 +33,14 @@ export default  class sessionAPI {
         console.log(sessionData);
         return sessionData;
     }
+
+    public async updateSet(setUpdate: ISetUpdate): Promise<{success: boolean, resp: string }> {
+        if (!setUpdate.set_nr || !setUpdate.exercise_id || !setUpdate.reps || !setUpdate.weight) return {success: false, resp:"Not everything has been filled in."};
+
+        const resp = await ApiClient.send<string>("update_set", {set_update: setUpdate});
+        const data = ApiClient.assertOk(resp);
+
+        console.log("updated set:",data);
+        return {success: true, resp: data};
+    }
 }
