@@ -1,13 +1,29 @@
-use crate::{
-    api::{self, ApiError},
-    dto::{self, Workout},
-    Db,
-};
-
+use serde::{Deserialize, Serialize};
 use uuid::Uuid;
+use crate::{api, Db};
+use crate::api::ApiError;
+use crate::models;
 
-// calls all the available workouts from the database
-pub fn list_workouts(db: &Db) -> Result<Vec<dto::Workout>, ApiError> {
+#[derive(Debug, Serialize, Deserialize)]
+pub struct CreateWorkout {
+    pub name: String,
+    pub desc: Option<String>,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct LinkExercise {
+    pub workout_uuid: String,
+    pub exercise_uuid: String,
+}
+
+#[derive(Debug, Serialize)]
+pub struct IdetailedWorkoutDTO {
+    pub uuid: String,
+    pub name: String,
+    pub exercises: Vec<models::Exercise>,
+}
+
+pub fn list(db: &Db) -> Result<Vec<models::Workout>, ApiError> {
     let conn = db
         .conn
         .lock()
@@ -19,19 +35,19 @@ pub fn list_workouts(db: &Db) -> Result<Vec<dto::Workout>, ApiError> {
     )?;
 
     let workout_iter = stmt.query_map([], |row| {
-        Ok(dto::Workout {
+        Ok(models::Workout {
             uuid: row.get(0)?,
             name: row.get(1)?,
             desc: row.get(2)?,
         })
     })?;
-    let workouts: Result<Vec<Workout>, rusqlite::Error> = workout_iter.collect();
+
+    let workouts: Result<Vec<models::Workout>, rusqlite::Error> = workout_iter.collect();
     let workouts = workouts?;
-    return Ok(workouts);
+    Ok(workouts)
 }
 
-//creates a new workout
-pub fn create_workout(db: &Db, workout: dto::CreateWorkout) -> Result<String, ApiError> {
+pub fn create(db: &Db, workout: CreateWorkout) -> Result<String, ApiError> {
     let conn = db
         .conn
         .lock()
@@ -43,12 +59,12 @@ pub fn create_workout(db: &Db, workout: dto::CreateWorkout) -> Result<String, Ap
         "INSERT INTO Workouts(Uuid,Name,Desc) VALUES (?1, ?2, ?3)",
         (&id.to_string(), workout.name, workout.desc),
     )
-    .map_err(|_| api::ApiError::DatabaseError)?;
+        .map_err(|_| api::ApiError::DatabaseError)?;
 
     Ok(id.to_string())
 }
 
-pub fn link_exercise(db: &Db, link_exercise: dto::LinkExercise) -> Result<String, ApiError> {
+pub fn link_exercise(db: &Db, link_exercise: LinkExercise) -> Result<String, ApiError> {
     let conn = db
         .conn
         .lock()
@@ -69,24 +85,7 @@ pub fn link_exercise(db: &Db, link_exercise: dto::LinkExercise) -> Result<String
     Ok(format!("exercise has been linked to workout"))
 }
 
-pub fn create_exercise(db: &Db, exercise: dto::CreateExercise) -> Result<bool, ApiError> {
-    let conn = db
-        .conn
-        .lock()
-        .map_err(|_| api::ApiError::FailedDbConnection)?;
-
-    let id = Uuid::new_v4();
-
-    conn.execute(
-        "INSERT INTO Exercises(Uuid,Name,Desc) VALUES (?1, ?2, ?3)",
-        (id.to_string(), exercise.name, exercise.desc),
-    )
-    .map_err(|_| api::ApiError::DatabaseError)?;
-
-    Ok(true)
-}
-
-pub fn get_workout(db: &Db, workout_uuid: String) -> Result<dto::IdetailedWorkoutDTO, ApiError> {
+pub fn detailed(db: &Db, workout_uuid: String) -> Result<IdetailedWorkoutDTO, ApiError> {
     let conn = db
         .conn
         .lock()
@@ -101,23 +100,28 @@ pub fn get_workout(db: &Db, workout_uuid: String) -> Result<dto::IdetailedWorkou
 
     // Get the exercises for this workout
     let mut stmt = conn.prepare(
-        "SELECT e.exerciseid, e.name, e.gifUrl
+        "SELECT e.*
         FROM WorkoutExercises we
         INNER JOIN Exercises e ON e.exerciseid = we.ExerciseId
         WHERE we.WorkoutId = (SELECT ID FROM Workouts WHERE Uuid = ?1)",
     )?;
 
     let exercises_iter = stmt.query_map([&workout_uuid], |row| {
-        Ok(dto::ExerciseDTO {
-            id: row.get(0)?,
-            name: row.get(1)?,
-            data: row.get(2)?,
+        Ok(models::Exercise {
+            exercise_id:        row.get(0)?,
+            name:               row.get(1)?,
+            gif_url:            row.get(2)?,
+            target_muscles:     row.get(3)?,
+            body_parts:         row.get(4)?,
+            equipments:         row.get(5)?,
+            secondary_muscles:  row.get(6)?,
+            instructions:       row.get(7)?,
         })
     })?;
 
-    let exercises: Result<Vec<dto::ExerciseDTO>, rusqlite::Error> = exercises_iter.collect();
+    let exercises: Result<Vec<models::Exercise>, rusqlite::Error> = exercises_iter.collect();
 
-    Ok(dto::IdetailedWorkoutDTO {
+    Ok(IdetailedWorkoutDTO {
         uuid: workout.0,
         name: workout.1,
         exercises: exercises?,

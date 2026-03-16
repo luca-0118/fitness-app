@@ -6,21 +6,21 @@ import HomeSharpIcon from '@mui/icons-material/HomeSharp';
 
 export default function BottomNavBar() {
     return (
-        <footer className="relative bottom-0 z-10 h-22 w-full bg-[#333737] border-t-2 border-[#565d5d]">
-            <nav className="grid grid-cols-4 h-full max-w-sm mx-auto">
-                <NavLink to="/" className={({ isActive }) => `inline-flex flex-col items-center ${isActive ? 'text-[#F67631]' : 'text-[#ffffff]'}`}>
+        <footer className="relative bottom-0 z-10 py-2 w-full bg-[#333737] border-t-2 border-[#565d5d]">
+            <nav className="h-full max-w-sm mx-auto justify-evenly flex">
+                <NavLink to="/" className={({ isActive }) => `text-center items-center ${isActive ? 'text-[#F67631]' : 'text-[#ffffff]'}`}>
                     <HomeSharpIcon sx={{ fontSize: 40 }}/>
                     <p className="text-xs">Home</p>
                 </NavLink>
-                <NavLink to="/workouts" className={({ isActive }) => `inline-flex flex-col items-center ${isActive ? 'text-[#F67631]' : 'text-[#ffffff]'}`}>
+                <NavLink to="/workouts" className={({ isActive }) => `text-center items-center ${isActive ? 'text-[#F67631]' : 'text-[#ffffff]'}`}>
                     <FitnessCenterIcon sx={{ fontSize: 40 }}/>
                     <p className="text-xs">Workout</p>
                 </NavLink>
-                <NavLink to="/kcal-tracker" className={({ isActive }) => `inline-flex flex-col items-center ${isActive ? 'text-[#F67631]' : 'text-[#ffffff]'}`}>
+                <NavLink to="/kcal-tracker" className={({ isActive }) => `text-center items-center ${isActive ? 'text-[#F67631]' : 'text-[#ffffff]'}`}>
                     <RestaurantSharpIcon sx={{ fontSize: 40 }}/>
                     <p className="text-xs">Kcal</p>
                 </NavLink>
-                <NavLink to="/profile" className={({ isActive }) => `inline-flex flex-col items-center ${isActive ? 'text-[#F67631]' : 'text-[#ffffff]'}`}>
+                <NavLink to="/profile" className={({ isActive }) => `text-center items-center ${isActive ? 'text-[#F67631]' : 'text-[#ffffff]'}`}>
                     <PersonSharpIcon sx={{ fontSize: 40 }}/>
                     <p className="text-xs">Profile</p>
                 </NavLink>

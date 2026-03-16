@@ -1,15 +1,35 @@
 use rusqlite::Connection;
+use tauri::Manager;
 use std::sync::Mutex;
 mod get_all_exercises;
 mod get_exercise_by_id;
 mod get_exercises_by_muscle;
 
-use crate::api::ApiResponse;
 mod api;
-mod dto;
 mod logic;
+mod models;
+mod endpoints;
+mod services;
+
 struct Db {
     conn: Mutex<Connection>,
+}
+#[derive(serde::Serialize,serde::Deserialize,Clone)]
+pub struct SessionState {
+    workout_name: String,
+    session_uuid: String,
+    start_time: String,
+    end_time: String,
+    exercises: Vec<SessionExercises>
+}
+
+#[derive(serde::Serialize,serde::Deserialize,Clone)]
+pub struct SessionExercises {
+    exercise_id: String,
+    name: String,
+    reps: i32,
+    weight: i32,
+    time_completed: String
 }
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
@@ -17,65 +37,55 @@ pub fn run() {
 
     // FIXME THIS CONNECTION IS USED BY EVERY SINGLE QUERY. IT ALLOWS US TO EASILY CHANGE QUERIES.
     // IT NEEDS TO BE LIKE THIS TO EASILY CHANGE IT.
-    let conn = Connection::open("../public/workoutbase.sqlite")
-        .expect("Failed to open or create database");
 
-    conn.execute("DROP TABLE IF EXISTS WorkoutExercises", [])
-        .expect("failed to drop table WorkoutExercises");
-
-    // Workout table
-    conn.execute("DROP TABLE IF EXISTS Workouts", [])
-        .expect("failed to drop table Workouts)");
-
-    conn.execute(
-        "CREATE TABLE Workouts (
-            ID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-            Uuid TEXT NOT NULL,
-            Name TEXT NOT NULL,
-            Desc TEXT
-            );",
-        [],
-    )
-    .expect("failed to initialize schema Workouts");
-
-    //Workout exercises table
-    // NOTE PRAGMA foreign_keys = ON; is required, otherwise foreign keys won't work.
-    conn.execute("PRAGMA foreign_keys = ON", [])
-        .expect("foreign keys disabled");
-
-    conn.execute(
-        "CREATE TABLE WorkoutExercises (
-            ID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-            WorkoutId INTEGER NOT NULL,
-            ExerciseId INTEGER NOT NULL,
-            FOREIGN KEY (WorkoutId) REFERENCES Workouts(ID),
-            FOREIGN KEY (ExerciseId) REFERENCES exercises(exerciseId)
-            )",
-        [],
-    )
-    .expect("failed to initialize schema WorkoutExercises");
+    // sets up the default structure of the database.
+    
 
     // Tauri building process
     tauri::Builder::default()
-    
-        .manage(Db {
-            conn: Mutex::new(conn),
+        .setup(|app| {
+            // Creates database file in appdata, allows it to be mutable
+            let dbpath = services::database::instantiate(app);
+            
+            //Connects to database.
+            let conn = services::database::establish_connection(&dbpath);
+            
+            // Adds all the required tables.
+            services::database::migrate(&conn);
+
+            app.manage(Db {
+                conn: Mutex::new(conn),
+            });
+            
+            Ok(())
         })
+
+        //Used for future state management.
+        .manage(Mutex::new( SessionState{
+            workout_name: String::new(),
+            session_uuid: String::new(),
+            start_time: String::new(),
+            end_time:String::new(),
+            exercises: Vec::new(),
+        }))
+
+
         .plugin(tauri_plugin_opener::init())
+
         // Add all frontend functions here
         .invoke_handler(tauri::generate_handler![
-            list_workouts,
-            create_workout,
-            link_exercise,
-            create_exercise,
-            get_exercise_by_id::return_exercise,
-            get_all_exercises::get_all_exercises,
+            endpoints::get_exercise_by_id::return_exercise,
+            endpoints::get_all_exercises::get_all_exercises,
+            endpoints::workout::get_workout,
+            endpoints::workout::create_workout,
+            endpoints::workout::list_workouts,
+            endpoints::workout::link_exercise,
+            endpoints::session::start_session,
             get_exercises_by_muscle::get_exercises_by_muscle,
-            get_workout
+            endpoints::session::get_session,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
-    
 }
 
 #[tauri::command]

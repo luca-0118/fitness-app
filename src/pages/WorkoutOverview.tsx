@@ -1,10 +1,22 @@
 import WorkoutWidget from "../components/WorkoutWidget";
-import GreenAddButton from "../components/GreenAddButton.tsx";
+import WorkoutAddButton from "../components/WorkoutAddButton.tsx";
 import { useState, useEffect } from "react";
 import API from "../classes/api.ts";
 import { DragDropProvider } from "@dnd-kit/react";
 import { move } from "@dnd-kit/helpers";
-
+import {PointerSensor, PointerActivationConstraints, DragDropManager} from '@dnd-kit/dom';
+const manager = new DragDropManager({
+    sensors: [
+        PointerSensor.configure({
+            activationConstraints: [
+                new PointerActivationConstraints.Delay({
+                    value: 150,
+                    tolerance: {x: 5, y: 5},
+                }),
+            ]
+        })
+    ]
+});
 // I quite genuinely have to remap my UUID to id because of muks lib. I hate libs.
 type dndLibModifier = {
     id: string;
@@ -44,17 +56,17 @@ export default function WorkoutOverview() {
                 <ul className="pt-2 text-center text-gray-400">
                     <li>No workouts yet. Create a new one!</li>
                 </ul>
-                <GreenAddButton to="/new-workout" />
+                <WorkoutAddButton to="/new-workout" />
             </div>
         );
 
     return (
         <>
             <div>
-                <DragDropProvider
+                <DragDropProvider manager={manager}
                     onDragEnd={(event) => {
                         // #TODO add local backend ordering.
-                        setWorkouts((work) => move(work, event));
+                        setWorkouts((workout) => move(workout, event));
                     }}
                 >
                     <ul className="pt-2">
@@ -63,7 +75,7 @@ export default function WorkoutOverview() {
                         ))}
                     </ul>
                 </DragDropProvider>
-                <GreenAddButton to="/new-workout" />
+                <WorkoutAddButton to="/new-workout" />
             </div>
         </>
     );

@@ -9,6 +9,7 @@ export default class workoutAPI {
         }
 
         const workout: WorkoutDTO = {
+            uuid: "",
             name: _name,
             desc: _desc,
         };

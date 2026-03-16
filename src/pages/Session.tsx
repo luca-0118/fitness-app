@@ -6,6 +6,7 @@ import TabataTimer from "../components/TabataTimer";
 import Sets from "../components/Sets.tsx";
 import CurrentExercise from "../components/CurrentExercise.tsx";
 import Plusknop from "../components/plusknop.tsx";
+import API from "../classes/api.ts";
 
 interface SessionState {
     exercises?: ExerciseDTO[];
@@ -22,6 +23,13 @@ export default function Session() {
     useEffect(() => {
         setNumSetsByExercise(Array(exercises.length).fill(3));
         setExpandedByExercise(Array(exercises.length).fill(false));
+
+        const getState = async () => {
+            const resp = await API.session.get();
+            console.log(resp);
+        }
+        getState();
+
     }, [exercises.length]);
 
     return (

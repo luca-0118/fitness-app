@@ -7,6 +7,19 @@
   }
 }
 
+.app {
+  padding-top: calc(16px + var(--safe-top));
+  padding-bottom: calc(16px + var(--safe-bottom));
+  padding-left: env(safe-area-inset-left);
+  padding-right: env(safe-area-inset-right);
+}
+
+:root {
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+
 html, body, #root {
   height: 100%;
   margin: 0;
@@ -25,4 +38,17 @@ body {
 .no-scrollbar {
   -ms-overflow-style: none;
   scrollbar-width: none;
+}
+
+.apexcharts-canvas:focus {
+  outline: none;
+}
+
+.apexcharts-canvas,
+.apexcharts-svg {
+  outline: none !important;
+}
+
+.apexcharts-bar-area.apexcharts-active {
+  stroke: transparent !important;
 }
