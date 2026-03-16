@@ -8,7 +8,8 @@ type backendFunctions =
   | "get_workout"
   | "start_session"
   | "get_session"
-  | "complete_session";
+  | "complete_session"
+  | "update_set";
 
 interface WorkoutDTO {
   uuid: string;
@@ -65,4 +66,18 @@ interface SessionExercises {
   reps: Number;
   weight: Number;
   time_completed: String;
+}
+
+interface ISetUpdate {
+    exercise_id: String,
+    set_nr: Number,
+    reps: Number,
+    weight: Number,
+}
+
+interface ISetUpdate {
+    exercise_id: String,
+    set_nr: Number,
+    reps: Number,
+    weight: Number,
 }

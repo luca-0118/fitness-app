@@ -34,6 +34,16 @@ export default  class sessionAPI {
         return sessionData;
     }
 
+    public async updateSet(setUpdate: ISetUpdate): Promise<{success: boolean, resp: string }> {
+        if (!setUpdate.set_nr || !setUpdate.exercise_id || !setUpdate.reps || !setUpdate.weight) return {success: false, resp:"Not everything has been filled in."};
+
+        const resp = await ApiClient.send<string>("update_set", {set_update: setUpdate});
+        const data = ApiClient.assertOk(resp);
+
+        console.log("updated set:",data);
+        return {success: true, resp: data};
+    }
+
     public async complete(): Promise<{ok:boolean,msg:string}> {
         if (typeof localStorage.getItem("workoutSessionId") == "undefined") 
             return {ok: false, msg:"no workout active to save."}
