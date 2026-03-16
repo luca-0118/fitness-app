@@ -1,15 +1,23 @@
-import { useState } from "react";
+import {useEffect, useState} from "react";
 import DeleteIcon from '@mui/icons-material/Delete';
 
 interface SetsProps {
     setNumber?: number;
     onDelete?: () => void;
+    updateFunction: (set_nr: number, reps: number, weight:number) => Promise<void>
 }
 
-export default function Sets({ setNumber = 1, onDelete }: SetsProps) {
+export default function Sets({updateFunction, setNumber = 1, onDelete }: SetsProps) {
     const [reps, setReps] = useState("0");
     const [weight, setWeight] = useState("0.0");
     const repsOptions = Array.from({ length: 51 }, (_, i) => i);
+
+    useEffect(() => {
+        if (!reps || !weight) return;
+            updateFunction(setNumber,Number(reps),Number(weight)).then(() => {
+                console.log("updated.");
+            });
+    }, [reps,weight]);
 
     return (
         <div className="border-t border-[#565d5d] pt-4 mt-3">

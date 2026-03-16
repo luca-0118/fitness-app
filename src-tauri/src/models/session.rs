@@ -9,8 +9,6 @@ pub struct Session {
     pub workout_name: String,
     pub start_time: String,
     pub end_time: String,
-    pub start_time: String,
-    pub end_time: String,
     pub exercises: Vec<Exercise>
 }
 
