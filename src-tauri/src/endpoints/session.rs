@@ -1,7 +1,5 @@
-use std::collections::btree_map::Range;
 use std::sync::Mutex;
-use serde::{Deserialize, Serialize};
-use tauri::webview::cookie::time::{format_description, UtcDateTime};
+use tauri::webview::cookie::time::{UtcDateTime};
 use uuid::Uuid;
 use crate::{api, services, Db, SessionExercises, SessionState};
 use crate::logic;
@@ -17,7 +15,6 @@ pub fn start_session(
 ) -> Result<api::ApiResponse<String>, api::ApiErrorResponse>  {
     let current_workout = logic::workout::detailed(&db, workout_id)?;
 
-    let format_desc = format_description::parse("[year]-[month]-[day] [hour]:[minute]:[second]").expect("Unable to parse format");
 
 
     let mut exercises: Vec<models::SessionExercise> = Vec::new();
@@ -27,9 +24,9 @@ pub fn start_session(
         let mut sets: Vec<models::Set> = Vec::new();
         // #TODO get the total count from new field in database.
 
-        if(exercise.body_parts.contains("cardio")) 
+        if exercise.body_parts.contains("cardio")
         {
-            for i in 0..3 {
+            for _i in 0..3 {
                 sets.push(models::Set::Timed{
                     distance: 0f64,
                     time: 0.0,
@@ -37,7 +34,7 @@ pub fn start_session(
                 });
             }
         } else {
-            for i in 0..3 {
+            for _i in 0..3 {
                 sets.push(models::Set::Weighted{
                     reps: 0,
                     weight:0.0,
@@ -45,13 +42,13 @@ pub fn start_session(
                 });
             }
         }
-        
+
         // adds the exercise to the sessionExercises
         exercises.push(models::SessionExercise {
             exercise_id: exercise.exercise_id.clone(),
             name: exercise.name.clone(),
             gif_url: exercise.gif_url.clone(),
-            sets: sets
+            sets
         });
     });
 
@@ -62,7 +59,7 @@ pub fn start_session(
         workout_name: current_workout.name.clone(),
         start_time: UtcDateTime::now().to_string(),
         end_time: String::new(),
-        exercises: exercises
+        exercises
     };
 
     // adds the session to our active memory.
@@ -77,7 +74,7 @@ pub fn start_session(
 #[tauri::command]
 pub fn get_session(
     session: tauri::State<Mutex<models::Session>>
-) -> Result<ApiResponse<models::Session>,api::ApiErrorResponse> {
+) -> Result<api::ApiResponse<models::Session>,api::ApiErrorResponse> {
     let session_state = session.lock().unwrap();
 
     Ok(api::ApiResponse {
@@ -92,11 +89,11 @@ pub fn get_session(
 pub fn update_set(
     session: tauri::State<Mutex<models::Session>>,
     set_update: models::SetUpdateDTO,
-) -> Result<ApiResponse<String>,api::ApiErrorResponse>
+) -> Result<api::ApiResponse<String>,api::ApiErrorResponse>
 {
     let mut session_state = session.lock().unwrap();
 
-    let response = set_update.apply(&mut session_state)?;
+    set_update.apply(&mut session_state)?;
 
     // returns positive response
     Ok(api::ApiResponse {
