@@ -53,9 +53,17 @@ export default function AddExercises() {
   }, []);
 
   useEffect(() => {
+    setActiveQuery(searchText);
+  }, [searchText]);
+
+  useEffect(() => {
     if (muscle === "") return;
     loadExercises();
   }, [muscle]);
+
+  const filteredExercises = allExercises.filter((exercise) =>
+    exercise.name.toLowerCase().includes(activeQuery.toLowerCase()),
+  );
 
   return (
     <>
@@ -69,9 +77,7 @@ export default function AddExercises() {
           className="overflow-x-scroll flex
                 [&::-webkit-scrollbar-thumb]:bg-neutral-500
                 [&::-webkit-scrollbar]:bg-neutral-700
-
-
-                "
+"
         >
           <button className="p-5" onClick={() => setMuscle("pectorals")}>
             <img className="min-w-15 w-15 contain-content" src={chest} alt="" />
@@ -139,7 +145,7 @@ export default function AddExercises() {
             />
           </button>
         </div>
-        {allExercises.map((exercise) => {
+        {filteredExercises.map((exercise) => {
           return (
             <ExerciseWidget
               key={exercise.id}
