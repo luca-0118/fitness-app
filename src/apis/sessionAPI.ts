@@ -33,4 +33,13 @@ export default  class sessionAPI {
         console.log(sessionData);
         return sessionData;
     }
+
+    public async complete(): Promise<{ok:boolean,msg:string}> {
+        // TODO add storing api call.
+        localStorage.removeItem("workoutSessionId");
+        return {
+            ok: true,
+            msg:"cleared"
+        }
+    }
 }
