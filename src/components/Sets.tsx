@@ -5,14 +5,16 @@ interface SetsProps {
     setNumber?: number;
     onDelete?: () => void;
     updateFunction: (set_nr: number, reps: number, weight:number) => Promise<void>
+    data: ISessionSets
 }
 
-export default function Sets({updateFunction, setNumber = 1, onDelete }: SetsProps) {
-    const [reps, setReps] = useState("0");
-    const [weight, setWeight] = useState("0.0");
+export default function Sets({updateFunction, setNumber = 0, onDelete, data }: SetsProps) {
+    const [reps, setReps] = useState(data.reps);
+    const [weight, setWeight] = useState(data.weight);
     const repsOptions = Array.from({ length: 51 }, (_, i) => i);
 
     useEffect(() => {
+        console.log("set up setnr:",setNumber);
         if (!reps || !weight) return;
             updateFunction(setNumber,Number(reps),Number(weight)).then(() => {
                 console.log("updated.");
@@ -38,7 +40,7 @@ export default function Sets({updateFunction, setNumber = 1, onDelete }: SetsPro
                 <label className="text-white text-base">Reps:</label>
                 <select
                     value={reps}
-                    onChange={(e) => setReps(e.target.value)}
+                    onChange={(e) => setReps(Number(e.target.value))}
                     className="w-32 bg-[#2e2e2e] border border-[#565d5d] rounded-lg px-3 py-2 text-white focus:outline-none focus:border-[#F67631] cursor-pointer"
                 >
                     {repsOptions.map((value) => (
@@ -56,7 +58,7 @@ export default function Sets({updateFunction, setNumber = 1, onDelete }: SetsPro
                     step="0.5"
                     min="0"
                     value={weight}
-                    onChange={(e) => setWeight(e.target.value)}
+                    onChange={(e) => setWeight(Number(e.target.value))}
                     className="w-32 bg-[#2e2e2e] border border-[#565d5d] rounded-lg px-3 py-2 text-white focus:outline-none focus:border-[#F67631]"
                     placeholder="0.0"
                 />
