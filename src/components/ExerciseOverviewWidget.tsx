@@ -1,6 +1,5 @@
 import { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import DragIndicatorIcon from "@mui/icons-material/DragIndicator";
 import { useSortable } from "@dnd-kit/react/sortable";
 
 interface ExerciseOverviewWidgetProps {

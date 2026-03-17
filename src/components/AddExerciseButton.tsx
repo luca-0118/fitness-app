@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 
-export default function GreenAddButton({ to = "/new-workout" }) {
+export default function AddExerciseButton({ to = "/new-workout" }) {
     const navigate = useNavigate();
 
     return (

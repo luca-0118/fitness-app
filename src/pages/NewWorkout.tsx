@@ -1,7 +1,12 @@
 import { useWorkout } from "../context/WorkoutContext";
 import AddExerciseButton from "../components/AddExerciseButton.tsx";
 
-export default function NewWorkout() {
+interface ExerciseWidgetProps {
+    name: string;
+    gif: string;
+}
+
+export default function NewWorkout({ name, gif }: ExerciseWidgetProps) {
     const { workoutName, setWorkoutName, exercises } = useWorkout();
 
     return (
@@ -15,12 +20,13 @@ export default function NewWorkout() {
             />
             <div className="mt-4">
                 <h2 className="font-bold text-[#F2F3F2] text-center justify-center mb-2 border-b-2 border-[#414141] w-[90%] flex mx-auto">Selected Exercises:</h2>
-                <ul className="text-center">
+                <ul className="text-center w-[90%] mx-auto">
                     {exercises.map((ex) => (
                         <li
-                            className="border p-4 my-2 bg-[#1E1E1E] border-[#414141] rounded-xl hover:bg-[#252525] font-bold"
+                            className="border p-4 my-2 bg-[#1E1E1E] border-[#414141] rounded-xl hover:bg-[#252525] font-bold flex"
                             key={ex.name}
                         >
+                            <img className="rounded-xl w-20 h-20 mr-4" alt={ name } src={ gif } loading="lazy"/>
                             {ex.name}
                         </li>
                     ))}
