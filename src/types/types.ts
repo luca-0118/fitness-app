@@ -87,5 +87,14 @@ interface IBaseSetUpdate {
 
 interface IWeightedSetUpdate extends IBaseSetUpdate {
     type: "Weighted";
-    set
+    set_nr: number;
+    weight:number;
+    reps:number;
+}
+
+interface ITimedSetUpdate extends IBaseSetUpdate {
+    type:"Timed";
+    set_nr: number;
+    time:number;
+    distance:number;
 }
