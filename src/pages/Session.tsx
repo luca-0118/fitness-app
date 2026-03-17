@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import CountDownTimer from "../components/CountDownTimer";
 import StopWatch from "../components/StopWatch";
 import TabataTimer from "../components/TabataTimer";
-import CurrentExercise from "../components/CurrentExercise.tsx";
+import {CurrentExercise} from "../components/CurrentExercise.tsx";
 import Plusknop from "../components/plusknop.tsx";
 import API from "../classes/api.ts";
 

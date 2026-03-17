@@ -1,7 +1,7 @@
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import Sets from "./Sets.tsx";
-import API from "../classes/api.ts";
+import UseSetUpdate from "../Hooks/UseSetUpdate.ts";
 
 interface CurrentExerciseProps {
     exerciseData: ISessionExercises;
@@ -10,33 +10,9 @@ interface CurrentExerciseProps {
     children?: React.ReactNode;
 }
 
-export default function CurrentExercise({ exerciseData, isExpanded = false, onToggle, children }: CurrentExerciseProps) {
-    
-    const updateSet = async (set_nr: number, data: {type: "Weighted"|"Timed", val1: number, val2: number }) => {
-        let setUpdate: IWeightedSetUpdate | ITimedSetUpdate;
-        if (data.type == "Weighted") {
-            setUpdate = {
-                exercise_id: exerciseData.exercise_id,
-                type:"Weighted",
-                set_nr,
-                reps: data.val1,
-                weight: data.val2,
-            } as IWeightedSetUpdate
-        } else {
-            setUpdate = {
-                exercise_id: exerciseData.exercise_id,
-                type:"Timed",
-                set_nr,
-                time: data.val1,
-                distance: data.val2
-            } as ITimedSetUpdate
-        }
+export function CurrentExercise({exerciseData, isExpanded = false, onToggle, children}: CurrentExerciseProps) {
 
-        const resp = await API.session.updateSet(setUpdate);
-
-        console.log(resp);
-    }
-
+    const updateSet = UseSetUpdate(exerciseData.exercise_id);
 
 
     return (
@@ -47,7 +23,7 @@ export default function CurrentExercise({ exerciseData, isExpanded = false, onTo
             >
                 <h2 className="text-white text-lg font-semibold">{exerciseData.name}</h2>
                 <span className="text-[#F67631]">
-                    {isExpanded ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+                    {isExpanded ? <KeyboardArrowUpIcon/> : <KeyboardArrowDownIcon/>}
                 </span>
             </button>
 
@@ -63,11 +39,12 @@ export default function CurrentExercise({ exerciseData, isExpanded = false, onTo
                         </div>
                     )}
 
-                    {exerciseData.sets.map((set,idx) => (
+                    {exerciseData.sets.map((set, idx) => (
                         <Sets
                             key={idx}
                             setNumber={idx}
-                            onDelete={() => {}}
+                            onDelete={() => {
+                            }}
                             updateFunction={updateSet}
                             data={set}
                         />
