@@ -14,7 +14,7 @@ import calves from "../assets/calves.png";
 import forearms from "../assets/forearms.png";
 import glutes from "../assets/glutes.png.jpg";
 import hamstrings from "../assets/hamstrings.png.jpg";
-import lats from "../assets/lats.jpg";
+import lats from "../assets/lats.png";
 import quads from "../assets/quads.png.jpg";
 import shoulders from "../assets/shoulders.png";
 
