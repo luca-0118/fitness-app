@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		19B4AA2A7BEE42E97F4CFB78 /* main.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6B0EEFA86D5A66774E186473 /* main.mm */; };
+		1C32C593AC5258C7E2EB2BDE /* libapp.a in Resources */ = {isa = PBXBuildFile; fileRef = 39D176BC582FCDC47FBF3EDD /* libapp.a */; };
 		3EC7315D63CE6D60C64A4674 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 69B875FB29A907C4C20DC402 /* CoreGraphics.framework */; };
 		598874D2E633DC765F3029AE /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9CA9DDFAA93B36BAF04DEDD6 /* Assets.xcassets */; };
 		71C171D4B2DF44AF70759520 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 052B142D607D8AF3E8BBACA3 /* LaunchScreen.storyboard */; };
@@ -29,10 +30,12 @@
 		14EC9F102816AC9D06EB629C /* database.rs */ = {isa = PBXFileReference; path = database.rs; sourceTree = "<group>"; };
 		238DED287FEFCC9AE928A3CC /* fitness-app_iOS.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "fitness-app_iOS.entitlements"; sourceTree = "<group>"; };
 		39749E79E5010512C0D6AF47 /* fitness-app_iOS.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = "fitness-app_iOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		39D176BC582FCDC47FBF3EDD /* libapp.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libapp.a; sourceTree = "<group>"; };
 		3ADBAB95E6AB1DFA1A9C7D68 /* workout.rs */ = {isa = PBXFileReference; path = workout.rs; sourceTree = "<group>"; };
 		4D65A061E1C3CBA7D3DA5E9C /* libapp.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libapp.a; sourceTree = "<group>"; };
 		4E3EE93AF0D58771995CCF8C /* session.rs */ = {isa = PBXFileReference; path = session.rs; sourceTree = "<group>"; };
 		4F87332DC1DC2CE28944275C /* workout.rs */ = {isa = PBXFileReference; path = workout.rs; sourceTree = "<group>"; };
+		509D5B2E11ED5404D3EE1F91 /* get_exercises_by_muscle.rs */ = {isa = PBXFileReference; path = get_exercises_by_muscle.rs; sourceTree = "<group>"; };
 		626E2605CA5D0704FFCB959D /* workout.rs */ = {isa = PBXFileReference; path = workout.rs; sourceTree = "<group>"; };
 		69B875FB29A907C4C20DC402 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		6B0EEFA86D5A66774E186473 /* main.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = main.mm; sourceTree = "<group>"; };
@@ -138,6 +141,7 @@
 		74790C6C15C41C013E2D24D2 /* Externals */ = {
 			isa = PBXGroup;
 			children = (
+				8E4513285F3A35759D845D05 /* arm64 */,
 			);
 			path = Externals;
 			sourceTree = "<group>";
@@ -149,6 +153,22 @@
 				4F87332DC1DC2CE28944275C /* workout.rs */,
 			);
 			path = logic;
+			sourceTree = "<group>";
+		};
+		8E4513285F3A35759D845D05 /* arm64 */ = {
+			isa = PBXGroup;
+			children = (
+				93247A00CE7CCD31E5332AF2 /* debug */,
+			);
+			path = arm64;
+			sourceTree = "<group>";
+		};
+		93247A00CE7CCD31E5332AF2 /* debug */ = {
+			isa = PBXGroup;
+			children = (
+				39D176BC582FCDC47FBF3EDD /* libapp.a */,
+			);
+			path = debug;
 			sourceTree = "<group>";
 		};
 		971CE941FCBE7F0A7C724A9F /* Products */ = {
@@ -203,6 +223,7 @@
 			children = (
 				8662B723F969D2FB60BC35E5 /* get_all_exercises.rs */,
 				75F6FEF053F3A8CBA651C855 /* get_exercise_by_id.rs */,
+				509D5B2E11ED5404D3EE1F91 /* get_exercises_by_muscle.rs */,
 				877AD8F4572CAEF7E07587E0 /* mod.rs */,
 				4E3EE93AF0D58771995CCF8C /* session.rs */,
 				3ADBAB95E6AB1DFA1A9C7D68 /* workout.rs */,
@@ -218,6 +239,13 @@
 				E5F801BFB7BBE76114314637 /* session.rs */,
 			);
 			path = services;
+			sourceTree = "<group>";
+		};
+		"TEMP_3964EB47-304F-4652-89C9-674C01F2B0F6" /* x86_64 */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = x86_64;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -281,6 +309,7 @@
 				598874D2E633DC765F3029AE /* Assets.xcassets in Resources */,
 				71C171D4B2DF44AF70759520 /* LaunchScreen.storyboard in Resources */,
 				FF46787BB6FEFCF9592C776E /* assets in Resources */,
+				1C32C593AC5258C7E2EB2BDE /* libapp.a in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -29,10 +29,17 @@ export default function AddExercises() {
   async function fetchExercises() {
     const result = await API.exercises.list();
     setAllExercise(result);
+    console.log(activeQuery);
   }
+
+  interface ExerciseResponse {
+    data: ExerciseDTO[];
+    ok: boolean;
+  }
+
   async function loadExercises() {
     try {
-      const res = await invoke<ExerciseDTO[]>("get_exercises_by_muscle", {
+      const res = await invoke<ExerciseResponse>("get_exercises_by_muscle", {
         muscle: muscle,
       });
       setAllExercise(res.data);

@@ -1,9 +1,6 @@
 use rusqlite::Connection;
 use tauri::Manager;
 use std::sync::Mutex;
-mod get_all_exercises;
-mod get_exercise_by_id;
-mod get_exercises_by_muscle;
 
 mod api;
 mod logic;
@@ -81,91 +78,12 @@ pub fn run() {
             endpoints::workout::list_workouts,
             endpoints::workout::link_exercise,
             endpoints::session::start_session,
-            get_exercises_by_muscle::get_exercises_by_muscle,
+            endpoints::get_exercises_by_muscle::get_exercises_by_muscle,
             endpoints::session::get_session,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
 
-#[tauri::command]
-fn list_workouts(
-    db: tauri::State<Db>,
-) -> Result<api::ApiResponse<Vec<dto::Workout>>, api::ApiErrorResponse> {
-    // Connects conn mutex to this thread.
 
-    let workouts = logic::list_workouts(&db)?;
 
-    Ok(ApiResponse {
-        ok: true,
-        data: workouts,
-    })
-}
-
-#[tauri::command]
-fn create_workout(
-    db: tauri::State<Db>,
-    workout: dto::CreateWorkout,
-) -> Result<api::ApiResponse<String>, api::ApiErrorResponse> {
-    // Early exit if the values are empty.
-    // Desc can be empty
-    if workout.name.trim().is_empty() {
-        return Err(api::ApiError::InvalidInput.into());
-    }
-
-    let response = logic::create_workout(&db, workout)?;
-
-    Ok(ApiResponse {
-        ok: true,
-        data: response.to_string(),
-    })
-}
-
-#[tauri::command]
-fn link_exercise(
-    db: tauri::State<Db>,
-    link_exercise: dto::LinkExercise,
-) -> Result<api::ApiResponse<String>, api::ApiErrorResponse> {
-    // checks if both exercise Id and workout Id are given.
-    if link_exercise.exercise_uuid.is_empty() || link_exercise.workout_uuid.is_empty() {
-        return Err(api::ApiError::InvalidInput.into());
-    }
-
-    let resp = logic::link_exercise(&db, link_exercise)?;
-
-    Ok(ApiResponse {
-        ok: true,
-        data: resp,
-    })
-}
-
-#[tauri::command]
-fn create_exercise(
-    db: tauri::State<Db>,
-    exercise: dto::CreateExercise,
-) -> Result<api::ApiResponse<String>, api::ApiErrorResponse> {
-    // Early exit if the values are empty.
-    // Desc can be empty
-    if exercise.name.trim().is_empty() {
-        return Err(api::ApiError::InvalidInput.into());
-    }
-
-    logic::create_exercise(&db, exercise)?;
-
-    Ok(ApiResponse {
-        ok: true,
-        data: "Exercise has been created".to_string(),
-    })
-}
-#[tauri::command]
-fn get_workout(
-    db: tauri::State<Db>,
-    _workout_uuid: String,
-) -> Result<api::ApiResponse<dto::IdetailedWorkoutDTO>, api::ApiErrorResponse> {
-    let response = logic::get_workout(&db, _workout_uuid)?;
-
-    Ok(ApiResponse {
-        ok: true,
-        data: response,
-    })
-}
