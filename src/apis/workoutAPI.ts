@@ -2,10 +2,10 @@ import { ApiClient } from "../classes/api";
 
 export default class workoutAPI {
     public async create(_name: string, _desc?: string): Promise<string> {
-        if (!_name) {
-            const err = "workout requires username";
-            console.error(err);
-            return err;
+        if (!_name.trim()) {
+            const errMessage = "Workout requires a name"
+            console.error(errMessage);
+            throw new Error(errMessage);
         }
 
         const workout: WorkoutDTO = {
