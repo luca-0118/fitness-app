@@ -63,7 +63,7 @@ interface ISessionExercises {
     exercise_id: string,
     gif_url: string,
     name: string,
-    sets: IWeightedSet|ITimedSet
+    sets: IWeightedSet[]|ITimedSet[]
 }
 interface IBaseSet {
     time_completed: string;
@@ -85,6 +85,7 @@ interface IBaseSetUpdate {
 
 interface IWeightedSetUpdate extends IBaseSetUpdate {
     type: "Weighted";
+    exercise_id: string;
     set_nr: number;
     weight:number;
     reps:number;
@@ -92,6 +93,7 @@ interface IWeightedSetUpdate extends IBaseSetUpdate {
 
 interface ITimedSetUpdate extends IBaseSetUpdate {
     type:"Timed";
+    exercise_id: string;
     set_nr: number;
     time:number;
     distance:number;
