@@ -11,6 +11,7 @@ interface CurrentExerciseProps {
 }
 
 export default function CurrentExercise({ exerciseData, isExpanded = false, onToggle, children }: CurrentExerciseProps) {
+    
     const updateSet = async (set_nr: number, reps: number, weight:number) => {
         const setUpdate: ISetUpdate = {
             exercise_id: exerciseData.exercise_id,
@@ -49,12 +50,13 @@ export default function CurrentExercise({ exerciseData, isExpanded = false, onTo
                         </div>
                     )}
 
-                    {exerciseData.sets.map((_set,idx) => (
+                    {exerciseData.sets.map((set,idx) => (
                         <Sets
-                            key={idx + 1}
-                            setNumber={idx + 1}
+                            key={idx}
+                            setNumber={idx}
                             onDelete={() => {}}
                             updateFunction={updateSet}
+                            data={set}
                         />
                     ))}
                     {children}
