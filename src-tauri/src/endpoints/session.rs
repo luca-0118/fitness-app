@@ -26,14 +26,26 @@ pub fn start_session(
         // Creates the three originally default sets
         let mut sets: Vec<models::Set> = Vec::new();
         // #TODO get the total count from new field in database.
-        for i in 0..3 {
-            sets.push(models::Set{
-                reps: 0,
-                weight:0.0,
-                time_completed: String::new()
-            });
-        }
 
+        if(exercise.body_parts.contains("cardio")) 
+        {
+            for i in 0..3 {
+                sets.push(models::Set::Timed{
+                    distance: 0f64,
+                    time: 0.0,
+                    time_completed: String::new()
+                });
+            }
+        } else {
+            for i in 0..3 {
+                sets.push(models::Set::Weighted{
+                    reps: 0,
+                    weight:0.0,
+                    time_completed: String::new()
+                });
+            }
+        }
+        
         // adds the exercise to the sessionExercises
         exercises.push(models::SessionExercise {
             exercise_id: exercise.exercise_id.clone(),
@@ -75,38 +87,16 @@ pub fn get_session(
 }
 
 
-#[derive(Debug,Serialize,Deserialize)]
-pub struct SetUpdateDTO {
-    pub exercise_id: String,
-    pub set_nr: usize,
-    pub reps: i32,
-    pub weight: f32,
-}
+
 #[tauri::command]
 pub fn update_set(
     session: tauri::State<Mutex<models::Session>>,
-    set_update: SetUpdateDTO,
+    set_update: models::SetUpdateDTO,
 ) -> Result<ApiResponse<String>,api::ApiErrorResponse>
 {
     let mut session_state = session.lock().unwrap();
 
-    // Gets the given exercise
-    let exercise = session_state
-        .exercises
-        .iter_mut()
-        .find(|e| e.exercise_id == set_update.exercise_id)
-        .unwrap();
-
-    // Finds the specific set
-    let set = exercise
-        .sets
-        .get_mut(set_update.set_nr)
-        .unwrap();
-
-    // Updates the set data.
-    set.reps = set_update.reps;
-    set.weight = set_update.weight;
-    set.time_completed = UtcDateTime::now().to_string();
+    let response = set_update.apply(&mut session_state)?;
 
     // returns positive response
     Ok(api::ApiResponse {
