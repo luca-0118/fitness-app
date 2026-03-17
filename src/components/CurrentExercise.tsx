@@ -12,13 +12,26 @@ interface CurrentExerciseProps {
 
 export default function CurrentExercise({ exerciseData, isExpanded = false, onToggle, children }: CurrentExerciseProps) {
     
-    const updateSet = async (set_nr: number, reps: number, weight:number) => {
-        const setUpdate: ISetUpdate = {
-            exercise_id: exerciseData.exercise_id,
-            set_nr,
-            reps,
-            weight
+    const updateSet = async (set_nr: number, data: {type: "Weighted"|"Timed", val1: number, val2: number }) => {
+        let setUpdate: IWeightedSetUpdate | ITimedSetUpdate;
+        if (data.type == "Weighted") {
+            setUpdate = {
+                exercise_id: exerciseData.exercise_id,
+                type:"Weighted",
+                set_nr,
+                reps: data.val1,
+                weight: data.val2,
+            } as IWeightedSetUpdate
+        } else {
+            setUpdate = {
+                exercise_id: exerciseData.exercise_id,
+                type:"Timed",
+                set_nr,
+                time: data.val1,
+                distance: data.val2
+            } as ITimedSetUpdate
         }
+
         const resp = await API.session.updateSet(setUpdate);
 
         console.log(resp);

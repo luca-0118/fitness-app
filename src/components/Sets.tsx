@@ -4,11 +4,21 @@ import DeleteIcon from '@mui/icons-material/Delete';
 interface SetsProps {
     setNumber?: number;
     onDelete?: () => void;
-    updateFunction: (set_nr: number, reps: number, weight:number) => Promise<void>
-    data: ISessionSets
+    updateFunction: (set_nr: number, data: {type: "Weighted"|"Timed", val1: number, val2: number }) => Promise<void>
+    data: IWeightedSet | ITimedSet
 }
 
 export default function Sets({updateFunction, setNumber = 0, onDelete, data }: SetsProps) {
+
+    // You can use this to see what kind of type the value is.
+    // it also shows how to use the updateFunction to send a TimeBasedSet.
+    if (data.type !== "Weighted") return <h1 onClick={(_e) => {
+        updateFunction(setNumber,{type:"Timed",val1:10.0,val2:34.0}).then(() => {
+            console.log("updated.");
+        })
+    }}>Incorrect type..</h1>
+    //
+
     const [reps, setReps] = useState(data.reps);
     const [weight, setWeight] = useState(data.weight);
     const repsOptions = Array.from({ length: 51 }, (_, i) => i);
@@ -16,7 +26,8 @@ export default function Sets({updateFunction, setNumber = 0, onDelete, data }: S
     useEffect(() => {
         console.log("set up setnr:",setNumber);
         if (!reps || !weight) return;
-            updateFunction(setNumber,Number(reps),Number(weight)).then(() => {
+
+            updateFunction(setNumber,{type:"Weighted",val1:reps,val2:weight}).then(() => {
                 console.log("updated.");
             });
     }, [reps,weight]);
