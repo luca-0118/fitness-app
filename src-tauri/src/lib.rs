@@ -31,6 +31,7 @@ pub struct SessionExercises {
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
+
     // FIXME THIS CONNECTION IS USED BY EVERY SINGLE QUERY. IT ALLOWS US TO EASILY CHANGE QUERIES.
     // IT NEEDS TO BE LIKE THIS TO EASILY CHANGE IT.
 
@@ -77,10 +78,12 @@ pub fn run() {
             endpoints::workout::list_workouts,
             endpoints::workout::link_exercise,
             endpoints::session::start_session,
+            endpoints::get_exercises_by_muscle::get_exercises_by_muscle,
             endpoints::session::get_session,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
+
 
 
