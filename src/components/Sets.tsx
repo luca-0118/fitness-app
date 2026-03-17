@@ -1,10 +1,11 @@
 import {useEffect, useState} from "react";
 import DeleteIcon from '@mui/icons-material/Delete';
+import {IUseSetUpdateFunction, TimedSet, WeightedSet} from "../Hooks/UseSetUpdate.ts";
 
 interface SetsProps {
     setNumber?: number;
     onDelete?: () => void;
-    updateFunction: (set_nr: number, data: {type: "Weighted"|"Timed", val1: number, val2: number }) => Promise<void>
+    updateFunction: IUseSetUpdateFunction
     data: IWeightedSet | ITimedSet
 }
 
@@ -12,10 +13,12 @@ export default function Sets({updateFunction, setNumber = 0, onDelete, data }: S
 
     // You can use this to see what kind of type the value is.
     // it also shows how to use the updateFunction to send a TimeBasedSet.
+    // this can be deleted to make way for different solutions.
     if (data.type !== "Weighted") return <h1 onClick={(_e) => {
-        updateFunction(setNumber,{type:"Timed",val1:10.0,val2:34.0}).then(() => {
-            console.log("updated.");
-        })
+        const data: TimedSet = {type:"Timed",time: 10.0, distance: 40.0};
+
+        updateFunction(setNumber,data)
+            .then(() => {console.log("time updated")});
     }}>Incorrect type..</h1>
     //
 
@@ -27,9 +30,10 @@ export default function Sets({updateFunction, setNumber = 0, onDelete, data }: S
         console.log("set up setnr:",setNumber);
         if (!reps || !weight) return;
 
-            updateFunction(setNumber,{type:"Weighted",val1:reps,val2:weight}).then(() => {
-                console.log("updated.");
-            });
+            const data: WeightedSet = {type:"Weighted",reps,weight};
+
+            updateFunction(setNumber,data)
+                .then(() => {console.log("updated")});
     }, [reps,weight]);
 
     return (
