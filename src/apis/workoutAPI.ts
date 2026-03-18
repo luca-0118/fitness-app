@@ -5,7 +5,7 @@ export default class workoutAPI {
         if (!_name.trim()) {
             const errMessage = "Workout requires a name"
             console.error(errMessage);
-            throw new Error(errMessage);
+            return errMessage;
         }
 
         const workout: WorkoutDTO = {

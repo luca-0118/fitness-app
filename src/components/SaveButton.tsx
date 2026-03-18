@@ -9,8 +9,10 @@ export default function SaveButton() {
     const navigate = useNavigate()
 
     async function handleSave() {
-        await Toast.promise(
-            (async () => {
+        return await Toast.promise(
+            new Promise(async (Resolve, Reject) => {
+            if (!workoutName) Reject("No name");
+
             const workoutUuid = await API.workouts.create(workoutName);
             console.log("workout sucessfully created!");
 
@@ -18,15 +20,14 @@ export default function SaveButton() {
                 await API.workouts.linkExercise(workoutUuid, exercise.id);
             }
 
-            return workoutUuid;
-        })(),
+            Resolve(workoutUuid);
+        }),
         {
             loading: "Saving workout...",
             success: "Workout saved!",
-            error: (err) => err.message,
-        }
-    );
-        navigate(-1)
+            // @ts-ignore This is an type error made by the library itself.
+            error: (err: unknown) => `Error: ${err}`,
+        });
     }
 
     return (
