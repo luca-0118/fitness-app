@@ -33,7 +33,7 @@ export default function Session() {
 
     }, [exercises.length]);
 
-    if (!session) return <h1>loadin....</h1>
+    if (!session) return <h1>loading....</h1>
     return (
         <>
             <div className="w-full flex flex-col items-center pt-6 pb-24">
