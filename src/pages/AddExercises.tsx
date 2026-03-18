@@ -152,7 +152,11 @@ export default function AddExercises() {
               name={exercise.name}
               gif={exercise.data}
               onSelect={() => {
-                addExercise({ id: exercise.id, name: exercise.name });
+                addExercise({
+                  id: exercise.id,
+                  name: exercise.name,
+                  gif: exercise.data,
+                });
                 navigate(-1);
               }}
             />
