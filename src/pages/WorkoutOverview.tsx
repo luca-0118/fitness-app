@@ -69,7 +69,7 @@ export default function WorkoutOverview() {
                         setWorkouts((workout) => move(workout, event));
                     }}
                 >
-                    <ul className="pt-2">
+                    <ul className="pt-2 pb-1">
                         {workouts.map((workout, index) => (
                             <WorkoutWidget key={workout.id} id={workout.id} index={index} name={workout.name} />
                         ))}
