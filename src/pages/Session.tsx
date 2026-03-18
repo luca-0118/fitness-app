@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import CountDownTimer from "../components/CountDownTimer";
 import StopWatch from "../components/StopWatch";
 import TabataTimer from "../components/TabataTimer";
@@ -13,9 +13,11 @@ interface SessionState {
 }
 
 export default function Session() {
+    const navigate = useNavigate();
     const [selectedTimer, setSelectedTimer] = useState("stopwatch");
     const [numSetsByExercise, setNumSetsByExercise] = useState<number[]>([]);
     const [expandedByExercise, setExpandedByExercise] = useState<boolean[]>([]);
+    const [isFinishing, setIsFinishing] = useState(false);
     const location = useLocation();
     const state = location.state as SessionState | null;
     const exercises = state?.exercises || [];
@@ -32,9 +34,28 @@ export default function Session() {
 
     }, [exercises.length]);
 
+    const handleFinishWorkout = async () => {
+        if (isFinishing) {
+            return;
+        }
+
+        try {
+            setIsFinishing(true);
+            const resp = await API.session.complete();
+
+            if (resp.ok) {
+                navigate("/");
+            }
+        } catch (error) {
+            console.error("Failed to finish workout", error);
+        } finally {
+            setIsFinishing(false);
+        }
+    };
+
     return (
         <>
-            <div className="w-full flex flex-col items-center pt-6 pb-24">
+            <div className="w-full flex flex-col items-center pt-6 pb-44">
                 <div className="relative mb-6">
                     {selectedTimer === "countdown" && <CountDownTimer onTimerChange={setSelectedTimer} />}
                     {selectedTimer === "stopwatch" && <StopWatch onTimerChange={setSelectedTimer} />}
@@ -89,6 +110,17 @@ export default function Session() {
                         </CurrentExercise>
                     ))
                 )}
+
+                <div className="fixed bottom-24 left-1/2 z-40 w-87 -translate-x-1/2">
+                    <button
+                        type="button"
+                        onClick={handleFinishWorkout}
+                        disabled={isFinishing}
+                        className="w-full rounded-xl border border-[#414141] bg-[#F67631] px-5 py-4 font-bold text-white transition-colors hover:bg-[#ff8a4a] disabled:cursor-not-allowed disabled:opacity-70"
+                    >
+                        {isFinishing ? "Finishing..." : "Finish Workout"}
+                    </button>
+                </div>
             </div>
         </>
     );
