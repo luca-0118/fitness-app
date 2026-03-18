@@ -83,7 +83,7 @@ export default function Session() {
                                         (next[exerciseIndex] || 3) + 1;
                                     setNumSetsByExercise(next);
                                 }}
-                                className="mt-3 w-77 h-12 rounded-full bg-[#2e2e2e] hover:bg-[#3a3a3a]  justify-center transition-colors"
+                                className="mt-3 w-77 h-12 rounded-full bg-[#2e2e2e] hover:bg-[#3a3a3a] active:bg-[#3a3a3a] justify-center transition-colors"
                                 iconSize={32}
                             />
                         </CurrentExercise>
