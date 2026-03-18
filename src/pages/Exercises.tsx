@@ -31,29 +31,34 @@ export default function Exercises() {
         getData();
     }, []);
 
-    return (
-        <>
-            <div className="pb-18 pt-2">
-                <DragDropProvider manager={manager}
-                    onDragEnd={(event) => {
-                        setExercises((exercises) => move(exercises, event));
-                    }}
-                >
-                    <ul>
-                        {exercises.map((exercise, index) => (
-                            <ExerciseOverviewWidget
-                                key={exercise.instanceId}
-                                id={exercise.instanceId.toString()}
-                                index={index}
-                                name={exercise.name}
-                            />
-                        ))}
-                    </ul>
-                </DragDropProvider>
-                <div className="absolute bottom-0 pb-24 w-full opacity-80">
-                    <StartSessionButton exercises={exercises} />
-                </div>
-            </div>
-        </>
-    );
+  return (
+    <>
+      <div className="pb-18 pt-2">
+        <DragDropProvider
+          manager={manager}
+          onDragEnd={(event) => {
+            setExercises((exercises) => move(exercises, event));
+          }}
+        >
+          <ul>
+            {exercises.map((exercise, index) => (
+              <ExerciseOverviewWidget
+                key={exercise.instanceId}
+                id={exercise.instanceId.toString()}
+                index={index}
+                name={exercise.name}
+                gif={exercise.gif_url}
+              />
+            ))}
+          </ul>
+        </DragDropProvider>
+        <div className="absolute bottom-0 pb-24 w-full opacity-80">
+          <StartSessionButton
+            exercises={exercises}
+            workoutId={selectedWorkout}
+          />
+        </div>
+      </div>
+    </>
+  );
 }
