@@ -18,7 +18,7 @@ export default function Sets({ setNumber = 1, onDelete }: SetsProps) {
                 {onDelete && setNumber > 3 && (
                     <button
                         onClick={onDelete}
-                        className="text-red-500 hover:text-red-400 cursor-pointer transition-colors"
+                        className="text-red-500 hover:text-red-400 active:text-red-400 cursor-pointer transition-colors"
                         title="Delete set"
                     >
                         <DeleteIcon sx={{ fontSize: 24 }} />
