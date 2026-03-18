@@ -1,22 +1,11 @@
 import WorkoutWidget from "../components/WorkoutWidget";
 import WorkoutAddButton from "../components/WorkoutAddButton.tsx";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import API from "../classes/api.ts";
 import { DragDropProvider } from "@dnd-kit/react";
 import { move } from "@dnd-kit/helpers";
-import {PointerSensor, PointerActivationConstraints, DragDropManager} from '@dnd-kit/dom';
-const manager = new DragDropManager({
-    sensors: [
-        PointerSensor.configure({
-            activationConstraints: [
-                new PointerActivationConstraints.Delay({
-                    value: 150,
-                    tolerance: {x: 5, y: 5},
-                }),
-            ]
-        })
-    ]
-});
+import { DndManagerdelay } from "../components/DndManager.tsx";
+
 // I quite genuinely have to remap my UUID to id because of muks lib. I hate libs.
 type dndLibModifier = {
     id: string;
@@ -25,6 +14,8 @@ type dndLibModifier = {
 };
 
 export default function WorkoutOverview() {
+    const manager = useMemo(() => DndManagerdelay(), []);
+
     const [workouts, setWorkouts] = useState<dndLibModifier[]>([]);
     useEffect(() => {
         const getWorkouts = async () => {
