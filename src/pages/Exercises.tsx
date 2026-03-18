@@ -27,11 +27,6 @@ export default function Exercises() {
                 ...exercise,
                 instanceId: index
             })));
-            setExercises(
-            hi.exercises.map((exercise: ExerciseDTO, index: number) => ({
-                ...exercise,
-                instanceId: index
-            })));
         };
         getData();
     }, []);
