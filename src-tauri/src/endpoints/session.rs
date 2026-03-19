@@ -39,7 +39,7 @@ pub fn start_session(
     };
 
     // adds the session to our active memory.
-    services::session::start(&session_state, session);
+    services::session::start(&session_state, &session);
 
     Ok(api::ApiResponse {
         ok: true,
@@ -54,4 +54,16 @@ pub fn get_session(
     let session_state = session.lock().unwrap();
 
     session_state.clone()
+}
+
+#[tauri::command]
+pub fn complete_session(
+    session: tauri::State<Mutex<SessionState>>
+) -> Result<api::ApiResponse<SessionState>,api::ApiErrorResponse> {
+    let mut session_state = services::session::get(&session);
+    session_state.end_time = UtcDateTime::now().to_string();
+
+    services::session::clear(&session);
+
+    Ok(api::ApiResponse { ok: true, data: session_state })
 }
