@@ -15,7 +15,7 @@ export default function ExerciseWidget({ name, gif, onSelect }: ExerciseWidgetPr
                 <img className="rounded-xl w-20 h-20 mr-4" alt={ name } src={ gif } loading="lazy"/>
                 <h2 className="text-lg font-semibold">{name}</h2>
             </button>
-            <button onClick={onSelect} className="flex h-12 w-12 rounded-full bg-[#40C057] hover:bg-[#5AEA74] active:bg-[#5AEA74] ml-2 z-50">
+            <button onClick={onSelect} className="flex h-12 w-12 rounded-full bg-[#F67631] hover:bg-[#FF9962] active:bg-[#FF9962] ml-2 z-50">
                 <AddIcon sx={{ fontSize: 49 }} />
             </button>
         </div>  

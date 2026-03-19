@@ -55,17 +55,19 @@ export default function WorkoutOverview() {
         <>
             <div>
                 <DragDropProvider manager={manager}
-                    onDragEnd={(event) => {
-                        // #TODO add local backend ordering.
-                        setWorkouts((workout) => move(workout, event));
-                    }}
-                >
-                    <ul className="pt-2 pb-1">
+                        onDragEnd={(event) => {
+                            // #TODO add local backend ordering.
+                            setWorkouts((workout) => move(workout, event));
+                        }}
+                    >
+                    <ul className="pt-2 pb-17">
                         {workouts.map((workout, index) => (
-                            <WorkoutWidget key={workout.id} id={workout.id} index={index} name={workout.name} />
+                                <WorkoutWidget key={workout.id} id={workout.id} index={index} name={workout.name} />
                         ))}
                     </ul>
                 </DragDropProvider>
+            </div>
+            <div className="fixed bottom-20 left-0 right-0 flex justify-center z-20">
                 <WorkoutAddButton to="/new-workout" />
             </div>
         </>
