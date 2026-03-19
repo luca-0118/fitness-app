@@ -6,23 +6,58 @@ interface SetsProps {
     setNumber?: number;
     onDelete?: () => void;
     exerciseType?: "cardio" | "weight";
+    updateFunction?: IUseSetUpdateFunction;
+    data?: IWeightedSet | ITimedSet;
 }
 
-export default function Sets({ setNumber = 1, onDelete, exerciseType = "weight" }: SetsProps) {
+export default function Sets({ setNumber = 1, onDelete, exerciseType = "weight", updateFunction, data }: SetsProps) {
     const [reps, setReps] = useState("");
     const [weight, setWeight] = useState("");
     const [time, setTime] = useState("");
     const [distance, setDistance] = useState("");
 
     useEffect(() => {
-        console.log("set up setnr:",setNumber);
-        if (!reps || !weight) return;
+        if (!data) return;
 
-            const data: WeightedSet = {type:"Weighted",reps,weight};
+        if (data.type === "Weighted") {
+            setReps(String(data.reps));
+            setWeight(String(data.weight));
+            return;
+        }
 
-            updateFunction(setNumber,data)
-                .then(() => {console.log("updated")});
-    }, [reps,weight]);
+        setTime(String(data.time));
+        setDistance(String(data.distance));
+    }, [data]);
+
+    useEffect(() => {
+        if (!updateFunction) return;
+        if (exerciseType === "cardio") {
+            if (time === "" || distance === "") return;
+
+            const timedData: TimedSet = {
+                type: "Timed",
+                time: Number(time),
+                distance: Number(distance),
+            };
+
+            updateFunction(setNumber, timedData).then(() => {
+                console.log("updated");
+            });
+            return;
+        }
+
+        if (reps === "" || weight === "") return;
+
+        const weightedData: WeightedSet = {
+            type: "Weighted",
+            reps: Number(reps),
+            weight: Number(weight),
+        };
+
+        updateFunction(setNumber, weightedData).then(() => {
+            console.log("updated");
+        });
+    }, [reps, weight, time, distance, exerciseType, setNumber, updateFunction]);
 
     return (
         <div className="border-t border-[#565d5d] pt-4 mt-3">
