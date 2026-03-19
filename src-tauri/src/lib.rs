@@ -11,23 +11,6 @@ mod services;
 struct Db {
     conn: Mutex<Connection>,
 }
-#[derive(serde::Serialize,serde::Deserialize,Clone)]
-pub struct SessionState {
-    workout_name: String,
-    session_uuid: String,
-    start_time: String,
-    end_time: String,
-    exercises: Vec<SessionExercises>
-}
-
-#[derive(serde::Serialize,serde::Deserialize,Clone)]
-pub struct SessionExercises {
-    exercise_id: String,
-    name: String,
-    reps: i32,
-    weight: i32,
-    time_completed: String
-}
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
@@ -58,9 +41,10 @@ pub fn run() {
         })
 
         //Used for future state management.
-        .manage(Mutex::new( SessionState{
-            workout_name: String::new(),
+        .manage(Mutex::new( models::Session{
             session_uuid: String::new(),
+            workout_uuid: String::new(),
+            workout_name: String::new(),
             start_time: String::new(),
             end_time:String::new(),
             exercises: Vec::new(),
@@ -80,6 +64,8 @@ pub fn run() {
             endpoints::session::start_session,
             endpoints::get_exercises_by_muscle::get_exercises_by_muscle,
             endpoints::session::get_session,
+            endpoints::session::update_set,
+            endpoints::session::complete_session
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

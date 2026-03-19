@@ -1,12 +1,26 @@
 use std::sync::Mutex;
-use crate::SessionState;
+use crate::models;
 
-pub fn start(session: &SessionState, session_state: tauri::State<Mutex<SessionState>>) -> bool {
+pub fn start(session: &models::Session, session_state: &tauri::State<Mutex<models::Session>>) -> bool {
    let mut session_state = session_state.lock().unwrap();
     *session_state = session.clone();
-    return true;
+    
+    true
 }
-pub fn get(session_state: tauri::State<Mutex<SessionState>>) -> SessionState {
+pub fn get(session_state: &tauri::State<Mutex<models::Session>>) -> models::Session {
     let session_state = session_state.lock().unwrap();
     session_state.clone()
+}
+pub fn clear(session_state: &tauri::State<Mutex<models::Session>>) -> bool {
+    let mut session_state = session_state.lock().unwrap();
+
+    // TODO find alternative to do this.
+    session_state.session_uuid = String::new();
+    session_state.workout_uuid = String::new();
+    session_state.workout_name = String::new();
+    session_state.start_time = String::new();
+    session_state.end_time = String::new();
+    session_state.exercises = Vec::new();
+
+    true
 }

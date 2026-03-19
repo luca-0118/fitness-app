@@ -7,7 +7,9 @@ type backendFunctions =
   | "get_all_exercises"
   | "get_workout"
   | "start_session"
-  | "get_session";
+  | "get_session"
+  | "complete_session"
+  | "update_set";
 
 interface WorkoutDTO {
   uuid: string;
@@ -51,17 +53,50 @@ interface IdetailedWorkoutDTO {
 }
 
 interface ISessionState {
-  workout_name: String;
-  session_uuid: String;
-  start_time: String;
-  end_time: String;
-  exercises: SessionExercises[];
+    workout_name: string,
+    workout_uuid: string,
+    session_uuid: string,
+    start_time: string,
+    end_time: string,
+    exercises: ISessionExercises[]
 }
 
-interface SessionExercises {
-  exercise_id: String;
-  name: String;
-  reps: Number;
-  weight: Number;
-  time_completed: String;
+interface ISessionExercises {
+    exercise_id: string,
+    gif_url: string,
+    name: string,
+    sets: IWeightedSet[]|ITimedSet[]
+}
+interface IBaseSet {
+    time_completed: string;
+}
+interface IWeightedSet extends IBaseSet {
+    type: "Weighted";
+    weight: number;
+    reps: number;
+}
+interface ITimedSet extends IBaseSet {
+    type: "Timed";
+    time: number;
+    distance: number;
+}
+
+interface IBaseSetUpdate {
+    exercise_id: string,
+}
+
+interface IWeightedSetUpdate extends IBaseSetUpdate {
+    type: "Weighted";
+    exercise_id: string;
+    set_nr: number;
+    weight:number;
+    reps:number;
+}
+
+interface ITimedSetUpdate extends IBaseSetUpdate {
+    type:"Timed";
+    exercise_id: string;
+    set_nr: number;
+    time:number;
+    distance:number;
 }
