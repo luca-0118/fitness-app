@@ -64,7 +64,7 @@ pub fn run() {
             endpoints::session::start_session,
             endpoints::get_exercises_by_muscle::get_exercises_by_muscle,
             endpoints::session::get_session,
-            endpoints::session::update_set
+            endpoints::session::update_set,
             endpoints::session::complete_session
         ])
         .run(tauri::generate_context!())

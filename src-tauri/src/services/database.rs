@@ -62,4 +62,34 @@ pub fn migrate(conn: &Connection) {
         [],
     )
         .expect("failed to initialize schema WorkoutExercises");
+
+    conn.execute("CREATE TABLE IF NOT EXISTS workoutHistory (
+        ID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+        sessionId TEXT UNIQUE NOT NULL,
+        started_at TEXT NOT NULL,
+        completed_at TEXT NOT NULL
+    )",[]).unwrap();
+
+    conn.execute("CREATE TABLE IF NOT EXISTS completedExercises (
+        ID TEXT NOT NULL PRIMARY KEY,
+        sessionId TEXT NOT NULL,
+        exerciseId TEXT NOT NULL,
+        Time_completed TEXT NOT NULL DEFAULT 'test',
+        FOREIGN KEY (sessionId) REFERENCES workoutHistory(sessionId)
+    )", []).unwrap();
+
+    conn.execute("CREATE TABLE IF NOT EXISTS completedCardioExercises (
+        ID TEXT NOT NULL PRIMARY KEY,
+        time FLOAT,
+        distance FLOAT,
+        FOREIGN KEY (ID) REFERENCES completedExercises(ID)
+    )",[]).unwrap();
+
+    conn.execute("CREATE TABLE IF NOT EXISTS completedWeightExercises (
+        ID TEXT NOT NULL PRIMARY KEY,
+        reps FLOAT,
+        weight FLOAT,
+        FOREIGN KEY (ID) REFERENCES completedExercises(ID)
+    )",[]).unwrap();
+
 }

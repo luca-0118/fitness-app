@@ -1,13 +1,13 @@
 use std::sync::Mutex;
-use crate::{SessionState, models};
+use crate::models;
 
-pub fn start(session: &SessionState, session_state: &tauri::State<Mutex<SessionState>>) -> bool {
+pub fn start(session: &models::Session, session_state: &tauri::State<Mutex<models::Session>>) -> bool {
    let mut session_state = session_state.lock().unwrap();
     *session_state = session.clone();
     
     true
 }
-pub fn get(session_state: &tauri::State<Mutex<SessionState>>) -> SessionState {
+pub fn get(session_state: &tauri::State<Mutex<models::Session>>) -> models::Session {
     let session_state = session_state.lock().unwrap();
     session_state.clone()
 }

@@ -1,7 +1,9 @@
+use core::error;
 use std::sync::Mutex;
+use rusqlite::Connection;
 use tauri::webview::cookie::time::{UtcDateTime};
 use uuid::Uuid;
-use crate::{api, services, Db, SessionExercises, SessionState};
+use crate::{api, services, Db};
 use crate::logic;
 use crate::models;
 
@@ -14,7 +16,6 @@ pub fn start_session(
     workout_id: String,
 ) -> Result<api::ApiResponse<String>, api::ApiErrorResponse>  {
     let current_workout = logic::workout::detailed(&db, workout_id)?;
-
 
 
     let mut exercises: Vec<models::SessionExercise> = Vec::new();
@@ -105,9 +106,10 @@ pub fn update_set(
 #[tauri::command]
 pub fn complete_session(
     session: tauri::State<Mutex<models::Session>>,
-    db: tauri::State<Mutex<Db>>
+    db: tauri::State<Db>
 ) -> Result<api::ApiResponse<models::Session>,api::ApiErrorResponse> {
-    let db = db.lock().unwrap();
+    let mut db_guard = db.conn.lock().unwrap();
+    let conn: &mut Connection = &mut db_guard;
 
     // Get the current session state object
     let mut session_state = services::session::get(&session);
@@ -118,43 +120,18 @@ pub fn complete_session(
 
     //creates an dto for the function and sends it.
     let workout_dto = logic::session::CompletedWorkoutDTO{
-        session_id: session_state.session_uuid,
-        started_at: session_state.start_time,
-        completed_at: session_state.end_time
+        session_id: session_state.session_uuid.clone(),
+        started_at: session_state.start_time.clone(),
+        completed_at: session_state.end_time.clone()
     };
-    logic::session::add_completed_workout(&db, workout_dto);
+    let completed = logic::session::add_completed_workout(conn, workout_dto);
+    if !completed {
+        println!("Error while creating workout");
+        return Err(api::ApiError::DatabaseError.into());
+    }
 
 
-    // logic::session::add_completed_exercises(&db,)
-
-
-    Ok(api::ApiResponse { ok: true, data: session_state })
-}
-
-#[tauri::command]
-pub fn complete_session(
-    session: tauri::State<Mutex<models::Session>>,
-    db: tauri::State<Mutex<Db>>
-) -> Result<api::ApiResponse<models::Session>,api::ApiErrorResponse> {
-    let db = db.lock().unwrap();
-
-    // Get the current session state object
-    let mut session_state = services::session::get(&session);
-    session_state.end_time = UtcDateTime::now().to_string();
-
-    // Removes the session from memory.
-    services::session::clear(&session);
-
-    //creates an dto for the function and sends it.
-    let workout_dto = logic::session::CompletedWorkoutDTO{
-        session_id: session_state.session_uuid,
-        started_at: session_state.start_time,
-        completed_at: session_state.end_time
-    };
-    logic::session::add_completed_workout(&db, workout_dto);
-
-
-    // logic::session::add_completed_exercises(&db,)
+    logic::session::add_completed_exercises(conn,&session_state.exercises,&session_state.session_uuid);
 
 
     Ok(api::ApiResponse { ok: true, data: session_state })

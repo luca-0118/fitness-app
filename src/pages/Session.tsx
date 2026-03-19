@@ -54,6 +54,8 @@ export default function Session() {
         }
     };
 
+    if (!session) return <h1>Loading....</h1>
+
     return (
         <>
             <div className="w-full flex flex-col items-center pt-6 pb-44">
