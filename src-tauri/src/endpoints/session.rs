@@ -1,7 +1,7 @@
 use std::sync::Mutex;
 use tauri::webview::cookie::time::{format_description, UtcDateTime};
 use uuid::Uuid;
-use crate::{api, services, Db, SessionExercises, SessionState};
+use crate::{Db, SessionExercises, SessionState, api, models, services};
 use crate::logic;
 
 
@@ -58,12 +58,29 @@ pub fn get_session(
 
 #[tauri::command]
 pub fn complete_session(
-    session: tauri::State<Mutex<SessionState>>
-) -> Result<api::ApiResponse<SessionState>,api::ApiErrorResponse> {
+    session: tauri::State<Mutex<models::Session>>,
+    db: tauri::State<Mutex<Db>>
+) -> Result<api::ApiResponse<models::Session>,api::ApiErrorResponse> {
+    let db = db.lock().unwrap();
+
+    // Get the current session state object
     let mut session_state = services::session::get(&session);
     session_state.end_time = UtcDateTime::now().to_string();
 
+    // Removes the session from memory.
     services::session::clear(&session);
+
+    //creates an dto for the function and sends it.
+    let workout_dto = logic::session::CompletedWorkoutDTO{
+        session_id: session_state.session_uuid,
+        started_at: session_state.start_time,
+        completed_at: session_state.end_time
+    };
+    logic::session::add_completed_workout(&db, workout_dto);
+
+
+    // logic::session::add_completed_exercises(&db,)
+
 
     Ok(api::ApiResponse { ok: true, data: session_state })
 }
