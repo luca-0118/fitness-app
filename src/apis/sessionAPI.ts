@@ -35,7 +35,12 @@ export default  class sessionAPI {
     }
 
     public async complete(): Promise<{ok:boolean,msg:string}> {
-        // TODO add storing api call.
+        if (typeof localStorage.getItem("workoutSessionId") == "undefined") 
+            return {ok: false, msg:"no workout active to save."}
+
+
+        const resp = await ApiClient.send<string>("complete_session");
+
         localStorage.removeItem("workoutSessionId");
         return {
             ok: true,

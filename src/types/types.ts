@@ -7,7 +7,8 @@ type backendFunctions =
   | "get_all_exercises"
   | "get_workout"
   | "start_session"
-  | "get_session";
+  | "get_session"
+  | "complete_session";
 
 interface WorkoutDTO {
   uuid: string;
