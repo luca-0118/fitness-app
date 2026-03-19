@@ -19,7 +19,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ value, onChange, onSearch }) => {
                     className="w-full bg-[#2e2e2e] border border-[#565d5d] rounded-lg pl-3 pr-12 py-2 text-white focus:outline-none focus:border-[#F67631]"
                 />
                 <button
-                    className="search__button absolute right-2 top-1/2 -translate-y-1/2 text-[#F67631] hover:text-[#ff8c42] transition-colors"
+                    className="search__button absolute right-2 top-1/2 -translate-y-1/2 text-[#F67631] hover:text-[#ff8c42] active:text-[#ff8c42] transition-colors"
                     type="button"
                     onClick={onSearch}
                 >

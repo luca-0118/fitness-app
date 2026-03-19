@@ -17,6 +17,7 @@ import hamstrings from "../assets/hamstrings.png.jpg";
 import lats from "../assets/lats.png";
 import quads from "../assets/quads.png.jpg";
 import shoulders from "../assets/shoulders.png";
+import Filter from "../components/Filter";
 
 export default function AddExercises() {
   const [allExercises, setAllExercise] = useState<ExerciseDTO[]>([]);
@@ -65,6 +66,14 @@ export default function AddExercises() {
     exercise.name.toLowerCase().includes(activeQuery.toLowerCase()),
   );
 
+  function handleFilterClick(muscleInput: string) {
+    console.log(muscle);
+    if (muscle === muscleInput) {
+      setMuscle("");
+      fetchExercises();
+    } else setMuscle(muscleInput);
+  }
+
   return (
     <>
       <SearchBar
@@ -76,74 +85,69 @@ export default function AddExercises() {
         <div
           className="overflow-x-scroll flex
                 [&::-webkit-scrollbar-thumb]:bg-neutral-500
-                [&::-webkit-scrollbar]:bg-neutral-700
-"
+                [&::-webkit-scrollbar]:bg-neutral-700"
         >
-          <button className="p-5" onClick={() => setMuscle("pectorals")}>
-            <img className="min-w-15 w-15 contain-content" src={chest} alt="" />
-          </button>
-          <button className="p-5 " onClick={() => setMuscle("biceps")}>
-            {" "}
-            <img
-              className=" min-w-15 w-15 h-15 contain-content"
-              src={bicep}
-              alt=""
-            />
-          </button>
-          <button className="p-5" onClick={() => setMuscle("triceps")}>
-            <img
-              className="min-w-15 w-15 contain-content h-15"
-              src={tricep}
-              alt=""
-            />
-          </button>
-          <button className="p-5" onClick={() => setMuscle("lats")}>
-            <img className="min-w-15 w-15 contain-content" src={lats} alt="" />
-          </button>
-          <button className="p-5" onClick={() => setMuscle("upper back")}>
-            <img className="min-w-15 w-15 contain-content" src={back} alt="" />
-          </button>
-          <button className="p-5" onClick={() => setMuscle("forearms")}>
-            <img
-              className="min-w-15 w-15 contain-content"
-              src={forearms}
-              alt=""
-            />
-          </button>
-          <button className="p-5" onClick={() => setMuscle("delts")}>
-            <img
-              className="min-w-15 w-15 contain-content"
-              src={shoulders}
-              alt=""
-            />
-          </button>
-          <button className="p-5" onClick={() => setMuscle("abs")}>
-            <img className="min-w-15 w-15 contain-content" src={abs} alt="" />
-          </button>
-          <button className="p-5" onClick={() => setMuscle("glutes")}>
-            <img
-              className="min-w-15 w-15 contain-content"
-              src={glutes}
-              alt=""
-            />
-          </button>
-          <button className="p-5" onClick={() => setMuscle("quads")}>
-            <img className="min-w-15 w-15 contain-content" src={quads} alt="" />
-          </button>
-          <button className="p-5" onClick={() => setMuscle("hamstrings")}>
-            <img
-              className="min-w-15 w-15 contain-content"
-              src={hamstrings}
-              alt=""
-            />
-          </button>
-          <button className="p-5" onClick={() => setMuscle("calves")}>
-            <img
-              className="min-w-15 w-15 contain-content"
-              src={calves}
-              alt=""
-            />
-          </button>
+          <Filter
+            gif={chest}
+            isSelected={muscle === "pectorals"}
+            onClick={() => handleFilterClick("pectorals")}
+          />
+
+          <Filter
+            gif={bicep}
+            isSelected={muscle === "biceps"}
+            onClick={() => handleFilterClick("biceps")}
+          />
+          <Filter
+            gif={tricep}
+            isSelected={muscle === "triceps"}
+            onClick={() => handleFilterClick("triceps")}
+          />
+          <Filter
+            gif={lats}
+            isSelected={muscle === "lats"}
+            onClick={() => handleFilterClick("lats")}
+          />
+          <Filter
+            gif={back}
+            isSelected={muscle === "upper back"}
+            onClick={() => handleFilterClick("upper back")}
+          />
+          <Filter
+            gif={shoulders}
+            isSelected={muscle === "delts"}
+            onClick={() => handleFilterClick("delts")}
+          />
+          <Filter
+            gif={forearms}
+            isSelected={muscle === "forearms"}
+            onClick={() => handleFilterClick("forearms")}
+          />
+          <Filter
+            gif={abs}
+            isSelected={muscle === "abs"}
+            onClick={() => handleFilterClick("abs")}
+          />
+          <Filter
+            gif={quads}
+            isSelected={muscle === "quads"}
+            onClick={() => handleFilterClick("quads")}
+          />
+          <Filter
+            gif={hamstrings}
+            isSelected={muscle === "hamstrings"}
+            onClick={() => handleFilterClick("hamstrings")}
+          />
+          <Filter
+            gif={glutes}
+            isSelected={muscle === "glutes"}
+            onClick={() => handleFilterClick("glutes")}
+          />
+          <Filter
+            gif={calves}
+            isSelected={muscle === "calves"}
+            onClick={() => handleFilterClick("calves")}
+          />
         </div>
         {filteredExercises.map((exercise) => {
           return (
@@ -152,7 +156,11 @@ export default function AddExercises() {
               name={exercise.name}
               gif={exercise.data}
               onSelect={() => {
-                addExercise({ id: exercise.id, name: exercise.name });
+                addExercise({
+                  id: exercise.id,
+                  name: exercise.name,
+                  gif: exercise.data,
+                });
                 navigate(-1);
               }}
             />

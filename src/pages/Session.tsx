@@ -7,8 +7,34 @@ import {CurrentExercise} from "../components/CurrentExercise.tsx";
 import Plusknop from "../components/plusknop.tsx";
 import API from "../classes/api.ts";
 
+
 interface SessionState {
     exercises?: ExerciseDTO[];
+}
+
+function getExerciseType(exercise: ExerciseDTO): "cardio" | "weight" {
+    const targetMuscles = (exercise as ExerciseDTO & {
+        target_muscles?: string;
+        targetMuscles?: string;
+    }).target_muscles || (exercise as ExerciseDTO & { targetMuscles?: string }).targetMuscles;
+
+    if (typeof targetMuscles === "string") {
+        const normalizedTargetMuscles = targetMuscles
+            .toLowerCase()
+            .replace(/[\[\]"]/g, "")
+            .trim();
+
+        if (normalizedTargetMuscles.startsWith("cardio")) {
+            return "cardio";
+        }
+    }
+
+    const exerciseType = (exercise as ExerciseDTO & { exerciseType?: string }).exerciseType;
+    if (typeof exerciseType === "string" && exerciseType.toLowerCase() === "cardio") {
+        return "cardio";
+    }
+
+    return "weight";
 }
 
 export default function Session() {
@@ -33,7 +59,7 @@ export default function Session() {
         }
         getState();
 
-    }, [exercises.length]);
+    }, [exercises]);
 
     const handleFinishWorkout = async () => {
         if (isFinishing) {
