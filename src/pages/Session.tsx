@@ -8,8 +8,34 @@ import CurrentExercise from "../components/CurrentExercise.tsx";
 import Plusknop from "../components/plusknop.tsx";
 import API from "../classes/api.ts";
 
+
 interface SessionState {
     exercises?: ExerciseDTO[];
+}
+
+function getExerciseType(exercise: ExerciseDTO): "cardio" | "weight" {
+    const targetMuscles = (exercise as ExerciseDTO & {
+        target_muscles?: string;
+        targetMuscles?: string;
+    }).target_muscles || (exercise as ExerciseDTO & { targetMuscles?: string }).targetMuscles;
+
+    if (typeof targetMuscles === "string") {
+        const normalizedTargetMuscles = targetMuscles
+            .toLowerCase()
+            .replace(/[\[\]"]/g, "")
+            .trim();
+
+        if (normalizedTargetMuscles.startsWith("cardio")) {
+            return "cardio";
+        }
+    }
+
+    const exerciseType = (exercise as ExerciseDTO & { exerciseType?: string }).exerciseType;
+    if (typeof exerciseType === "string" && exerciseType.toLowerCase() === "cardio") {
+        return "cardio";
+    }
+
+    return "weight";
 }
 
 export default function Session() {
@@ -21,7 +47,11 @@ export default function Session() {
     const exercises = state?.exercises || [];
 
     useEffect(() => {
-        setNumSetsByExercise(Array(exercises.length).fill(3));
+        setNumSetsByExercise(
+            exercises.map((exercise) =>
+                getExerciseType(exercise) === "cardio" ? 1 : 3,
+            ),
+        );
         setExpandedByExercise(Array(exercises.length).fill(false));
 
         const getState = async () => {
@@ -30,7 +60,7 @@ export default function Session() {
         }
         getState();
 
-    }, [exercises.length]);
+    }, [exercises]);
 
     return (
         <>
@@ -46,48 +76,56 @@ export default function Session() {
                         <p className="text-white">No exercises selected.</p>
                     </div>
                 ) : (
-                    exercises.map((exercise, exerciseIndex) => (
-                        <CurrentExercise
-                            key={exercise.id}
-                            exerciseName={exercise.name}
-                            exerciseImage={exercise.data}
-                            isExpanded={expandedByExercise[exerciseIndex] || false}
-                            onToggle={() => {
-                                const next = [...expandedByExercise];
-                                next[exerciseIndex] = !next[exerciseIndex];
-                                setExpandedByExercise(next);
-                            }}
-                        >
-                            {Array.from(
-                                { length: numSetsByExercise[exerciseIndex] || 3 },
-                                (_, setIndex) => (
-                                    <Sets
-                                        key={setIndex + 1}
-                                        setNumber={setIndex + 1}
-                                        onDelete={() => {
+                    exercises.map((exercise, exerciseIndex) => {
+                        const exerciseType = getExerciseType(exercise);
+                        const setCount = exerciseType === "cardio" ? 1 : (numSetsByExercise[exerciseIndex] || 3);
+
+                        return (
+                            <CurrentExercise
+                                key={exercise.id}
+                                exerciseName={exercise.name}
+                                exerciseImage={exercise.data}
+                                isExpanded={expandedByExercise[exerciseIndex] || false}
+                                onToggle={() => {
+                                    const next = [...expandedByExercise];
+                                    next[exerciseIndex] = !next[exerciseIndex];
+                                    setExpandedByExercise(next);
+                                }}
+                            >
+                                {Array.from(
+                                    { length: setCount },
+                                    (_, setIndex) => (
+                                        <Sets
+                                            key={setIndex + 1}
+                                            setNumber={setIndex + 1}
+                                            exerciseType={exerciseType}
+                                            onDelete={() => {
+                                                const next = [...numSetsByExercise];
+                                                next[exerciseIndex] = Math.max(
+                                                    1,
+                                                    (next[exerciseIndex] || 3) - 1,
+                                                );
+                                                setNumSetsByExercise(next);
+                                            }}
+                                        />
+                                    ),
+                                )}
+
+                                {exerciseType !== "cardio" && (
+                                    <Plusknop
+                                        onClick={() => {
                                             const next = [...numSetsByExercise];
-                                            next[exerciseIndex] = Math.max(
-                                                1,
-                                                (next[exerciseIndex] || 3) - 1,
-                                            );
+                                            next[exerciseIndex] =
+                                                (next[exerciseIndex] || 3) + 1;
                                             setNumSetsByExercise(next);
                                         }}
+                                        className="mt-3 w-77 h-12 rounded-full bg-[#2e2e2e] hover:bg-[#3a3a3a] active:bg-[#3a3a3a] justify-center transition-colors"
+                                        iconSize={32}
                                     />
-                                ),
-                            )}
-
-                            <Plusknop
-                                onClick={() => {
-                                    const next = [...numSetsByExercise];
-                                    next[exerciseIndex] =
-                                        (next[exerciseIndex] || 3) + 1;
-                                    setNumSetsByExercise(next);
-                                }}
-                                className="mt-3 w-77 h-12 rounded-full bg-[#2e2e2e] hover:bg-[#3a3a3a] active:bg-[#3a3a3a] justify-center transition-colors"
-                                iconSize={32}
-                            />
-                        </CurrentExercise>
-                    ))
+                                )}
+                            </CurrentExercise>
+                        );
+                    })
                 )}
             </div>
         </>

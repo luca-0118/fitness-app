@@ -4,12 +4,14 @@ import DeleteIcon from '@mui/icons-material/Delete';
 interface SetsProps {
     setNumber?: number;
     onDelete?: () => void;
+    exerciseType?: "cardio" | "weight";
 }
 
-export default function Sets({ setNumber = 1, onDelete }: SetsProps) {
-    const [reps, setReps] = useState("0");
-    const [weight, setWeight] = useState("0.0");
-    const repsOptions = Array.from({ length: 51 }, (_, i) => i);
+export default function Sets({ setNumber = 1, onDelete, exerciseType = "weight" }: SetsProps) {
+    const [reps, setReps] = useState("");
+    const [weight, setWeight] = useState("");
+    const [time, setTime] = useState("");
+    const [distance, setDistance] = useState("");
 
     return (
         <div className="border-t border-[#565d5d] pt-4 mt-3">
@@ -26,33 +28,59 @@ export default function Sets({ setNumber = 1, onDelete }: SetsProps) {
                 )}
             </div>
 
-            <div className="flex items-center justify-between mb-3">
-                <label className="text-white text-base">Reps:</label>
-                <select
-                    value={reps}
-                    onChange={(e) => setReps(e.target.value)}
-                    className="w-32 bg-[#2e2e2e] border border-[#565d5d] rounded-lg px-3 py-2 text-white focus:outline-none focus:border-[#F67631] cursor-pointer"
-                >
-                    {repsOptions.map((value) => (
-                        <option key={value} value={value}>
-                            {value}
-                        </option>
-                    ))}
-                </select>
-            </div>
+            {exerciseType === "cardio" ? (
+                <>
+                    <div className="flex items-center justify-between mb-3">
+                        <label className="text-white text-base">Time:</label>
+                        <input
+                            type="text"
+                            inputMode="numeric"
+                            value={time}
+                            onChange={(e) => setTime(e.target.value)}
+                            className="w-32 bg-[#2e2e2e] border border-[#565d5d] rounded-lg px-3 py-2 text-white focus:outline-none focus:border-[#F67631]"
+                            placeholder="min"
+                        />
+                    </div>
 
-            <div className="flex items-center justify-between">
-                <label className="text-white text-base">Weight (kg):</label>
-                <input
-                    type="number"
-                    step="0.5"
-                    min="0"
-                    value={weight}
-                    onChange={(e) => setWeight(e.target.value)}
-                    className="w-32 bg-[#2e2e2e] border border-[#565d5d] rounded-lg px-3 py-2 text-white focus:outline-none focus:border-[#F67631]"
-                    placeholder="0.0"
-                />
-            </div>
+                    <div className="flex items-center justify-between">
+                        <label className="text-white text-base">Distance:</label>
+                        <input
+                            type="text"
+                            inputMode="decimal"
+                            value={distance}
+                            onChange={(e) => setDistance(e.target.value)}
+                            className="w-32 bg-[#2e2e2e] border border-[#565d5d] rounded-lg px-3 py-2 text-white focus:outline-none focus:border-[#F67631]"
+                            placeholder="km"
+                        />
+                    </div>
+                </>
+            ) : (
+                <>
+                    <div className="flex items-center justify-between mb-3">
+                        <label className="text-white text-base">Reps:</label>
+                        <input
+                            type="text"
+                            inputMode="numeric"
+                            value={reps}
+                            onChange={(e) => setReps(e.target.value)}
+                            className="w-32 bg-[#2e2e2e] border border-[#565d5d] rounded-lg px-3 py-2 text-white focus:outline-none focus:border-[#F67631]"
+                            placeholder="reps"
+                        />
+                    </div>
+
+                    <div className="flex items-center justify-between">
+                        <label className="text-white text-base">Weight (kg):</label>
+                        <input
+                            type="text"
+                            inputMode="decimal"
+                            value={weight}
+                            onChange={(e) => setWeight(e.target.value)}
+                            className="w-32 bg-[#2e2e2e] border border-[#565d5d] rounded-lg px-3 py-2 text-white focus:outline-none focus:border-[#F67631]"
+                            placeholder="0.0"
+                        />
+                    </div>
+                </>
+            )}
         </div>
     );
 }

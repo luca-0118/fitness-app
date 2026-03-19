@@ -4,7 +4,7 @@ import PauseCircleOutlineIcon from '@mui/icons-material/PauseCircleOutline';
 import StopCircleOutlinedIcon from '@mui/icons-material/StopCircleOutlined';
 import FlagCircleOutlinedIcon from '@mui/icons-material/FlagCircleOutlined';
 import RestartAltIcon from '@mui/icons-material/RestartAlt';
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import MenuIcon from '@mui/icons-material/Menu';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 
@@ -62,10 +62,10 @@ export default function StopWatch({ onTimerChange }: StopWatchProps) {
     return (
         <div className="flex flex-col items-center justify-center relative w-87 bg-[#1E1E1E] border-2 border-[#565d5d] rounded-lg p-6 pt-12">
             <button 
-                className="absolute top-2 left-2 text-orange-500 hover:text-orange-400 active:text-orange-400 transition-colors z-10"
+                className="absolute top-2 right-2 text-orange-500 hover:text-orange-400 active:text-orange-400 transition-colors z-10"
                 onClick={handleMenuClick}
             >
-                <KeyboardArrowDownIcon style={{ fontSize: '32px' }} />
+                <MenuIcon style={{ fontSize: '32px' }} />
             </button>
             <Menu
                 anchorEl={anchorEl}
