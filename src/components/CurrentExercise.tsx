@@ -42,7 +42,7 @@ export function CurrentExercise({exerciseData, isExpanded = false, onToggle, chi
                     {exerciseData.sets.map((set, idx) => (
                         <Sets
                             key={idx}
-                            setNumber={idx}
+                            setNumber={idx + 1}
                             onDelete={() => {
                             }}
                             updateFunction={updateSet}

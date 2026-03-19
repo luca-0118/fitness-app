@@ -27,7 +27,7 @@ pub fn start_session(
 
         if exercise.body_parts.contains("cardio")
         {
-            for _i in 0..3 {
+            for _i in 0..1 {
                 sets.push(models::Set::Timed{
                     distance: 0f64,
                     time: 0.0,

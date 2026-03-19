@@ -9,7 +9,7 @@ interface SetsProps {
     data: IWeightedSet | ITimedSet
 }
 
-export default function Sets({updateFunction, setNumber = 0, onDelete, data }: SetsProps) {
+export default function Sets({updateFunction, setNumber = 1, onDelete, data }: SetsProps) {
 
     // You can use this to see what kind of type the value is.
     // it also shows how to use the updateFunction to send a TimeBasedSet.
@@ -32,7 +32,7 @@ export default function Sets({updateFunction, setNumber = 0, onDelete, data }: S
 
             const data: WeightedSet = {type:"Weighted",reps,weight};
 
-            updateFunction(setNumber,data)
+            updateFunction(setNumber - 1,data)
                 .then(() => {console.log("updated")});
     }, [reps,weight]);
 
@@ -79,7 +79,7 @@ export default function Sets({updateFunction, setNumber = 0, onDelete, data }: S
 
             const data: TimedSet = {type:"Timed",time,distance};
 
-            updateFunction(setNumber,data)
+            updateFunction(setNumber - 1,data)
                 .then(() => {console.log("updated")});
     }, [time,distance]);
 
