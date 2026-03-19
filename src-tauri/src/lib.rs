@@ -1,4 +1,5 @@
 use rusqlite::Connection;
+use tauri::Manager;
 use std::sync::Mutex;
 
 mod api;
@@ -13,18 +14,30 @@ struct Db {
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
+
     // FIXME THIS CONNECTION IS USED BY EVERY SINGLE QUERY. IT ALLOWS US TO EASILY CHANGE QUERIES.
     // IT NEEDS TO BE LIKE THIS TO EASILY CHANGE IT.
-    let conn = services::database::establish_connection();
 
     // sets up the default structure of the database.
-    services::database::migrate(&conn);
+    
 
     // Tauri building process
     tauri::Builder::default()
-        //the default connection to the database
-        .manage(Db {
-            conn: Mutex::new(conn),
+        .setup(|app| {
+            // Creates database file in appdata, allows it to be mutable
+            let dbpath = services::database::instantiate(app);
+            
+            //Connects to database.
+            let conn = services::database::establish_connection(&dbpath);
+            
+            // Adds all the required tables.
+            services::database::migrate(&conn);
+
+            app.manage(Db {
+                conn: Mutex::new(conn),
+            });
+            
+            Ok(())
         })
 
         //Used for future state management.
@@ -37,6 +50,7 @@ pub fn run() {
             exercises: Vec::new(),
         }))
 
+
         .plugin(tauri_plugin_opener::init())
 
         // Add all frontend functions here
@@ -48,11 +62,13 @@ pub fn run() {
             endpoints::workout::list_workouts,
             endpoints::workout::link_exercise,
             endpoints::session::start_session,
+            endpoints::get_exercises_by_muscle::get_exercises_by_muscle,
             endpoints::session::get_session,
             endpoints::session::update_set
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
+
 
 

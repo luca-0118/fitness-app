@@ -11,43 +11,44 @@ type backendFunctions =
     | "update_set";
 
 interface WorkoutDTO {
-    uuid: string;
-    name: string;
-    desc?: string;
+  uuid: string;
+  name: string;
+  desc?: string;
 }
 
 interface ExerciseDTO {
-    instanceId: number;
-    id: string;
-    name: string;
-    data: string;
+  instanceId: number;
+  id: string;
+  name: string;
+  data: string;
+  gif_url: string;
 }
 
 interface linkExerciseDTO {
-    workout_uuid: string;
-    exercise_uuid: string;
+  workout_uuid: string;
+  exercise_uuid: string;
 }
 
 interface ApiError extends ApiReponse {
-    ok: false;
-    error_type: string;
-    message: string;
+  ok: false;
+  error_type: string;
+  message: string;
 }
 
 interface ApiReponse {
-    ok: boolean;
+  ok: boolean;
 }
 
 interface ApiSucess<T> extends ApiReponse {
-    ok: true;
-    data: T;
+  ok: true;
+  data: T;
 }
 
 interface IdetailedWorkoutDTO {
-    uuid: string;
-    name: string;
-    desc: string;
-    exercises: ExerciseDTO[];
+  uuid: string;
+  name: string;
+  desc: string;
+  exercises: ExerciseDTO[];
 }
 
 interface ISessionState {

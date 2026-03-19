@@ -5,26 +5,14 @@ import {IUseSetUpdateFunction, TimedSet, WeightedSet} from "../Hooks/UseSetUpdat
 interface SetsProps {
     setNumber?: number;
     onDelete?: () => void;
-    updateFunction: IUseSetUpdateFunction
-    data: IWeightedSet | ITimedSet
+    exerciseType?: "cardio" | "weight";
 }
 
-export default function Sets({updateFunction, setNumber = 0, onDelete, data }: SetsProps) {
-
-    // You can use this to see what kind of type the value is.
-    // it also shows how to use the updateFunction to send a TimeBasedSet.
-    // this can be deleted to make way for different solutions.
-    if (data.type !== "Weighted") return <h1 onClick={(_e) => {
-        const data: TimedSet = {type:"Timed",time: 10.0, distance: 40.0};
-
-        updateFunction(setNumber,data)
-            .then(() => {console.log("time updated")});
-    }}>Incorrect type..</h1>
-    //
-
-    const [reps, setReps] = useState(data.reps);
-    const [weight, setWeight] = useState(data.weight);
-    const repsOptions = Array.from({ length: 51 }, (_, i) => i);
+export default function Sets({ setNumber = 1, onDelete, exerciseType = "weight" }: SetsProps) {
+    const [reps, setReps] = useState("");
+    const [weight, setWeight] = useState("");
+    const [time, setTime] = useState("");
+    const [distance, setDistance] = useState("");
 
     useEffect(() => {
         console.log("set up setnr:",setNumber);
@@ -43,7 +31,7 @@ export default function Sets({updateFunction, setNumber = 0, onDelete, data }: S
                 {onDelete && setNumber > 3 && (
                     <button
                         onClick={onDelete}
-                        className="text-red-500 hover:text-red-400 cursor-pointer transition-colors"
+                        className="text-red-500 hover:text-red-400 active:text-red-400 cursor-pointer transition-colors"
                         title="Delete set"
                     >
                         <DeleteIcon sx={{ fontSize: 24 }} />
@@ -51,33 +39,59 @@ export default function Sets({updateFunction, setNumber = 0, onDelete, data }: S
                 )}
             </div>
 
-            <div className="flex items-center justify-between mb-3">
-                <label className="text-white text-base">Reps:</label>
-                <select
-                    value={reps}
-                    onChange={(e) => setReps(Number(e.target.value))}
-                    className="w-32 bg-[#2e2e2e] border border-[#565d5d] rounded-lg px-3 py-2 text-white focus:outline-none focus:border-[#F67631] cursor-pointer"
-                >
-                    {repsOptions.map((value) => (
-                        <option key={value} value={value}>
-                            {value}
-                        </option>
-                    ))}
-                </select>
-            </div>
+            {exerciseType === "cardio" ? (
+                <>
+                    <div className="flex items-center justify-between mb-3">
+                        <label className="text-white text-base">Time:</label>
+                        <input
+                            type="text"
+                            inputMode="numeric"
+                            value={time}
+                            onChange={(e) => setTime(e.target.value)}
+                            className="w-32 bg-[#2e2e2e] border border-[#565d5d] rounded-lg px-3 py-2 text-white focus:outline-none focus:border-[#F67631]"
+                            placeholder="min"
+                        />
+                    </div>
 
-            <div className="flex items-center justify-between">
-                <label className="text-white text-base">Weight (kg):</label>
-                <input
-                    type="number"
-                    step="0.5"
-                    min="0"
-                    value={weight}
-                    onChange={(e) => setWeight(Number(e.target.value))}
-                    className="w-32 bg-[#2e2e2e] border border-[#565d5d] rounded-lg px-3 py-2 text-white focus:outline-none focus:border-[#F67631]"
-                    placeholder="0.0"
-                />
-            </div>
+                    <div className="flex items-center justify-between">
+                        <label className="text-white text-base">Distance:</label>
+                        <input
+                            type="text"
+                            inputMode="decimal"
+                            value={distance}
+                            onChange={(e) => setDistance(e.target.value)}
+                            className="w-32 bg-[#2e2e2e] border border-[#565d5d] rounded-lg px-3 py-2 text-white focus:outline-none focus:border-[#F67631]"
+                            placeholder="km"
+                        />
+                    </div>
+                </>
+            ) : (
+                <>
+                    <div className="flex items-center justify-between mb-3">
+                        <label className="text-white text-base">Reps:</label>
+                        <input
+                            type="text"
+                            inputMode="numeric"
+                            value={reps}
+                            onChange={(e) => setReps(e.target.value)}
+                            className="w-32 bg-[#2e2e2e] border border-[#565d5d] rounded-lg px-3 py-2 text-white focus:outline-none focus:border-[#F67631]"
+                            placeholder="reps"
+                        />
+                    </div>
+
+                    <div className="flex items-center justify-between">
+                        <label className="text-white text-base">Weight (kg):</label>
+                        <input
+                            type="text"
+                            inputMode="decimal"
+                            value={weight}
+                            onChange={(e) => setWeight(e.target.value)}
+                            className="w-32 bg-[#2e2e2e] border border-[#565d5d] rounded-lg px-3 py-2 text-white focus:outline-none focus:border-[#F67631]"
+                            placeholder="0.0"
+                        />
+                    </div>
+                </>
+            )}
         </div>
     );
 }
