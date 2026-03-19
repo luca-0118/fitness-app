@@ -52,7 +52,7 @@ export default function Exercises() {
             ))}
           </ul>
         </DragDropProvider>
-        <div className="absolute bottom-0 pb-24 w-full opacity-80">
+        <div className="fixed bottom-20 w-full opacity-80">
           <StartSessionButton
             exercises={exercises}
             workoutId={selectedWorkout}
