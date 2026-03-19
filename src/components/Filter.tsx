@@ -1,4 +1,12 @@
-export default function Filter({ gif, isSelected, onClick }) {
+export default function Filter({
+  gif,
+  isSelected,
+  onClick,
+}: {
+  gif: string;
+  isSelected: boolean;
+  onClick: () => void;
+}) {
   return (
     <div className="p-2">
       <button
