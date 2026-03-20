@@ -9,25 +9,28 @@ export default function SaveButton() {
     const navigate = useNavigate()
 
     async function handleSave() {
-        return await Toast.promise(
+        const workoutUuid = await Toast.promise(
             new Promise(async (Resolve, Reject) => {
-            if (!workoutName) Reject("No name");
+                if (!workoutName) Reject("No name");
 
-            const workoutUuid = await API.workouts.create(workoutName);
-            console.log("workout sucessfully created!");
+                const workoutUuid = await API.workouts.create(workoutName);
+                console.log("workout sucessfully created!");
 
-            for (const exercise of exercises) {
-                await API.workouts.linkExercise(workoutUuid, exercise.id);
+                for (const exercise of exercises) {
+                    await API.workouts.linkExercise(workoutUuid, exercise.id);
+                }
+
+                Resolve(workoutUuid);
+            }),
+            {
+                loading: "Saving workout...",
+                success: "Workout saved!",
+                // @ts-ignore This is an type error made by the library itself.
+                error: (err: unknown) => `Error: ${err}`,
             }
-
-            Resolve(workoutUuid);
-        }),
-        {
-            loading: "Saving workout...",
-            success: "Workout saved!",
-            // @ts-ignore This is an type error made by the library itself.
-            error: (err: unknown) => `Error: ${err}`,
-        });
+        );
+        navigate(-1);
+        return workoutUuid;
     }
 
     return (
