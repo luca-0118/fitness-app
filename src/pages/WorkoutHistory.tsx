@@ -1,25 +1,30 @@
 import WorkoutHistoryWidget from "../components/WorkoutHistoryWidget.tsx";
+import {useEffect, useState} from "react";
+import API from "../classes/api.ts";
 
 export default function WorkoutHistory() {
-    const workoutHistory = [
-        { id: 1, name: "Push Day" },
-        { id: 2, name: "Pull Day" },
-        { id: 3, name: "Leg Day" },
-        { id: 4, name: "Upper Body" },
-        { id: 5, name: "Lower Body" },
-        { id: 6, name: "PR day" },
-        { id: 7, name: "Full body" },
-        { id: 8, name: "Cardio" },
-        { id: 9, name: "Recovery" },
-        { id: 10, name: "Glute" },
-    ];
+    const [history,setHisory] = useState<IworkoutHistory[]>([]);
+
+    useEffect(() => {
+        const get = async () => {
+            const resp = await API.workouts.history();
+            if (resp.length == 0) return;
+
+            setHisory(resp);
+        }
+
+        get();
+
+    }, []);
+
+    if (history.length == 0 ) return <h1>Loading...</h1>
 
     return (
         <>
             <div>
                 <div className="pt-2">
-                    {workoutHistory.map((workoutHistory) => (
-                        <WorkoutHistoryWidget key={workoutHistory.id} name={workoutHistory.name} />
+                    {history.map((workout,idx) => (
+                        <WorkoutHistoryWidget key={idx} workout={workout} />
                     ))}
                 </div>
             </div>
