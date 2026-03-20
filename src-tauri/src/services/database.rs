@@ -35,22 +35,25 @@ pub fn establish_connection(dbpath: &PathBuf) -> Connection {
 
 // Creates all the default structure for the database (for workouts and connecting exercises to workouts.)
 pub fn migrate(conn: &Connection) {
+
+    //Workout exercises table
+    // NOTE PRAGMA foreign_keys = ON; is required, otherwise foreign keys won't work.
+    conn.execute("PRAGMA foreign_keys = ON", [])
+        .expect("foreign keys disabled");
+    
+    // conn.execute("DROP TABLE IF EXISTS Workouts", []).expect("TODO: panic message");
+
     conn.execute(
         "CREATE TABLE IF NOT EXISTS Workouts (
         ID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-        Uuid TEXT NOT NULL,
+        Uuid TEXT UNIQUE NOT NULL,
         Name TEXT NOT NULL,
         Desc TEXT
         );",
         [],
     )
         .expect("failed to initialize schema Workouts");
-
-    //Workout exercises table
-    // NOTE PRAGMA foreign_keys = ON; is required, otherwise foreign keys won't work.
-    conn.execute("PRAGMA foreign_keys = ON", [])
-        .expect("foreign keys disabled");
-
+    
     conn.execute(
         "CREATE TABLE IF NOT EXISTS WorkoutExercises (
         ID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
@@ -66,8 +69,10 @@ pub fn migrate(conn: &Connection) {
     conn.execute("CREATE TABLE IF NOT EXISTS workoutHistory (
         ID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
         sessionId TEXT UNIQUE NOT NULL,
+        workoutId TEXT NOT NULL,
         started_at TEXT NOT NULL,
-        completed_at TEXT NOT NULL
+        completed_at TEXT NOT NULL,
+        FOREIGN KEY (workoutId) REFERENCES Workouts(Uuid)
     )",[]).unwrap();
 
     conn.execute("CREATE TABLE IF NOT EXISTS completedExercises (

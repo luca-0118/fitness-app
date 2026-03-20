@@ -1,5 +1,6 @@
 use crate::api::{self, ApiError};
 use serde::Serialize;
+use crate::Db;
 
 #[derive(Debug, Serialize)]
 pub struct Exercise {
@@ -9,8 +10,11 @@ pub struct Exercise {
 }
 
 #[tauri::command]
-pub fn get_exercises_by_muscle(muscle: String) -> Result<api::ApiResponse<Vec<Exercise>>, api::ApiErrorResponse> {
-    let conn = rusqlite::Connection::open("test.db").map_err(ApiError::from)?;
+pub fn get_exercises_by_muscle(muscle: String,db: tauri::State<Db>) -> Result<api::ApiResponse<Vec<Exercise>>, api::ApiErrorResponse> {
+    let conn = db
+        .conn
+        .lock()
+        .map_err(|_| api::ApiError::FailedDbConnection)?;
 
     let query = format!(
         "SELECT * FROM exercises WHERE targetMuscles = '[\"{}\"]'",

@@ -3,16 +3,20 @@ use uuid::Uuid;
 
 use crate::{Db, api, models::{SessionExercise, Set}};
 
+#[derive(Debug)]
 pub struct CompletedWorkoutDTO {
     pub session_id: String,
+    pub workout_id: String,
     pub started_at: String,
     pub completed_at: String
 }
 
 pub fn add_completed_workout(conn: &mut Connection,workout: CompletedWorkoutDTO) -> bool {
 
-    let result = conn.execute("INSERT INTO workoutHistory(SessionId,Started_at,Completed_at) VALUES (?1,?2,?3)",
-    [workout.session_id,workout.started_at,workout.completed_at]);
+    println!("inserting following struct: {:?}",workout);
+    
+    let result = conn.execute("INSERT INTO workoutHistory(SessionId,WorkoutId,Started_at,Completed_at) VALUES (?1,?2,?3,?4)",
+    [workout.session_id,workout.workout_id,workout.started_at,workout.completed_at]);
 
     // returns true or false based on if the result has affected anything once.
     match result {

@@ -121,6 +121,7 @@ pub fn complete_session(
     //creates an dto for the function and sends it.
     let workout_dto = logic::session::CompletedWorkoutDTO{
         session_id: session_state.session_uuid.clone(),
+        workout_id: session_state.workout_uuid.clone(),
         started_at: session_state.start_time.clone(),
         completed_at: session_state.end_time.clone()
     };
