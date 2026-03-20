@@ -1,4 +1,4 @@
-import WorkoutWidget from "../components/WorkoutWidget";
+import WorkoutWidget from "../components/WorkoutWidget.tsx";
 import WorkoutAddButton from "../components/WorkoutAddButton.tsx";
 import { useState, useEffect, useMemo } from "react";
 import API from "../classes/api.ts";
