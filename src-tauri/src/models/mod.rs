@@ -8,3 +8,5 @@ pub use session::Session;
 pub use session::Exercise as SessionExercise;
 pub use session::Set;
 pub use session::SetUpdateDTO;
+pub use workout::IWorkoutHistory;
+pub use workout::WorkoutHistory;

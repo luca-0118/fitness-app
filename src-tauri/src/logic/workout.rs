@@ -1,7 +1,7 @@
 use serde::{Deserialize, Serialize};
 use uuid::Uuid;
 use crate::{api, Db};
-use crate::api::ApiError;
+use crate::api::{ApiError, ApiErrorResponse};
 use crate::models;
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -126,4 +126,37 @@ pub fn detailed(db: &Db, workout_uuid: String) -> Result<IdetailedWorkoutDTO, Ap
         name: workout.1,
         exercises: exercises?,
     })
+}
+
+pub fn history(db: &Db) -> Result<models::IWorkoutHistory, ApiErrorResponse> {
+    let conn = db
+        .conn
+        .lock()
+        .map_err(|_| api::ApiError::FailedDbConnection)?;
+
+    let mut stmt = conn.prepare(
+        "SELECT w.Name,wh.sessionId,wh.started_at,wh.completed_at FROM workoutHistory wh
+             INNER JOIN Workouts w ON wh.workoutId = w.Uuid;",
+    ).map_err(|_| ApiError::DatabaseError)?;
+
+    let workout_iter = stmt.query_map([], |row| {
+        Ok(models::WorkoutHistory {
+            workout_name: row.get(0)?,
+            session_uuid: row.get(1)?,
+            start_date: row.get(2)?,
+            end_date: row.get(3)?
+        })
+    }).map_err(|_| ApiError::DatabaseError)?;
+
+    let workout_history_list: Result<models::IWorkoutHistory,rusqlite::Error> = workout_iter.collect();
+
+    return match workout_history_list {
+        Ok(workout_history_list) => {
+            Ok(workout_history_list)
+        }
+        Err(_) => {
+            Err(ApiError::DatabaseError.into())
+        }
+    }
+
 }
