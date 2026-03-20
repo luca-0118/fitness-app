@@ -4,10 +4,10 @@ use rusqlite::Connection;
 use tauri::webview::cookie::time::{UtcDateTime};
 use uuid::Uuid;
 use crate::{api, services, Db};
+use crate::api::ApiResponse;
 use crate::logic;
 use crate::models;
-
-
+use crate::models::IWorkoutHistory;
 
 #[tauri::command]
 pub fn start_session(
@@ -121,6 +121,7 @@ pub fn complete_session(
     //creates an dto for the function and sends it.
     let workout_dto = logic::session::CompletedWorkoutDTO{
         session_id: session_state.session_uuid.clone(),
+        workout_id: session_state.workout_uuid.clone(),
         started_at: session_state.start_time.clone(),
         completed_at: session_state.end_time.clone()
     };
@@ -135,4 +136,16 @@ pub fn complete_session(
 
 
     Ok(api::ApiResponse { ok: true, data: session_state })
+}
+
+#[tauri::command]
+pub fn workout_history(db: tauri::State<Db>) -> Result<ApiResponse<IWorkoutHistory>,api::ApiErrorResponse> {
+    let completed_workouts = logic::workout::history(&db)?;
+    
+    Ok(ApiResponse {
+        ok:true,
+        data: completed_workouts
+    })
+    
+    
 }

@@ -9,7 +9,8 @@ type backendFunctions =
   | "start_session"
   | "get_session"
   | "complete_session"
-  | "update_set";
+  | "update_set"
+  | "workout_history";
 
 interface WorkoutDTO {
   uuid: string;
@@ -99,4 +100,18 @@ interface ITimedSetUpdate extends IBaseSetUpdate {
     set_nr: number;
     time:number;
     distance:number;
+}
+
+interface workoutHistoryDTO {
+    workout_name:    string;
+    session_uuid:    string;
+    start_date:      string;
+    end_date:        string;
+}
+
+interface IworkoutHistory {
+    workoutName: string;
+    sessionUuid: string;
+    startDate: Date;
+    endDate: Date;
 }

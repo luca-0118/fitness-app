@@ -65,7 +65,8 @@ pub fn run() {
             endpoints::get_exercises_by_muscle::get_exercises_by_muscle,
             endpoints::session::get_session,
             endpoints::session::update_set,
-            endpoints::session::complete_session
+            endpoints::session::complete_session,
+            endpoints::session::workout_history
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

@@ -35,7 +35,7 @@ export default class workoutAPI {
 
     /**
      *  Gets a workout with it's connected exercises based on the provided Uuid.
-     * @param _workoutID The Uuid provided from the backend list.
+     * @param _workoutUuid The Uuid provided from the backend list.
      * @returns a detailed list of workout information and connected exercises.
      */
     public async detailed(_workoutUuid: string): Promise<IdetailedWorkoutDTO | string> {
@@ -48,4 +48,24 @@ export default class workoutAPI {
         const resp = await ApiClient.send<IdetailedWorkoutDTO>("get_workout", { workoutUuid: _workoutUuid });
         return ApiClient.assertOk(resp);
     }
+
+    public async history(): Promise<IworkoutHistory[]> {
+        const resp = await ApiClient.send<workoutHistoryDTO[]>("workout_history");
+
+        const data = ApiClient.assertOk(resp);
+
+        return data.map(historyObj => {
+            let startDate = new Date(historyObj.start_date);
+            let endDate = new Date(historyObj.end_date);
+
+            return {
+                workoutName: historyObj.workout_name,
+                sessionUuid: historyObj.session_uuid,
+                startDate,
+                endDate
+            }
+        })
+    }
 }
+
+
