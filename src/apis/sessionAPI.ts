@@ -33,4 +33,65 @@ export default  class sessionAPI {
         console.log(sessionData);
         return sessionData;
     }
+
+    public async updateSet(setUpdate: ITimedSetUpdate|IWeightedSetUpdate): Promise<{success: boolean, resp: string }> {
+        const validator = validators[setUpdate.type];
+
+        if (!validator) {
+            return { success: false, resp: "updateType not found" };
+        }
+
+        const error = validator(setUpdate as any);
+        if (error) {
+            return { success: false, resp: error };
+        }
+
+        const resp = await ApiClient.send<string>("update_set", { setUpdate });
+        const data = ApiClient.assertOk(resp);
+
+        console.log(`updated ${setUpdate.type} set:`, data);
+
+        return { success: true, resp: data };
+    }
+
+    public async complete(): Promise<{ok:boolean,msg:string}> {
+        if (typeof localStorage.getItem("workoutSessionId") == "undefined") 
+            return {ok: false, msg:"no workout active to save."}
+
+
+        const resp = await ApiClient.send<string>("complete_session");
+
+        localStorage.removeItem("workoutSessionId");
+        return {
+            ok: true,
+            msg:"cleared"
+        }
+    }
+}
+
+const validators = {
+    Weighted: validateWeighted,
+    Timed: validateTimed,
+} as const;
+
+function validateWeighted(set: IWeightedSetUpdate): string | null {
+    if (
+        set.set_nr < 0 ||
+        !set.exercise_id ||
+        !set.reps ||
+        !set.weight
+    ) return "Not everything has been filled in.";
+
+    return null;
+}
+
+function validateTimed(set: ITimedSetUpdate): string | null {
+    if (
+        set.set_nr < 0 ||
+        !set.exercise_id ||
+        !set.distance ||
+        !set.time
+    ) return "Not everything has been filled in.";
+
+    return null;
 }

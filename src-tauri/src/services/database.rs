@@ -1,9 +1,34 @@
 
+use std::path::PathBuf;
+
 use rusqlite::Connection;
+use tauri::{App, Manager};
+
+pub fn instantiate(app: &mut App) -> PathBuf {
+            let db_path = app.path().resolve(
+                "workoutbase.sqlite",
+                tauri::path::BaseDirectory::AppLocalData,
+            ).expect("pathbuf not found");
+
+            // Check if database already exists
+            if !db_path.exists() {
+                // Ensure the parent directory exists
+                if let Some(parent) = db_path.parent() {
+                    std::fs::create_dir_all(parent).expect("directory couldn't be created.");
+                }
+
+                // Embed and write the template database
+                let template_bytes = include_bytes!("../resources/workoutbase.sqlite");
+                std::fs::write(&db_path, template_bytes)
+                    .expect("Failed to write database template");
+            }
+
+            db_path
+}
 
 // Logic for establishing a connection.
-pub fn establish_connection() -> Connection {
-    Connection::open("../public/workoutbase.sqlite")
+pub fn establish_connection(dbpath: &PathBuf) -> Connection {
+    Connection::open(dbpath)
         .expect("Failed to open or create database")
 }
 
@@ -37,4 +62,34 @@ pub fn migrate(conn: &Connection) {
         [],
     )
         .expect("failed to initialize schema WorkoutExercises");
+
+    conn.execute("CREATE TABLE IF NOT EXISTS workoutHistory (
+        ID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+        sessionId TEXT UNIQUE NOT NULL,
+        started_at TEXT NOT NULL,
+        completed_at TEXT NOT NULL
+    )",[]).unwrap();
+
+    conn.execute("CREATE TABLE IF NOT EXISTS completedExercises (
+        ID TEXT NOT NULL PRIMARY KEY,
+        sessionId TEXT NOT NULL,
+        exerciseId TEXT NOT NULL,
+        Time_completed TEXT NOT NULL DEFAULT 'test',
+        FOREIGN KEY (sessionId) REFERENCES workoutHistory(sessionId)
+    )", []).unwrap();
+
+    conn.execute("CREATE TABLE IF NOT EXISTS completedCardioExercises (
+        ID TEXT NOT NULL PRIMARY KEY,
+        time FLOAT,
+        distance FLOAT,
+        FOREIGN KEY (ID) REFERENCES completedExercises(ID)
+    )",[]).unwrap();
+
+    conn.execute("CREATE TABLE IF NOT EXISTS completedWeightExercises (
+        ID TEXT NOT NULL PRIMARY KEY,
+        reps FLOAT,
+        weight FLOAT,
+        FOREIGN KEY (ID) REFERENCES completedExercises(ID)
+    )",[]).unwrap();
+
 }

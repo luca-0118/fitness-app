@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import PlayCircleOutlineIcon from '@mui/icons-material/PlayCircleOutline';
 import PauseCircleOutlineIcon from '@mui/icons-material/PauseCircleOutline';
 import StopCircleOutlinedIcon from '@mui/icons-material/StopCircleOutlined';
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import MenuIcon from '@mui/icons-material/Menu';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 
@@ -107,12 +107,12 @@ export default function TabataTimer({ onTimerChange }: TabataTimerProps) {
     };
 
     return (
-        <div className="flex flex-col items-center justify-center relative w-87 bg-[#1E1E1E] border-2 border-[#565d5d] rounded-lg p-6 pt-12">
+        <div className="flex flex-col items-center justify-center relative w-87 bg-[#1E1E1E] border-2 border-[#565d5d] rounded-lg p-6 pt-8">
             <button
-                className="absolute top-2 left-2 text-orange-500 hover:text-orange-400 transition-colors z-10"
+                className="absolute top-2 right-2 text-orange-500 hover:text-orange-400 active:text-orange-400 transition-colors z-10"
                 onClick={handleMenuClick}
             >
-                <KeyboardArrowDownIcon style={{ fontSize: '32px' }} />
+                <MenuIcon style={{ fontSize: '32px' }} />
             </button>
             <Menu anchorEl={anchorEl} open={open} onClose={handleMenuClose}>
                 <MenuItem onClick={() => handleTimerSwitch('stopwatch')}>Stopwatch</MenuItem>
@@ -161,7 +161,7 @@ export default function TabataTimer({ onTimerChange }: TabataTimerProps) {
                 </div>
             )}
 
-            <div className="text-sm mb-2 text-gray-300">
+            <div className="text-lg font-bold mb-2 text-white">
                 Round {currentRound}/{totalRounds} · {isWorkPhase ? "WORK" : "REST"}
             </div>
 
@@ -173,7 +173,7 @@ export default function TabataTimer({ onTimerChange }: TabataTimerProps) {
 
             <div className="flex flex-row items-center justify-center gap-3">
                 <button
-                    className="w-14 h-14 rounded-full border-4 border-green-500 bg-gray-900 text-green-500 hover:bg-green-500 hover:text-white transition-colors flex items-center justify-center"
+                    className="w-14 h-14 rounded-full border-4 border-green-500 bg-gray-900 text-green-500 hover:bg-green-500 hover:text-white active:bg-green-500 active:text-white transition-colors flex items-center justify-center"
                     onClick={() => {
                         if (isActive) {
                             setIsActive(false);
@@ -185,7 +185,7 @@ export default function TabataTimer({ onTimerChange }: TabataTimerProps) {
                     {isActive ? <PauseCircleOutlineIcon fontSize="large" /> : <PlayCircleOutlineIcon fontSize="large" />}
                 </button>
                 <button
-                    className="w-14 h-14 rounded-full border-4 border-red-500 bg-gray-900 text-red-500 hover:bg-red-500 hover:text-white transition-colors flex items-center justify-center"
+                    className="w-14 h-14 rounded-full border-4 border-red-500 bg-gray-900 text-red-500 hover:bg-red-500 hover:text-white active:bg-red-500 active:text-white transition-colors flex items-center justify-center"
                     onClick={handleReset}
                 >
                     <StopCircleOutlinedIcon fontSize="large" />

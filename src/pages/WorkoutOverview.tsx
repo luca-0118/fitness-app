@@ -1,22 +1,11 @@
 import WorkoutWidget from "../components/WorkoutWidget.tsx";
 import WorkoutAddButton from "../components/WorkoutAddButton.tsx";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import API from "../classes/api.ts";
 import { DragDropProvider } from "@dnd-kit/react";
 import { move } from "@dnd-kit/helpers";
-import {PointerSensor, PointerActivationConstraints, DragDropManager} from '@dnd-kit/dom';
-const manager = new DragDropManager({
-    sensors: [
-        PointerSensor.configure({
-            activationConstraints: [
-                new PointerActivationConstraints.Delay({
-                    value: 150,
-                    tolerance: {x: 5, y: 5},
-                }),
-            ]
-        })
-    ]
-});
+import { DndManagerdelay } from "../components/DndManager.tsx";
+
 // I quite genuinely have to remap my UUID to id because of muks lib. I hate libs.
 type dndLibModifier = {
     id: string;
@@ -25,6 +14,8 @@ type dndLibModifier = {
 };
 
 export default function WorkoutOverview() {
+    const manager = useMemo(() => DndManagerdelay(), []);
+
     const [workouts, setWorkouts] = useState<dndLibModifier[]>([]);
     useEffect(() => {
         const getWorkouts = async () => {
@@ -56,7 +47,9 @@ export default function WorkoutOverview() {
                 <ul className="pt-2 text-center text-gray-400">
                     <li>No workouts yet. Create a new one!</li>
                 </ul>
-                <WorkoutAddButton to="/new-workout" />
+                <div className="fixed bottom-20 left-0 right-0 flex justify-center z-20">
+                    <WorkoutAddButton to="/new-workout" />
+                </div>
             </div>
         );
 
@@ -64,17 +57,19 @@ export default function WorkoutOverview() {
         <>
             <div>
                 <DragDropProvider manager={manager}
-                    onDragEnd={(event) => {
-                        // #TODO add local backend ordering.
-                        setWorkouts((workout) => move(workout, event));
-                    }}
-                >
-                    <ul className="pt-2">
+                        onDragEnd={(event) => {
+                            // #TODO add local backend ordering.
+                            setWorkouts((workout) => move(workout, event));
+                        }}
+                    >
+                    <ul className="pt-2 pb-17">
                         {workouts.map((workout, index) => (
-                            <WorkoutWidget key={workout.id} id={workout.id} index={index} name={workout.name} />
+                                <WorkoutWidget key={workout.id} id={workout.id} index={index} name={workout.name} />
                         ))}
                     </ul>
                 </DragDropProvider>
+            </div>
+            <div className="fixed bottom-20 left-0 right-0 flex justify-center z-20">
                 <WorkoutAddButton to="/new-workout" />
             </div>
         </>
