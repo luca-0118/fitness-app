@@ -12,31 +12,6 @@ interface SessionState {
     exercises?: ExerciseDTO[];
 }
 
-function getExerciseType(exercise: ExerciseDTO): "cardio" | "weight" {
-    const targetMuscles = (exercise as ExerciseDTO & {
-        target_muscles?: string;
-        targetMuscles?: string;
-    }).target_muscles || (exercise as ExerciseDTO & { targetMuscles?: string }).targetMuscles;
-
-    if (typeof targetMuscles === "string") {
-        const normalizedTargetMuscles = targetMuscles
-            .toLowerCase()
-            .replace(/[\[\]"]/g, "")
-            .trim();
-
-        if (normalizedTargetMuscles.startsWith("cardio")) {
-            return "cardio";
-        }
-    }
-
-    const exerciseType = (exercise as ExerciseDTO & { exerciseType?: string }).exerciseType;
-    if (typeof exerciseType === "string" && exerciseType.toLowerCase() === "cardio") {
-        return "cardio";
-    }
-
-    return "weight";
-}
-
 export default function Session() {
     const navigate = useNavigate();
     const [selectedTimer, setSelectedTimer] = useState("stopwatch");
@@ -54,12 +29,75 @@ export default function Session() {
             const resp = await API.session.get();
             console.log(resp);
             if (typeof resp !== "string") {
-            setSession(resp);
+                setSession(resp);
+                setExpandedByExercise(Array(resp.exercises.length).fill(false));
             }
         }
         getState();
 
     }, [exercises]);
+
+    const handleAddSet = (exerciseIndex: number) => {
+        setSession((prevSession) => {
+            if (!prevSession) return prevSession;
+
+            const exercise = prevSession.exercises[exerciseIndex];
+            if (!exercise) return prevSession;
+
+            if (exercise.sets.length > 0 && exercise.sets[0].type === "Timed") {
+                return prevSession;
+            }
+
+            const lastSet = exercise.sets[exercise.sets.length - 1] as IWeightedSet | undefined;
+            const newSet: IWeightedSet = lastSet
+                ? { ...lastSet }
+                : {
+                    type: "Weighted",
+                    reps: 0,
+                    weight: 0,
+                    time_completed: new Date().toISOString(),
+                };
+
+            const nextExercises = [...prevSession.exercises];
+            nextExercises[exerciseIndex] = {
+                ...exercise,
+                sets: [...exercise.sets, newSet] as IWeightedSet[],
+            };
+
+            return {
+                ...prevSession,
+                exercises: nextExercises,
+            };
+        });
+    };
+
+    const handleDeleteSet = (exerciseIndex: number, setIndex: number) => {
+        setSession((prevSession) => {
+            if (!prevSession) return prevSession;
+
+            const exercise = prevSession.exercises[exerciseIndex];
+            if (!exercise) return prevSession;
+
+            if (exercise.sets.length > 0 && exercise.sets[0].type === "Timed") {
+                return prevSession;
+            }
+
+            if (exercise.sets.length <= 1) {
+                return prevSession;
+            }
+
+            const nextExercises = [...prevSession.exercises];
+            nextExercises[exerciseIndex] = {
+                ...exercise,
+                sets: exercise.sets.filter((_, idx) => idx !== setIndex) as IWeightedSet[] | ITimedSet[],
+            };
+
+            return {
+                ...prevSession,
+                exercises: nextExercises,
+            };
+        });
+    };
 
     const handleFinishWorkout = async () => {
         if (isFinishing) {
@@ -91,7 +129,7 @@ export default function Session() {
                     {selectedTimer === "tabata" && <TabataTimer onTimerChange={setSelectedTimer} />}
                 </div>
 
-                {exercises.length === 0 ? (
+                {session.exercises.length === 0 ? (
                     <div className="w-87 bg-[#1E1E1E] border-2 border-[#565d5d] rounded-xl p-4 mb-4 text-center">
                         <p className="text-white">No exercises selected.</p>
                     </div>
@@ -106,8 +144,10 @@ export default function Session() {
                                 next[exerciseIndex] = !next[exerciseIndex];
                                 setExpandedByExercise(next);
                             }}
+                            onDeleteSet={(setIndex) => handleDeleteSet(exerciseIndex, setIndex)}
                         >
                             <Plusknop
+                                onClick={() => handleAddSet(exerciseIndex)}
                                 className="mt-3 w-77 h-12 rounded-full bg-[#2e2e2e] hover:bg-[#3a3a3a]  justify-center transition-colors"
                                 iconSize={32}
                             />

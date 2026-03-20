@@ -36,8 +36,6 @@ export default function Sets({updateFunction, setNumber = 1, onDelete, data }: S
                 .then(() => {console.log("updated")});
     }, [reps,weight]);
 
-    const repsOptions = Array.from({ length: 51 }, (_, i) => i);
-
     return ( 
             <OuterLayer set_nr={setNumber} onDelete={onDelete|| (() => {return;})}>
                 <>
