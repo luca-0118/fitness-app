@@ -134,25 +134,31 @@ export default function Session() {
                         <p className="text-white">No exercises selected.</p>
                     </div>
                 ) : (
-                    session.exercises.map((exercise, exerciseIndex) => (
-                        <CurrentExercise
-                            key={exercise.exercise_id}
-                            exerciseData={exercise}
-                            isExpanded={expandedByExercise[exerciseIndex] || false}
-                            onToggle={() => {
-                                const next = [...expandedByExercise];
-                                next[exerciseIndex] = !next[exerciseIndex];
-                                setExpandedByExercise(next);
-                            }}
-                            onDeleteSet={(setIndex) => handleDeleteSet(exerciseIndex, setIndex)}
-                        >
-                            <Plusknop
-                                onClick={() => handleAddSet(exerciseIndex)}
-                                className="mt-3 w-77 h-12 rounded-full bg-[#2e2e2e] hover:bg-[#3a3a3a]  justify-center transition-colors"
-                                iconSize={32}
-                            />
-                        </CurrentExercise>
-                    ))
+                    session.exercises.map((exercise, exerciseIndex) => {
+                        const isCardio = exercise.sets.length > 0 && exercise.sets[0].type === "Timed";
+
+                        return (
+                            <CurrentExercise
+                                key={exercise.exercise_id}
+                                exerciseData={exercise}
+                                isExpanded={expandedByExercise[exerciseIndex] || false}
+                                onToggle={() => {
+                                    const next = [...expandedByExercise];
+                                    next[exerciseIndex] = !next[exerciseIndex];
+                                    setExpandedByExercise(next);
+                                }}
+                                onDeleteSet={(setIndex) => handleDeleteSet(exerciseIndex, setIndex)}
+                            >
+                                {!isCardio && (
+                                    <Plusknop
+                                        onClick={() => handleAddSet(exerciseIndex)}
+                                        className="mt-3 w-77 h-12 rounded-full bg-[#2e2e2e] hover:bg-[#3a3a3a]  justify-center transition-colors"
+                                        iconSize={32}
+                                    />
+                                )}
+                            </CurrentExercise>
+                        );
+                    })
                 )}
 
                 <div className="fixed bottom-24 left-1/2 z-40 w-87 -translate-x-1/2">
