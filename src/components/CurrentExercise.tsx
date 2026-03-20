@@ -7,10 +7,11 @@ interface CurrentExerciseProps {
     exerciseData: ISessionExercises;
     isExpanded?: boolean;
     onToggle?: () => void;
+    onDeleteSet?: (setIndex: number) => void;
     children?: React.ReactNode;
 }
 
-export function CurrentExercise({exerciseData, isExpanded = false, onToggle, children}: CurrentExerciseProps) {
+export function CurrentExercise({exerciseData, isExpanded = false, onToggle, onDeleteSet, children}: CurrentExerciseProps) {
 
     const updateSet = UseSetUpdate(exerciseData.exercise_id);
 
@@ -43,8 +44,7 @@ export function CurrentExercise({exerciseData, isExpanded = false, onToggle, chi
                         <Sets
                             key={idx}
                             setNumber={idx + 1}
-                            onDelete={() => {
-                            }}
+                            onDelete={() => onDeleteSet?.(idx)}
                             updateFunction={updateSet}
                             data={set}
                         />

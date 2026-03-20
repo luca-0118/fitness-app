@@ -11,6 +11,12 @@ interface SetsProps {
 
 export default function Sets({updateFunction, setNumber = 1, onDelete, data }: SetsProps) {
 
+    const parseNumberInput = (value: string): number | null => {
+        if (value.trim() === "") return 0;
+        const parsed = Number(value);
+        return Number.isNaN(parsed) ? null : parsed;
+    };
+
     // You can use this to see what kind of type the value is.
     // it also shows how to use the updateFunction to send a TimeBasedSet.
     // this can be deleted to make way for different solutions.
@@ -36,32 +42,36 @@ export default function Sets({updateFunction, setNumber = 1, onDelete, data }: S
                 .then(() => {console.log("updated")});
     }, [reps,weight]);
 
-    const repsOptions = Array.from({ length: 51 }, (_, i) => i);
-
     return ( 
             <OuterLayer set_nr={setNumber} onDelete={onDelete|| (() => {return;})}>
                 <>
                     <div className="flex items-center justify-between mb-3">
                         <label className="text-white text-base">reps:</label>
                         <input
-                            type="numbr"
-                            inputMode="numeric"
-                            value={reps}
-                            onChange={(e) => setReps(Number(e.target.value))}
+                            type="number"
+                            inputMode="text"
+                            value={reps === 0 ? "" : reps}
+                            onChange={(e) => {
+                                const parsed = parseNumberInput(e.target.value);
+                                if (parsed !== null) setReps(parsed);
+                            }}
                             className="w-32 bg-[#2e2e2e] border border-[#565d5d] rounded-lg px-3 py-2 text-white focus:outline-none focus:border-[#F67631]"
-                            placeholder="reps"
+                            placeholder="0"
                         />
                     </div>
 
                     <div className="flex items-center justify-between">
                         <label className="text-white text-base">weight (Kg):</label>
                         <input
-                            type="number"
+                            type="text"
                             inputMode="decimal"
-                            value={weight}
-                            onChange={(e) => setWeight(Number(e.target.value))}
+                            value={weight === 0 ? "" : weight}
+                            onChange={(e) => {
+                                const parsed = parseNumberInput(e.target.value);
+                                if (parsed !== null) setWeight(parsed);
+                            }}
                             className="w-32 bg-[#2e2e2e] border border-[#565d5d] rounded-lg px-3 py-2 text-white focus:outline-none focus:border-[#F67631]"
-                            placeholder="weight"
+                            placeholder="0.0"
                         />
                     </div>
                 </>
@@ -89,24 +99,30 @@ export default function Sets({updateFunction, setNumber = 1, onDelete, data }: S
                 <div className="flex items-center justify-between mb-3">
                     <label className="text-white text-base">Time in minutes:</label>
                     <input
-                        type="number"
+                        type="text"
                         inputMode="numeric"
-                        value={time}
-                        onChange={(e) => setTime(Number(e.target.value))}
+                        value={time === 0 ? "" : time}
+                        onChange={(e) => {
+                            const parsed = parseNumberInput(e.target.value);
+                            if (parsed !== null) setTime(parsed);
+                        }}
                         className="w-32 bg-[#2e2e2e] border border-[#565d5d] rounded-lg px-3 py-2 text-white focus:outline-none focus:border-[#F67631]"
-                        placeholder="time in minutes"
+                        placeholder="0"
                     />
                 </div>
 
                 <div className="flex items-center justify-between">
                     <label className="text-white text-base">Distance</label>
                     <input
-                        type="number"
+                        type="text"
                         inputMode="decimal"
-                        value={distance}
-                        onChange={(e) => setDistance(Number(e.target.value))}
+                        value={distance === 0 ? "" : distance}
+                        onChange={(e) => {
+                            const parsed = parseNumberInput(e.target.value);
+                            if (parsed !== null) setDistance(parsed);
+                        }}
                         className="w-32 bg-[#2e2e2e] border border-[#565d5d] rounded-lg px-3 py-2 text-white focus:outline-none focus:border-[#F67631]"
-                        placeholder="km"
+                        placeholder="0.0"
                     />
                 </div>
             </>
