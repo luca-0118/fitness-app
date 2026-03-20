@@ -47,7 +47,9 @@ export default function WorkoutOverview() {
                 <ul className="pt-2 text-center text-gray-400">
                     <li>No workouts yet. Create a new one!</li>
                 </ul>
-                <WorkoutAddButton to="/new-workout" />
+                <div className="fixed bottom-20 left-0 right-0 flex justify-center z-20">
+                    <WorkoutAddButton to="/new-workout" />
+                </div>
             </div>
         );
 
