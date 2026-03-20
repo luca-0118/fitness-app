@@ -16,6 +16,7 @@ import SessionHistory from "./pages/SessionHistory.tsx";
 import KcalTracker from "./pages/KcalTracker.tsx";
 import Exercises from "./pages/Exercises.tsx";
 import ExerciseDescription from "./pages/ExerciseDescription.tsx";
+import { Toaster } from "react-hot-toast";
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
         <BrowserRouter>
           <div className="h-dvh flex flex-col overflow-hidden">
             <Header />
+            <Toaster position="top-center" reverseOrder={false} />
               <main className="flex-1 overflow-y-auto no-scrollbar">
                 <Routes>
                   <Route path="/" element={<Home />} />
