@@ -6,7 +6,7 @@ use tauri::{App, Manager};
 
 pub fn instantiate(app: &mut App) -> PathBuf {
             let db_path = app.path().resolve(
-                "workoutbase.sqlite",
+                "workoutbase.db",
                 tauri::path::BaseDirectory::AppLocalData,
             ).expect("pathbuf not found");
 
@@ -18,7 +18,7 @@ pub fn instantiate(app: &mut App) -> PathBuf {
                 }
 
                 // Embed and write the template database
-                let template_bytes = include_bytes!("../resources/workoutbase.sqlite");
+                let template_bytes = include_bytes!("../resources/workoutbase.db");
                 std::fs::write(&db_path, template_bytes)
                     .expect("Failed to write database template");
             }

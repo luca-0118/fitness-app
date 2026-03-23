@@ -55,8 +55,8 @@ export default class workoutAPI {
         const data = ApiClient.assertOk(resp);
 
         return data.map(historyObj => {
-            let startDate = new Date(historyObj.start_date);
-            let endDate = new Date(historyObj.end_date);
+            let startDate = new Date(historyObj.start_date.split("+")[0].trimEnd());
+            let endDate = new Date(historyObj.end_date.split("+")[0].trimEnd());
 
             return {
                 workoutName: historyObj.workout_name,
