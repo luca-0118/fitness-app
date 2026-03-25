@@ -6,12 +6,12 @@ export default function ExerciseDescription() {
   const [id, setId] = useState<string>("");
   const location = useLocation();
   const [name, setName] = useState<string>("");
-  const [bodyParts, setBodyParts] = useState<string>("");
-  const [equipments, setEquipments] = useState<string>("");
+  const [bodyParts, setBodyParts] = useState<string[]>([]);
+  const [equipments, setEquipments] = useState<string[]>([]);
   const [gif, setgif] = useState<string>("");
-  const [instructions, setInstructions] = useState<string>("");
-  const [secondaryMuscles, setSecondaryMuscles] = useState<string>("");
-  const [targetMuscle, setTargetMuscle] = useState<string>("");
+  const [instructions, setInstructions] = useState<string[]>([]);
+  const [secondaryMuscles, setSecondaryMuscles] = useState<string[]>([]);
+  const [targetMuscle, setTargetMuscle] = useState<string[]>([]);
 
   useEffect(() => {
     setId(location.state.id);
@@ -38,29 +38,52 @@ export default function ExerciseDescription() {
       const res = await invoke<ExerciseResponse>("get_exercise_by_id", {
         exerciseId: id,
       });
-      setBodyParts(res.data.body_parts);
-      setEquipments(res.data.equipments);
+      setBodyParts(JSON.parse(res.data.body_parts));
+      setEquipments(JSON.parse(res.data.equipments));
       setgif(res.data.gif_url);
-      setInstructions(res.data.instructions);
+      setInstructions(JSON.parse(res.data.instructions));
       setName(res.data.name);
-      setSecondaryMuscles(res.data.secondary_muscles);
-      setTargetMuscle(res.data.target_muscles);
+      setSecondaryMuscles(JSON.parse(res.data.secondary_muscles));
+      setTargetMuscle(JSON.parse(res.data.target_muscles));
     } catch (err) {
       console.error(err);
     }
   }
 
   return (
-    <>
-      {" "}
-      <div>{bodyParts}</div>
-      <div>{equipments}</div>
-      <div>{name}</div>
-      <div>{gif}</div>
-      <div>{instructions}</div>
-      <div>{name}</div>
-      <div>{secondaryMuscles}</div>
-      <div>{targetMuscle}</div>
-    </>
+    <div className="flex w-screen">
+      <div className="grid grid-cols-2 gap-4 py-4 w-[90%] mx-auto">
+        <div className="col-span-2 bg-[#1E1E1E] border border-[#414141] rounded-xl p-6 font-bold flex flex-col ">
+
+          <h2 className="font-bold text-[#F2F3F2] text-2xl  mb-2 border-b-2 border-[#414141] w-[90%] flex mx-auto">
+            <div>{name}</div>
+          </h2>
+          <img src={gif} alt="" />
+
+          <h2 className="font-bold text-[#F2F3F2] text-2xl  mb-2 border-b-2 border-[#414141] w-[90%] flex mx-auto">
+            Targeted muscles:
+          </h2>
+          <div className="bg-[#F67631] w-fit px-9 py-1 rounded-xl mx-2 my-1">{targetMuscle}</div>
+          <h2 className="font-bold text-[#F2F3F2] text-2xl  mb-2 border-b-2 border-[#414141] w-[90%] flex mx-auto">
+            Secondary muscles:
+          </h2>
+          <div className="flex max-w-fit flex-wrap">
+            {secondaryMuscles.map((muscle) => {
+              return <div className="bg-[#F67631] px-9 py-1 rounded-xl max-w-full mx-2 my-1">{muscle}</div>
+            })}
+          </div>
+          <h2 className="font-bold text-[#F2F3F2] text-2xl  mb-2 border-b-2 border-[#414141] w-[90%] flex mx-auto">
+            equipment:
+          </h2>
+          <div className="bg-[#F67631] w-fit px-9 py-1 rounded-xl mx-2 my-1">{equipments}</div>
+          <h2 className="font-bold text-[#F2F3F2] text-2xl  mb-2 border-b-2 border-[#414141] w-[90%] flex mx-auto">
+            instructions:
+          </h2>
+          {instructions.map((instruct) => {
+            return <div className=" self-start w-fit px-3 rounded-xl mx-2 my-1">{instruct}</div>
+          })}
+        </div >
+
+      </div></div>
   );
 }
