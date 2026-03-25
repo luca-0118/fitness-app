@@ -30,7 +30,6 @@ export default function AddExercises() {
   async function fetchExercises() {
     const result = await API.exercises.list();
     setAllExercise(result);
-    console.log(activeQuery);
   }
 
   interface ExerciseResponse {
@@ -67,7 +66,6 @@ export default function AddExercises() {
   );
 
   function handleFilterClick(muscleInput: string) {
-    console.log(muscle);
     if (muscle === muscleInput) {
       setMuscle("");
       fetchExercises();
