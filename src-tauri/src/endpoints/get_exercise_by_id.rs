@@ -9,10 +9,11 @@ pub struct Exercise {
     body_parts: String,
     equipments: String,
     secondary_muscles: String,
+    instructions: String
 }
 
 #[tauri::command]
-pub fn return_exercise(
+pub fn get_exercise_by_id(
     db: tauri::State<Db>,
     exercise_id: &str,
 ) -> Result<api::ApiResponse<Exercise>, api::ApiErrorResponse> {
@@ -35,6 +36,7 @@ pub fn return_exercise(
         let body_parts: String = row.get(4).unwrap();
         let equipments: String = row.get(5).unwrap();
         let secondary_muscles: String = row.get(6).unwrap();
+        let instructions: String = row.get(7).unwrap();
 
         let exercise = Exercise {
             name: name,
@@ -43,6 +45,7 @@ pub fn return_exercise(
             body_parts: body_parts,
             equipments: equipments,
             secondary_muscles: secondary_muscles,
+            instructions: instructions
         };
 
         return Ok(api::ApiResponse {

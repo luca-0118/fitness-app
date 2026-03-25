@@ -55,7 +55,6 @@ pub fn run() {
 
         // Add all frontend functions here
         .invoke_handler(tauri::generate_handler![
-            endpoints::get_exercise_by_id::return_exercise,
             endpoints::get_all_exercises::get_all_exercises,
             endpoints::workout::get_workout,
             endpoints::workout::create_workout,
@@ -66,7 +65,8 @@ pub fn run() {
             endpoints::session::get_session,
             endpoints::session::update_set,
             endpoints::session::complete_session,
-            endpoints::session::workout_history
+            endpoints::session::workout_history,
+            endpoints::get_exercise_by_id::get_exercise_by_id
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
