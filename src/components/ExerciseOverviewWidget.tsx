@@ -7,6 +7,7 @@ interface ExerciseOverviewWidgetProps {
   index: number;
   name: string;
   gif: string;
+  exerciseId: string;
 }
 
 export default function ExerciseOverviewWidget({
@@ -14,6 +15,7 @@ export default function ExerciseOverviewWidget({
   index,
   name,
   gif,
+  exerciseId,
 }: ExerciseOverviewWidgetProps) {
   const navigate = useNavigate();
   const [element, setElement] = useState<HTMLElement | null>(null);
@@ -28,7 +30,11 @@ export default function ExerciseOverviewWidget({
     >
       <button
         className="flex w-full h-full py-4"
-        onClick={() => navigate("/exercise-description")}
+        onClick={() =>
+          navigate("/exercise-description", {
+            state: { id: exerciseId },
+          })
+        }
       >
         <img
           className="h-20 w-20 contain-content rounded-xl"
