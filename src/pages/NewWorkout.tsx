@@ -27,13 +27,14 @@ export default function NewWorkout() {
                 name={exercise.name}
                 gif={exercise.gif}
                 index={1}
+                exerciseId={"test"}
               />
             );
           })}
         </ul>
-          <div className="fixed bottom-20 left-0 right-0 flex justify-center z-20">
-              <AddExerciseButton to="/add-exercises" />
-          </div>
+        <div className="fixed bottom-20 left-0 right-0 flex justify-center z-20">
+          <AddExerciseButton to="/add-exercises" />
+        </div>
       </div>
     </div>
   );
