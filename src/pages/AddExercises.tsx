@@ -1,7 +1,6 @@
 import ExerciseWidget from "../components/ExerciseWidget";
 import { useEffect, useState } from "react";
 import { useWorkout } from "../context/WorkoutContext";
-import { useNavigate } from "react-router-dom";
 import API from "../classes/api";
 import SearchBar from "../components/SearchBar";
 import { invoke } from "@tauri-apps/api/core";
@@ -18,14 +17,15 @@ import lats from "../assets/lats.png";
 import quads from "../assets/quads.png.jpg";
 import shoulders from "../assets/shoulders.png";
 import Filter from "../components/Filter";
+import ExerciseDescriptionOverlay from "../components/ExerciseDescriptionOverlay";
 
 export default function AddExercises() {
   const [allExercises, setAllExercise] = useState<ExerciseDTO[]>([]);
   const [searchText, setSearchText] = useState("");
   const [activeQuery, setActiveQuery] = useState("");
   const [muscle, setMuscle] = useState<string>("");
-  const { addExercise } = useWorkout();
-  const navigate = useNavigate();
+  const [toggleOverlay, setToggleOverlay]= useState(false)
+  
 
   async function fetchExercises() {
     const result = await API.exercises.list();
@@ -149,21 +149,9 @@ export default function AddExercises() {
         </div>
         {filteredExercises.map((exercise) => {
           return (
-            <ExerciseWidget
-              key={exercise.id}
-              name={exercise.name}
-              gif={exercise.data}
-              id={exercise.id}
-              onSelect={() => {
-                addExercise({
-                  id: exercise.id,
-                  name: exercise.name,
-                  gif: exercise.data,
-                });
-                navigate(-1);
-              }}
-            />
-          );
+
+          toggleOverlay ? <ExerciseDescriptionOverlay id={exercise.id} toggle={()=>setToggleOverlay(!toggleOverlay)}/> : 
+          )
         })}
       </div>
     </>
