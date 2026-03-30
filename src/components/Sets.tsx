@@ -30,17 +30,18 @@ export default function Sets({updateFunction, setNumber = 1, onDelete, data }: S
 
     if (data.type == "Weighted") {
         const [reps, setReps] = useState(data.reps);
-        const [weight, setWeight] = useState(data.weight);
+        const [weightInput, setWeightInput] = useState(data.weight === 0 ? "" : String(data.weight));
 
             useEffect(() => {
         console.log("set up setnr:",setNumber);
-        if (!reps || !weight) return;
+        const parsedWeight = parseNumberInput(weightInput);
+        if (!reps || parsedWeight === null || parsedWeight === 0) return;
 
-            const data: WeightedSet = {type:"Weighted",reps,weight};
+            const data: WeightedSet = {type:"Weighted",reps,weight: parsedWeight};
 
             updateFunction(setNumber - 1,data)
                 .then(() => {console.log("updated")});
-    }, [reps,weight]);
+    }, [reps, weightInput]);
 
     return ( 
             <OuterLayer set_nr={setNumber} onDelete={onDelete|| (() => {return;})}>
@@ -48,8 +49,9 @@ export default function Sets({updateFunction, setNumber = 1, onDelete, data }: S
                     <div className="flex items-center justify-between mb-3">
                         <label className="text-white text-base">reps:</label>
                         <input
-                            type="number"
-                            inputMode="text"
+                            type="text"
+                            inputMode="numeric"
+                            pattern="[0-9]*"
                             value={reps === 0 ? "" : reps}
                             onChange={(e) => {
                                 const parsed = parseNumberInput(e.target.value);
@@ -65,10 +67,12 @@ export default function Sets({updateFunction, setNumber = 1, onDelete, data }: S
                         <input
                             type="text"
                             inputMode="decimal"
-                            value={weight === 0 ? "" : weight}
+                            value={weightInput}
                             onChange={(e) => {
-                                const parsed = parseNumberInput(e.target.value);
-                                if (parsed !== null) setWeight(parsed);
+                                const value = e.target.value;
+                                if (/^\d*\.?\d*$/.test(value)) {
+                                    setWeightInput(value);
+                                }
                             }}
                             className="w-32 bg-[#2e2e2e] border border-[#565d5d] rounded-lg px-3 py-2 text-white focus:outline-none focus:border-[#F67631]"
                             placeholder="0.0"

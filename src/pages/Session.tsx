@@ -1,30 +1,19 @@
 import { useEffect, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
 import CountDownTimer from "../components/CountDownTimer";
 import StopWatch from "../components/StopWatch";
 import TabataTimer from "../components/TabataTimer";
 import {CurrentExercise} from "../components/CurrentExercise.tsx";
 import Plusknop from "../components/plusknop.tsx";
+import FinishWorkoutButton from "../components/FinishWorkoutButton";
 import API from "../classes/api.ts";
 
-
-interface SessionState {
-    exercises?: ExerciseDTO[];
-}
-
 export default function Session() {
-    const navigate = useNavigate();
     const [selectedTimer, setSelectedTimer] = useState("stopwatch");
     const [expandedByExercise, setExpandedByExercise] = useState<boolean[]>([]);
-    const [isFinishing, setIsFinishing] = useState(false);
-    const location = useLocation();
-    const state = location.state as SessionState | null;
-    const exercises = state?.exercises || [];
+    const [elapsedSeconds, setElapsedSeconds] = useState(0);
     const [session,setSession] = useState<ISessionState>();
 
     useEffect(() => {
-        setExpandedByExercise(Array(exercises.length).fill(false));
-
         const getState = async () => {
             const resp = await API.session.get();
             console.log(resp);
@@ -35,7 +24,23 @@ export default function Session() {
         }
         getState();
 
-    }, [exercises]);
+    }, []);
+
+    useEffect(() => {
+        if (!session) return;
+
+        const startTime = new Date(session.start_time).getTime();
+        const now = new Date().getTime();
+        setElapsedSeconds(Math.floor((now - startTime) / 1000));
+
+        const interval = setInterval(() => {
+            const now = new Date().getTime();
+            const elapsed = Math.floor((now - startTime) / 1000);
+            setElapsedSeconds(elapsed);
+        }, 1000);
+
+        return () => clearInterval(interval);
+    }, [session]);
 
     const handleAddSet = (exerciseIndex: number) => {
         setSession((prevSession) => {
@@ -99,25 +104,6 @@ export default function Session() {
         });
     };
 
-    const handleFinishWorkout = async () => {
-        if (isFinishing) {
-            return;
-        }
-
-        try {
-            setIsFinishing(true);
-            const resp = await API.session.complete();
-
-            if (resp.ok) {
-                navigate("/");
-            }
-        } catch (error) {
-            console.error("Failed to finish workout", error);
-        } finally {
-            setIsFinishing(false);
-        }
-    };
-
     if (!session) return <h1>Loading....</h1>
 
     return (
@@ -161,16 +147,7 @@ export default function Session() {
                     })
                 )}
 
-                <div className="fixed bottom-24 left-1/2 z-40 w-87 -translate-x-1/2">
-                    <button
-                        type="button"
-                        onClick={handleFinishWorkout}
-                        disabled={isFinishing}
-                        className="w-full rounded-xl border border-[#414141] bg-[#F67631] px-5 py-4 font-bold text-white transition-colors hover:bg-[#ff8a4a] disabled:cursor-not-allowed disabled:opacity-70"
-                    >
-                        {isFinishing ? "Finishing..." : "Finish Workout"}
-                    </button>
-                </div>
+                <FinishWorkoutButton elapsedSeconds={elapsedSeconds} />
             </div>
         </>
     );

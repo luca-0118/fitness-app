@@ -1,5 +1,10 @@
 import { ApiClient } from "../classes/api";
 
+export const SESSION_STORAGE_KEYS = {
+    id: "workoutSessionId",
+    startedAt: "workoutSessionStartedAt",
+    workoutName: "workoutSessionName",
+} as const;
 
 export default  class sessionAPI {
 
@@ -15,9 +20,10 @@ export default  class sessionAPI {
         
         if (!resp.ok || !sessionId) return false; 
 
-        localStorage.setItem("workoutSessionId",sessionId);
+        localStorage.setItem(SESSION_STORAGE_KEYS.id, sessionId);
+        localStorage.setItem(SESSION_STORAGE_KEYS.startedAt, Date.now().toString());
 
-        return localStorage.getItem("workoutSessionId") !== null;
+        return localStorage.getItem(SESSION_STORAGE_KEYS.id) !== null;
     }
 
 
@@ -25,7 +31,7 @@ export default  class sessionAPI {
      * @returns ISessionState | error string
      */
     public async get(): Promise<ISessionState|string> {
-        const session_id = localStorage.getItem("workoutSessionId");
+        const session_id = localStorage.getItem(SESSION_STORAGE_KEYS.id);
         if (!session_id) return "session not found";
 
         const resp = await ApiClient.send<ISessionState>("get_session",{sessionId: session_id});
@@ -55,13 +61,15 @@ export default  class sessionAPI {
     }
 
     public async complete(): Promise<{ok:boolean,msg:string}> {
-        if (typeof localStorage.getItem("workoutSessionId") == "undefined") 
+        if (!localStorage.getItem(SESSION_STORAGE_KEYS.id))
             return {ok: false, msg:"no workout active to save."}
 
 
-        const resp = await ApiClient.send<string>("complete_session");
+        await ApiClient.send<string>("complete_session");
 
-        localStorage.removeItem("workoutSessionId");
+        localStorage.removeItem(SESSION_STORAGE_KEYS.id);
+        localStorage.removeItem(SESSION_STORAGE_KEYS.startedAt);
+        localStorage.removeItem(SESSION_STORAGE_KEYS.workoutName);
         return {
             ok: true,
             msg:"cleared"

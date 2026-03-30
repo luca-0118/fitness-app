@@ -1,5 +1,3 @@
-import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
-
 interface WorkoutHistoryWidgetProps {
     workout: IworkoutHistory;
 }

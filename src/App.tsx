@@ -17,6 +17,7 @@ import KcalTracker from "./pages/KcalTracker.tsx";
 import Exercises from "./pages/Exercises.tsx";
 import ExerciseDescription from "./pages/ExerciseDescription.tsx";
 import { Toaster } from "react-hot-toast";
+import FloatingWorkoutTimer from "./components/FloatingWorkoutTimer.tsx";
 
 function App() {
   return (
@@ -41,6 +42,7 @@ function App() {
                   <Route path="/exercise-description" element={<ExerciseDescription />} />
                 </Routes>
               </main>
+            <FloatingWorkoutTimer />
             <BottomNavBar/>
           </div>
         </BrowserRouter>
