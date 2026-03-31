@@ -1,4 +1,10 @@
-export default function Filter({ gif, isSelected, onClick }: {gif: string, isSelected: boolean, onClick:()=>void}) {
+interface FilterProps {
+  gif: string;
+  isSelected: boolean;
+  onClick: () => void;
+}
+
+export default function Filter({ gif, isSelected, onClick }: FilterProps) {
   return (
     <div className="p-2">
       <button
