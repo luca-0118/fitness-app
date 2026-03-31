@@ -1,6 +1,6 @@
 import AddIcon from "@mui/icons-material/Add";
 import { invoke } from "@tauri-apps/api/core";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 export default function ExerciseDescriptionOverlay({
@@ -19,7 +19,6 @@ export default function ExerciseDescriptionOverlay({
   const [secondaryMuscles, setSecondaryMuscles] = useState<string[]>([]);
   const [targetMuscle, setTargetMuscle] = useState<string[]>([]);
   const navigate = useNavigate();
-  const [error, setError] = useState<Boolean>(false);
   const [toggle, setToggle] = useState(false);
 
   interface ExerciseResponse {
@@ -44,7 +43,7 @@ export default function ExerciseDescriptionOverlay({
         setTargetMuscle(JSON.parse(res.data.target_muscles));
       } catch (err) {
         console.error(err);
-        setError(true);
+        console.log(err);
       }
     }
   }

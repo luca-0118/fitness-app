@@ -1,4 +1,3 @@
-import ExerciseWidget from "../components/ExerciseWidget";
 import { useEffect, useState } from "react";
 import { useWorkout } from "../context/WorkoutContext";
 import API from "../classes/api";
