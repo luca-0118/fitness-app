@@ -18,16 +18,13 @@ import quads from "../assets/quads.png.jpg";
 import shoulders from "../assets/shoulders.png";
 import Filter from "../components/Filter";
 import ExerciseDescriptionOverlay from "../components/ExerciseDescriptionOverlay";
-import ExerciseDescriptionOverlayCopy from "../components/ExerciseDescriptionOverlay copy";
 
 export default function AddExercises() {
   const [allExercises, setAllExercise] = useState<ExerciseDTO[]>([]);
   const [searchText, setSearchText] = useState("");
   const [activeQuery, setActiveQuery] = useState("");
   const [muscle, setMuscle] = useState<string>("");
-  const [toggleOverlay, setToggleOverlay]= useState(false)
-  const [overlayId, setOverlayId] = useState("")
-  
+  const { addExercise } = useWorkout();
 
   async function fetchExercises() {
     const result = await API.exercises.list();
@@ -38,12 +35,6 @@ export default function AddExercises() {
     data: ExerciseDTO[];
     ok: boolean;
   }
-
-function handleToggle(id){
-  setToggleOverlay(!toggleOverlay)
-  setOverlayId(id)
-
-}
 
   async function loadExercises() {
     try {
@@ -155,11 +146,22 @@ function handleToggle(id){
             onClick={() => handleFilterClick("calves")}
           />
         </div>
-        
+
         {filteredExercises.map((exercise) => {
           return (
-          !toggleOverlay ? <ExerciseDescriptionOverlay id={exercise.id} toggle={()=> handleToggle(exercise.id)}/> :  <ExerciseDescriptionOverlayCopy id={overlayId}/>
-          )
+            <ExerciseDescriptionOverlay
+              name={exercise.name}
+              id={exercise.id}
+              gif={exercise.data}
+              onSelect={() => {
+                addExercise({
+                  id: exercise.id,
+                  name: exercise.name,
+                  gif: exercise.data,
+                });
+              }}
+            />
+          );
         })}
       </div>
     </>
