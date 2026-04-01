@@ -1,10 +1,6 @@
 import ExerciseWidget from "../components/ExerciseWidget";
 import {useMemo, useState} from "react";
 import { useWorkout } from "../context/WorkoutContext";
-import { useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
-import { useWorkout } from "../context/WorkoutContext";
-import API from "../classes/api";
 import SearchBar from "../components/SearchBar";
 import bicep from "../assets/biceps.jpg";
 import tricep from "../assets/triceps.jpg";
@@ -117,7 +113,7 @@ export default function AddExercises() {
 
         {filteredExercises.map((exercise) => {
           return (
-            <ExerciseWidget
+            <ExerciseDescriptionOverlay
               key={exercise.exercise_id}
               name={exercise.name}
               gif={exercise.gif_url}

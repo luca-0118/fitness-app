@@ -42,8 +42,8 @@ export default function Exercises() {
           <ul>
             {exercises.map((exercise, index) => (
               <ExerciseOverviewWidget
-                key={exercise.instanceId}
-                id={exercise.instanceId.toString()}
+                key={exercise.exercise_id}
+                id={exercise.exercise_id}
                 index={index}
                 name={exercise.name}
                 gif={exercise.gif_url}
