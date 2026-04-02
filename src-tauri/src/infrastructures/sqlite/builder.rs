@@ -1,14 +1,28 @@
-use std::path::PathBuf;
+use std::{env, path::PathBuf};
 
 use rusqlite::Connection;
 use tauri::{App,Manager};
 
-
+enum AppState {
+    Dev = 0,
+    Stable = 1
+}
 
 pub fn build_database(app: &mut App) {
+
+    //gets the incoming command and sees if there's a clean arguement.
+    // if there is we delete the database
+    let clean = std::env::args().any(|arg| arg == "--clean");
+
+    let mode = if clean {
+        AppState::Dev
+    } else {
+        AppState::Stable
+    };
+
     let db_path = instantiate(app);
     let mut conn = establish_connection(&db_path);
-    migrate(&mut conn);
+    migrate(&mut conn,mode);
     conn.close().expect("Couldnt close Connection");
 }
 
@@ -42,8 +56,25 @@ fn establish_connection(dbpath: &PathBuf) -> Connection {
 }
 
 // Creates all the default structure for the database (for workouts and connecting exercises to workouts.)
-fn migrate(conn: &mut Connection) {
+fn migrate(conn: &mut Connection,state: AppState) {
     let tx = conn.transaction().unwrap();
+
+    match state {
+        AppState::Dev => {
+        tx.execute("PRAGMA foreign_keys = OFF", [])
+        .expect("failed to disable foreign keys");
+
+        // Drop in reverse dependency order to avoid FK constraint issues
+        tx.execute("DROP TABLE IF EXISTS completedWeightExercises", []).unwrap();
+        tx.execute("DROP TABLE IF EXISTS completedCardioExercises", []).unwrap();
+        tx.execute("DROP TABLE IF EXISTS completedExercises", []).unwrap();
+        tx.execute("DROP TABLE IF EXISTS workoutHistory", []).unwrap();
+        tx.execute("DROP TABLE IF EXISTS WorkoutExercises", []).unwrap();
+        tx.execute("DROP TABLE IF EXISTS Workouts", []).unwrap();
+        },
+        AppState::Stable => {}
+    }
+
     tx.execute(
         "CREATE TABLE IF NOT EXISTS Workouts (
         ID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
