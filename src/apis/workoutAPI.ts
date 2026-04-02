@@ -55,14 +55,17 @@ export default class workoutAPI {
 
     /**
      *  Gets a workout with it's connected exercises based on the provided Uuid.
+     *
+     * LSP: Always returns IdetailedWorkoutDTO or throws — never returns an
+     * error string, keeping the contract consistent across all callers.
+     *
      * @param _workoutUuid The Uuid provided from the backend list.
      * @returns a detailed list of workout information and connected exercises.
+     * @throws Error when the UUID is missing.
      */
-    public async detailed(_workoutUuid: string): Promise<IdetailedWorkoutDTO | string> {
+    public async detailed(_workoutUuid: string): Promise<IdetailedWorkoutDTO> {
         if (!_workoutUuid) {
-            const err = "workout requires username";
-            console.error(err);
-            return err;
+            throw new Error("Workout UUID is required.");
         }
 
         const resp = await ApiClient.send<IdetailedWorkoutDTO>("get_workout", { req: _workoutUuid });

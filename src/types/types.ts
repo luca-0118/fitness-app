@@ -21,10 +21,17 @@ interface WorkoutDTO {
   desc?: string;
 }
 
-interface ExerciseDTO {
+/**
+ * ISP: Minimal interface for components that only need basic exercise data.
+ * ExerciseDTO extends this for the full representation.
+ */
+interface IExerciseBasic {
     exercise_id: string;
     name: string;
     gif_url: string;
+}
+
+interface ExerciseDTO extends IExerciseBasic {
     target_muscles: string;
     body_parts: string;
     equipments: string;
@@ -120,4 +127,55 @@ interface IworkoutHistory {
   sessionUuid: string;
   startDate: Date;
   endDate: Date;
+}
+
+/**
+ * ISP: Muscle group type moved here from UseMuscleFilters.ts so that API layers
+ * do not depend on hook modules.
+ */
+type muscleGroups =
+  | "pectorals"
+  | "biceps"
+  | "triceps"
+  | "lats"
+  | "upper back"
+  | "delts"
+  | "forearms"
+  | "abs"
+  | "quads"
+  | "hamstrings"
+  | "glutes"
+  | "calves"
+  | null;
+
+/**
+ * DIP: Abstraction for storage operations so that consumers (e.g. sessionAPI)
+ * are not coupled to a concrete browser-storage implementation.
+ */
+interface IStorageService {
+  getItem(key: string): string | null;
+  setItem(key: string, value: string): void;
+  removeItem(key: string): void;
+}
+
+/**
+ * DIP: Abstraction for the session API, enabling dependency injection in hooks
+ * and facilitating testing without a real backend.
+ */
+interface ISessionAPI {
+  start(workout_id: string): Promise<boolean>;
+  get(): Promise<ISessionState>;
+  updateSet(
+    setUpdate: ITimedSetUpdate | IWeightedSetUpdate
+  ): Promise<{ success: boolean; resp: string }>;
+  complete(): Promise<{ ok: boolean; msg: string }>;
+}
+
+/**
+ * DIP: Abstraction for the exercises API, enabling dependency injection in hooks.
+ */
+interface IExercisesAPI {
+  list(): Promise<ExerciseDTO[]>;
+  filter(muscle: muscleGroups): Promise<ExerciseDTO[]>;
+  get(id: string): Promise<ExerciseDTO>;
 }

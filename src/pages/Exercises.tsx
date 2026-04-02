@@ -16,16 +16,17 @@ export default function Exercises() {
 
   useEffect(() => {
     const getData = async () => {
-      const hi = await API.workouts.detailed(selectedWorkout);
-      if (typeof hi === "string") {
-        return;
+      try {
+        const hi = await API.workouts.detailed(selectedWorkout);
+        setExercises(
+          hi.exercises.map((exercise: ExerciseDTO, index: number) => ({
+            ...exercise,
+            instanceId: index,
+          })),
+        );
+      } catch {
+        // Workout not found or UUID missing — leave exercise list empty.
       }
-      setExercises(
-        hi.exercises.map((exercise: ExerciseDTO, index: number) => ({
-          ...exercise,
-          instanceId: index,
-        })),
-      );
     };
     getData();
   }, []);

@@ -15,11 +15,13 @@ export default function Session() {
 
   useEffect(() => {
     const getState = async () => {
-      const resp = await API.session.get();
-      console.log(resp);
-      if (typeof resp !== "string") {
+      try {
+        const resp = await API.session.get();
+        console.log(resp);
         setSession(resp);
         setExpandedByExercise(Array(resp.exercises.length).fill(false));
+      } catch {
+        // Session not found or backend error — stay on loading screen.
       }
     };
     getState();

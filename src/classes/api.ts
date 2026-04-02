@@ -3,10 +3,15 @@ import workoutAPI from "../apis/workoutAPI";
 import ExercisesAPI from "../apis/exercisesAPI";
 import sessionAPI from "../apis/sessionAPI";
 
+/**
+ * DIP: The public surface of each API property uses the abstraction interface
+ * rather than the concrete class.  This ensures callers (hooks, components)
+ * program against stable interfaces and are not coupled to implementation details.
+ */
 export default class API {
     public static workouts: workoutAPI = new workoutAPI();
-    public static exercises: ExercisesAPI = new ExercisesAPI();
-    public static session: sessionAPI = new sessionAPI();
+    public static exercises: IExercisesAPI = new ExercisesAPI();
+    public static session: ISessionAPI = new sessionAPI();
 }
 
 export class ApiClient {

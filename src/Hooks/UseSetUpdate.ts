@@ -24,13 +24,19 @@ export type IUseSetUpdateFunction = (set_nr: number ,data: TimedSet|WeightedSet)
 
 /**
  * UseSetUpdate sets up a hook in order to update sets.
- * By connecting the exercise_ID, it has a connection to said workoutin memory.
- * @param exercise_id - the provided ID of the exericse
+ * By connecting the exercise_ID, it has a connection to said workout in memory.
+ *
+ * DIP: The concrete session API is provided via the sessionApi parameter so
+ * that consumers are not coupled to the global API singleton.  The default
+ * value falls back to API.session for convenience in production code.
+ *
+ * @param exercise_id - the provided ID of the exercise
+ * @param sessionApi - injectable session API (defaults to API.session)
  * @constructor
  * @returns UpdateSet - A function in order to call and update any of the sets.
  *
  */
-export default function UseSetUpdate(exercise_id: string): UseSetUpdateProps {
+export default function UseSetUpdate(exercise_id: string, sessionApi: ISessionAPI = API.session): UseSetUpdateProps {
 
     /**
      * Updates the set based on the number of given parameters.
@@ -57,7 +63,7 @@ export default function UseSetUpdate(exercise_id: string): UseSetUpdateProps {
             } as ITimedSetUpdate
         }
 
-        const resp = await API.session.updateSet(setUpdate);
+        const resp = await sessionApi.updateSet(setUpdate);
 
         console.log("hook response:",resp);
     }

@@ -1,4 +1,5 @@
 import { ApiClient } from "../classes/api";
+import { LocalStorageService } from "../services/StorageService";
 
 export const SESSION_STORAGE_KEYS = {
     id: "workoutSessionId",
@@ -6,49 +7,68 @@ export const SESSION_STORAGE_KEYS = {
     workoutName: "workoutSessionName",
 } as const;
 
-export default  class sessionAPI {
+/**
+ * SRP: Session-specific API calls only.  All storage access is delegated to an
+ * injected IStorageService so that this class does not depend on a concrete
+ * persistence mechanism.
+ *
+ * DIP: Depends on the IStorageService abstraction rather than a concrete
+ * localStorage implementation.
+ */
+export default class sessionAPI implements ISessionAPI {
+    private storage: IStorageService;
+
+    /**
+     * @param storage - Storage service for persisting session identifiers.
+     *   Defaults to LocalStorageService; can be replaced for testing.
+     */
+    constructor(storage: IStorageService = new LocalStorageService()) {
+        this.storage = storage;
+    }
 
     /**
      * Starts a session for a workout.
      * @param workout_id The provided ID of the workout.
-     * @returns A boolean indicating if the session is started sucessfully.
+     * @returns A boolean indicating if the session started successfully.
      */
-    public async start(workout_id: string): Promise<Boolean> {
-        const resp= await ApiClient.send<string>("start_session", {req: workout_id});
+    public async start(workout_id: string): Promise<boolean> {
+        const resp = await ApiClient.send<string>("start_session", { req: workout_id });
+        const sessionId = ApiClient.assertOk(resp);
 
-        const sessionId= ApiClient.assertOk(resp);
-        
-        if (!resp.ok || !sessionId) return false; 
+        if (!sessionId) return false;
 
-        localStorage.setItem(SESSION_STORAGE_KEYS.id, sessionId);
-        localStorage.setItem(SESSION_STORAGE_KEYS.startedAt, Date.now().toString());
+        this.storage.setItem(SESSION_STORAGE_KEYS.id, sessionId);
+        this.storage.setItem(SESSION_STORAGE_KEYS.startedAt, Date.now().toString());
 
-        return localStorage.getItem(SESSION_STORAGE_KEYS.id) !== null;
+        return this.storage.getItem(SESSION_STORAGE_KEYS.id) !== null;
     }
 
-
-    /** Uses stored sessionId in localstorage to get the workout session data.
-     * @returns ISessionState | error string
+    /**
+     * Uses the stored session ID to fetch workout session data.
+     *
+     * LSP: Always returns ISessionState or throws — never returns an error
+     * string, keeping the contract consistent across all callers.
+     *
+     * @throws Error when no active session is found in storage.
      */
-    public async get(): Promise<ISessionState|string> {
-        const session_id = localStorage.getItem(SESSION_STORAGE_KEYS.id);
-        if (!session_id) return "session not found";
+    public async get(): Promise<ISessionState> {
+        const session_id = this.storage.getItem(SESSION_STORAGE_KEYS.id);
+        if (!session_id) throw new Error("No active session found.");
 
-        // LOL this sessionID is absolutely useless.....
-        const resp = await ApiClient.send<ISessionState>("get_session",{sessionId: session_id});
+        const resp = await ApiClient.send<ISessionState>("get_session", { sessionId: session_id });
         const sessionData = ApiClient.assertOk(resp);
         console.log(sessionData);
         return sessionData;
     }
 
-    public async updateSet(setUpdate: ITimedSetUpdate|IWeightedSetUpdate): Promise<{success: boolean, resp: string }> {
+    public async updateSet(setUpdate: ITimedSetUpdate | IWeightedSetUpdate): Promise<{ success: boolean; resp: string }> {
         const validator = validators[setUpdate.type];
 
         if (!validator) {
             return { success: false, resp: "updateType not found" };
         }
 
-        const error = validator(setUpdate as any);
+        const error = validator(setUpdate);
         if (error) {
             return { success: false, resp: error };
         }
@@ -61,26 +81,25 @@ export default  class sessionAPI {
         return { success: true, resp: data };
     }
 
-    public async complete(): Promise<{ok:boolean,msg:string}> {
-        if (!localStorage.getItem(SESSION_STORAGE_KEYS.id))
-            return {ok: false, msg:"no workout active to save."}
-
+    public async complete(): Promise<{ ok: boolean; msg: string }> {
+        if (!this.storage.getItem(SESSION_STORAGE_KEYS.id))
+            return { ok: false, msg: "no workout active to save." };
 
         await ApiClient.send<string>("complete_session");
 
-        localStorage.removeItem(SESSION_STORAGE_KEYS.id);
-        localStorage.removeItem(SESSION_STORAGE_KEYS.startedAt);
-        localStorage.removeItem(SESSION_STORAGE_KEYS.workoutName);
-        return {
-            ok: true,
-            msg:"cleared"
-        }
+        this.storage.removeItem(SESSION_STORAGE_KEYS.id);
+        this.storage.removeItem(SESSION_STORAGE_KEYS.startedAt);
+        this.storage.removeItem(SESSION_STORAGE_KEYS.workoutName);
+
+        return { ok: true, msg: "cleared" };
     }
 }
 
-const validators = {
-    Weighted: validateWeighted,
-    Timed: validateTimed,
+type SetUpdateValidator = (set: IWeightedSetUpdate | ITimedSetUpdate) => string | null;
+
+const validators: Record<string, SetUpdateValidator> = {
+    Weighted: (set) => validateWeighted(set as IWeightedSetUpdate),
+    Timed: (set) => validateTimed(set as ITimedSetUpdate),
 } as const;
 
 function validateWeighted(set: IWeightedSetUpdate): string | null {

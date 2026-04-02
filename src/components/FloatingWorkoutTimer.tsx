@@ -85,7 +85,6 @@ export default function FloatingWorkoutTimer() {
     if (localStorage.getItem(SESSION_STORAGE_KEYS.workoutName)) return;
 
     API.session.get().then((resp) => {
-      if (typeof resp === "string") return;
       localStorage.setItem(SESSION_STORAGE_KEYS.workoutName, resp.workout_name);
       setWorkoutName(resp.workout_name);
     }).catch(() => {
