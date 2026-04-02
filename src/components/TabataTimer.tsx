@@ -161,12 +161,12 @@ export default function TabataTimer({ onTimerChange }: TabataTimerProps) {
                 </div>
             )}
 
-            <div className="text-lg font-bold mb-2 text-white">
+            <div className={`text-lg font-bold mb-2 ${isWorkPhase ? "text-green-400" : "text-red-400"}`}>
                 Round {currentRound}/{totalRounds} · {isWorkPhase ? "WORK" : "REST"}
             </div>
 
-            <div className="border-2 border-[#565d5d] rounded-lg p-4 mb-4 w-56 text-center">
-                <div className="text-3xl font-bold text-white font-mono">
+            <div className={`border-2 rounded-lg p-4 mb-4 w-56 text-center ${isWorkPhase ? "border-green-500 bg-green-950/20" : "border-red-500 bg-red-950/20"}`}>
+                <div className={`text-3xl font-bold font-mono ${isWorkPhase ? "text-green-400" : "text-red-400"}`}>
                     {formatTime(timeLeftMs)}
                 </div>
             </div>

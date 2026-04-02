@@ -20,6 +20,7 @@ export default function CountDownTimer({ onTimerChange }: CountDownTimerProps) {
     const [seconds, setSeconds] = useState(0);
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
+    const isRunningPhase = isActive && timeLeftMs > 0;
 
     const formatTime = (ms: number) => {
         const totalSeconds = Math.floor(ms / 1000);
@@ -137,8 +138,8 @@ export default function CountDownTimer({ onTimerChange }: CountDownTimerProps) {
           </div>
         )}
         
-        <div className="border-2 border-[#565d5d] rounded-lg p-4 mb-4 w-56 text-center">
-          <div className="text-3xl font-bold text-white font-mono">
+        <div className={`border-2 rounded-lg p-4 mb-4 w-56 text-center ${isRunningPhase ? "border-green-500 bg-green-950/20" : "border-red-500 bg-red-950/20"}`}>
+          <div className={`text-3xl font-bold font-mono ${isRunningPhase ? "text-green-400" : "text-red-400"}`}>
             {formatTime(timeLeftMs)}
           </div>
         </div>
