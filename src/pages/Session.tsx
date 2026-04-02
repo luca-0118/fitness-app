@@ -4,12 +4,14 @@ import StopWatch from "../components/StopWatch";
 import TabataTimer from "../components/TabataTimer";
 import { CurrentExercise } from "../components/CurrentExercise.tsx";
 import Plusknop from "../components/plusknop.tsx";
+import Checkmark from "../components/Checkmark";
 import FinishWorkoutButton from "../components/FinishWorkoutButton";
 import API from "../classes/api.ts";
 
 export default function Session() {
   const [selectedTimer, setSelectedTimer] = useState("stopwatch");
   const [expandedByExercise, setExpandedByExercise] = useState<boolean[]>([]);
+  const [completedByExercise, setCompletedByExercise] = useState<boolean[]>([]);
   const [elapsedSeconds, setElapsedSeconds] = useState(0);
   const [session, setSession] = useState<ISessionState>();
 
@@ -20,6 +22,7 @@ export default function Session() {
       if (typeof resp !== "string") {
         setSession(resp);
         setExpandedByExercise(Array(resp.exercises.length).fill(false));
+        setCompletedByExercise(Array(resp.exercises.length).fill(false));
       }
     };
     getState();
@@ -107,6 +110,20 @@ export default function Session() {
     });
   };
 
+  const handleToggleExerciseComplete = (exerciseIndex: number) => {
+    setCompletedByExercise((prev) => {
+      const next = [...prev];
+      next[exerciseIndex] = !next[exerciseIndex];
+      return next;
+    });
+
+    setExpandedByExercise((prev) => {
+      const next = [...prev];
+      next[exerciseIndex] = false;
+      return next;
+    });
+  };
+
   if (!session) return <h1>Loading....</h1>;
 
   return (
@@ -148,6 +165,7 @@ pb-30
                 key={exercise.exercise_id}
                 exerciseData={exercise}
                 isExpanded={expandedByExercise[exerciseIndex] || false}
+                  isCompleted={completedByExercise[exerciseIndex] || false}
                 onToggle={() => {
                   const next = [...expandedByExercise];
                   next[exerciseIndex] = !next[exerciseIndex];
@@ -158,11 +176,19 @@ pb-30
                 }
               >
                 {!isCardio && (
+                    <div className="mt-3 flex items-center gap-3">
                   <Plusknop
                     onClick={() => handleAddSet(exerciseIndex)}
-                    className="mt-3 w-77 h-12 rounded-full bg-[#2e2e2e] hover:bg-[#3a3a3a]  justify-center transition-colors"
+                        className="w-64 h-12 rounded-full bg-[#2e2e2e] hover:bg-[#3a3a3a] justify-center transition-colors"
                     iconSize={32}
                   />
+                      <Checkmark
+                        onClick={() => handleToggleExerciseComplete(exerciseIndex)}
+                        isActive={completedByExercise[exerciseIndex] || false}
+                        className={`w-12 h-12 rounded-full border-2 transition-colors flex items-center justify-center ${completedByExercise[exerciseIndex] ? "border-[#0ceb31] bg-[#0ceb31] text-white" : "border-[#0ceb31] bg-[#1f2937] text-[#0ceb31] hover:bg-[#0ceb31] hover:text-white active:bg-[#0ceb31] active:text-white"}`}
+                        iconSize={28}
+                      />
+                    </div>
                 )}
               </CurrentExercise>
             );
