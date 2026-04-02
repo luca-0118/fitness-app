@@ -24,9 +24,12 @@ import { SESSION_STORAGE_KEYS } from "./apis/sessionAPI";
 
 function App() {
   useEffect(() => {
+    // Timer fix: when the app closes while a workout is running, finalize that session
+    // so the floating timer and session state do not stay orphaned on next launch.
     let unlistenCloseRequested: (() => void) | undefined;
     let isClosing = false;
 
+    // Completes the active workout only if a session id exists in storage.
     const finishActiveWorkout = async () => {
       if (!localStorage.getItem(SESSION_STORAGE_KEYS.id)) return;
 
@@ -38,12 +41,14 @@ function App() {
     };
 
     const handleBeforeUnload = () => {
+      // Browser/web fallback: best-effort completion when the page is unloaded.
       void finishActiveWorkout();
     };
 
     window.addEventListener("beforeunload", handleBeforeUnload);
 
     const registerTauriCloseHook = async () => {
+      // Desktop/Tauri path: intercept close, complete workout, then continue closing.
       const isTauriRuntime = "__TAURI_INTERNALS__" in window || "__TAURI__" in window;
       if (!isTauriRuntime) return;
 
@@ -52,6 +57,7 @@ function App() {
         const appWindow = getCurrentWindow();
 
         unlistenCloseRequested = await appWindow.onCloseRequested(async (event) => {
+          // Prevent recursive close handling while we are already closing.
           if (isClosing) return;
 
           event.preventDefault();
