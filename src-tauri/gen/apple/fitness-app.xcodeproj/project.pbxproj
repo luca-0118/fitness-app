@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		19B4AA2A7BEE42E97F4CFB78 /* main.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6B0EEFA86D5A66774E186473 /* main.mm */; };
-		1C32C593AC5258C7E2EB2BDE /* libapp.a in Resources */ = {isa = PBXBuildFile; fileRef = 39D176BC582FCDC47FBF3EDD /* libapp.a */; };
 		3EC7315D63CE6D60C64A4674 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 69B875FB29A907C4C20DC402 /* CoreGraphics.framework */; };
 		598874D2E633DC765F3029AE /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9CA9DDFAA93B36BAF04DEDD6 /* Assets.xcassets */; };
 		71C171D4B2DF44AF70759520 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 052B142D607D8AF3E8BBACA3 /* LaunchScreen.storyboard */; };
@@ -25,39 +24,40 @@
 /* Begin PBXFileReference section */
 		052B142D607D8AF3E8BBACA3 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 		066D260B1FF57117B0CFA5E7 /* Metal.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Metal.framework; path = System/Library/Frameworks/Metal.framework; sourceTree = SDKROOT; };
+		0DB7BF93CCADF2157AEEA0CA /* session.rs */ = {isa = PBXFileReference; lastKnownFileType = text; path = session.rs; sourceTree = "<group>"; };
 		0F19A5177D7FDD44C5716109 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
-		130E9FC53A92B6DBD3922D35 /* workoutbase.sqlite */ = {isa = PBXFileReference; lastKnownFileType = file; path = workoutbase.sqlite; sourceTree = "<group>"; };
-		14EC9F102816AC9D06EB629C /* database.rs */ = {isa = PBXFileReference; path = database.rs; sourceTree = "<group>"; };
+		14EC9F102816AC9D06EB629C /* database.rs */ = {isa = PBXFileReference; lastKnownFileType = text; path = database.rs; sourceTree = "<group>"; };
+		19A74B4655008044DD896FA7 /* session.rs */ = {isa = PBXFileReference; lastKnownFileType = text; path = session.rs; sourceTree = "<group>"; };
 		238DED287FEFCC9AE928A3CC /* fitness-app_iOS.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "fitness-app_iOS.entitlements"; sourceTree = "<group>"; };
-		39749E79E5010512C0D6AF47 /* fitness-app_iOS.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = "fitness-app_iOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
-		39D176BC582FCDC47FBF3EDD /* libapp.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libapp.a; sourceTree = "<group>"; };
-		3ADBAB95E6AB1DFA1A9C7D68 /* workout.rs */ = {isa = PBXFileReference; path = workout.rs; sourceTree = "<group>"; };
+		3224E9AF9E57CB1EDA049D5F /* workoutbase.db */ = {isa = PBXFileReference; lastKnownFileType = file; path = workoutbase.db; sourceTree = "<group>"; };
+		39749E79E5010512C0D6AF47 /* fitness-app.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "fitness-app.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		3ADBAB95E6AB1DFA1A9C7D68 /* workout.rs */ = {isa = PBXFileReference; lastKnownFileType = text; path = workout.rs; sourceTree = "<group>"; };
 		4D65A061E1C3CBA7D3DA5E9C /* libapp.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libapp.a; sourceTree = "<group>"; };
-		4E3EE93AF0D58771995CCF8C /* session.rs */ = {isa = PBXFileReference; path = session.rs; sourceTree = "<group>"; };
-		4F87332DC1DC2CE28944275C /* workout.rs */ = {isa = PBXFileReference; path = workout.rs; sourceTree = "<group>"; };
-		509D5B2E11ED5404D3EE1F91 /* get_exercises_by_muscle.rs */ = {isa = PBXFileReference; path = get_exercises_by_muscle.rs; sourceTree = "<group>"; };
-		626E2605CA5D0704FFCB959D /* workout.rs */ = {isa = PBXFileReference; path = workout.rs; sourceTree = "<group>"; };
+		4E3EE93AF0D58771995CCF8C /* session.rs */ = {isa = PBXFileReference; lastKnownFileType = text; path = session.rs; sourceTree = "<group>"; };
+		4F87332DC1DC2CE28944275C /* workout.rs */ = {isa = PBXFileReference; lastKnownFileType = text; path = workout.rs; sourceTree = "<group>"; };
+		509D5B2E11ED5404D3EE1F91 /* get_exercises_by_muscle.rs */ = {isa = PBXFileReference; lastKnownFileType = text; path = get_exercises_by_muscle.rs; sourceTree = "<group>"; };
+		626E2605CA5D0704FFCB959D /* workout.rs */ = {isa = PBXFileReference; lastKnownFileType = text; path = workout.rs; sourceTree = "<group>"; };
 		69B875FB29A907C4C20DC402 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		6B0EEFA86D5A66774E186473 /* main.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = main.mm; sourceTree = "<group>"; };
-		75F6FEF053F3A8CBA651C855 /* get_exercise_by_id.rs */ = {isa = PBXFileReference; path = get_exercise_by_id.rs; sourceTree = "<group>"; };
-		8662B723F969D2FB60BC35E5 /* get_all_exercises.rs */ = {isa = PBXFileReference; path = get_all_exercises.rs; sourceTree = "<group>"; };
-		877AD8F4572CAEF7E07587E0 /* mod.rs */ = {isa = PBXFileReference; path = mod.rs; sourceTree = "<group>"; };
-		8F113424E6217E721F7664A6 /* mod.rs */ = {isa = PBXFileReference; path = mod.rs; sourceTree = "<group>"; };
+		75F6FEF053F3A8CBA651C855 /* get_exercise_by_id.rs */ = {isa = PBXFileReference; lastKnownFileType = text; path = get_exercise_by_id.rs; sourceTree = "<group>"; };
+		8662B723F969D2FB60BC35E5 /* get_all_exercises.rs */ = {isa = PBXFileReference; lastKnownFileType = text; path = get_all_exercises.rs; sourceTree = "<group>"; };
+		877AD8F4572CAEF7E07587E0 /* mod.rs */ = {isa = PBXFileReference; lastKnownFileType = text; path = mod.rs; sourceTree = "<group>"; };
+		8F113424E6217E721F7664A6 /* mod.rs */ = {isa = PBXFileReference; lastKnownFileType = text; path = mod.rs; sourceTree = "<group>"; };
 		9207E6B1FFA0C3127A47CBE6 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		96AA3C2E09C7AAEB4B0A1E82 /* MetalKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MetalKit.framework; path = System/Library/Frameworks/MetalKit.framework; sourceTree = SDKROOT; };
 		97E861F454651AD7C2B9BFE4 /* assets */ = {isa = PBXFileReference; lastKnownFileType = folder; path = assets; sourceTree = SOURCE_ROOT; };
 		9CA9DDFAA93B36BAF04DEDD6 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		A1B227A745A688C7506C093F /* bindings.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = bindings.h; sourceTree = "<group>"; };
-		A4561F6A59960AD25A6B4F1F /* mod.rs */ = {isa = PBXFileReference; path = mod.rs; sourceTree = "<group>"; };
+		A4561F6A59960AD25A6B4F1F /* mod.rs */ = {isa = PBXFileReference; lastKnownFileType = text; path = mod.rs; sourceTree = "<group>"; };
 		B37FCF96B93E1AC8DD854BF1 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
-		B45715CF403166BDC6E13A47 /* mod.rs */ = {isa = PBXFileReference; path = mod.rs; sourceTree = "<group>"; };
-		C0FEA81134B00CD0C32EA50F /* lib.rs */ = {isa = PBXFileReference; path = lib.rs; sourceTree = "<group>"; };
-		CB367526E04DE749D703FF12 /* exercise.rs */ = {isa = PBXFileReference; path = exercise.rs; sourceTree = "<group>"; };
-		CD6B867B230EF08F36AEE5F7 /* api.rs */ = {isa = PBXFileReference; path = api.rs; sourceTree = "<group>"; };
-		E5F801BFB7BBE76114314637 /* session.rs */ = {isa = PBXFileReference; path = session.rs; sourceTree = "<group>"; };
+		B45715CF403166BDC6E13A47 /* mod.rs */ = {isa = PBXFileReference; lastKnownFileType = text; path = mod.rs; sourceTree = "<group>"; };
+		C0FEA81134B00CD0C32EA50F /* lib.rs */ = {isa = PBXFileReference; lastKnownFileType = text; path = lib.rs; sourceTree = "<group>"; };
+		CB367526E04DE749D703FF12 /* exercise.rs */ = {isa = PBXFileReference; lastKnownFileType = text; path = exercise.rs; sourceTree = "<group>"; };
+		CD6B867B230EF08F36AEE5F7 /* api.rs */ = {isa = PBXFileReference; lastKnownFileType = text; path = api.rs; sourceTree = "<group>"; };
+		E5F801BFB7BBE76114314637 /* session.rs */ = {isa = PBXFileReference; lastKnownFileType = text; path = session.rs; sourceTree = "<group>"; };
 		F7338C8E16C75908013EBE0B /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
 		F8279499324D2ADBEAF796D4 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
-		F87FE4B9076FC8E192DD9FD0 /* main.rs */ = {isa = PBXFileReference; path = main.rs; sourceTree = "<group>"; };
+		F87FE4B9076FC8E192DD9FD0 /* main.rs */ = {isa = PBXFileReference; lastKnownFileType = text; path = main.rs; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -109,6 +109,7 @@
 			children = (
 				CB367526E04DE749D703FF12 /* exercise.rs */,
 				8F113424E6217E721F7664A6 /* mod.rs */,
+				0DB7BF93CCADF2157AEEA0CA /* session.rs */,
 				626E2605CA5D0704FFCB959D /* workout.rs */,
 			);
 			path = models;
@@ -133,7 +134,7 @@
 		6D24560BEAAD146E0F2F45F5 /* resources */ = {
 			isa = PBXGroup;
 			children = (
-				130E9FC53A92B6DBD3922D35 /* workoutbase.sqlite */,
+				3224E9AF9E57CB1EDA049D5F /* workoutbase.db */,
 			);
 			path = resources;
 			sourceTree = "<group>";
@@ -141,7 +142,6 @@
 		74790C6C15C41C013E2D24D2 /* Externals */ = {
 			isa = PBXGroup;
 			children = (
-				8E4513285F3A35759D845D05 /* arm64 */,
 			);
 			path = Externals;
 			sourceTree = "<group>";
@@ -150,31 +150,16 @@
 			isa = PBXGroup;
 			children = (
 				A4561F6A59960AD25A6B4F1F /* mod.rs */,
+				19A74B4655008044DD896FA7 /* session.rs */,
 				4F87332DC1DC2CE28944275C /* workout.rs */,
 			);
 			path = logic;
 			sourceTree = "<group>";
 		};
-		8E4513285F3A35759D845D05 /* arm64 */ = {
-			isa = PBXGroup;
-			children = (
-				93247A00CE7CCD31E5332AF2 /* debug */,
-			);
-			path = arm64;
-			sourceTree = "<group>";
-		};
-		93247A00CE7CCD31E5332AF2 /* debug */ = {
-			isa = PBXGroup;
-			children = (
-				39D176BC582FCDC47FBF3EDD /* libapp.a */,
-			);
-			path = debug;
-			sourceTree = "<group>";
-		};
 		971CE941FCBE7F0A7C724A9F /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				39749E79E5010512C0D6AF47 /* fitness-app_iOS.app */,
+				39749E79E5010512C0D6AF47 /* fitness-app.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -241,13 +226,6 @@
 			path = services;
 			sourceTree = "<group>";
 		};
-		"TEMP_3964EB47-304F-4652-89C9-674C01F2B0F6" /* x86_64 */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = x86_64;
-			sourceTree = "<group>";
-		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -268,7 +246,7 @@
 			packageProductDependencies = (
 			);
 			productName = "fitness-app_iOS";
-			productReference = 39749E79E5010512C0D6AF47 /* fitness-app_iOS.app */;
+			productReference = 39749E79E5010512C0D6AF47 /* fitness-app.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -279,8 +257,6 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = YES;
 				LastUpgradeCheck = 1430;
-				TargetAttributes = {
-				};
 			};
 			buildConfigurationList = 74BE5EC37DB9F654336F795F /* Build configuration list for PBXProject "fitness-app" */;
 			developmentRegion = en;
@@ -309,7 +285,6 @@
 				598874D2E633DC765F3029AE /* Assets.xcassets in Resources */,
 				71C171D4B2DF44AF70759520 /* LaunchScreen.storyboard in Resources */,
 				FF46787BB6FEFCF9592C776E /* assets in Resources */,
-				1C32C593AC5258C7E2EB2BDE /* libapp.a in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -355,12 +330,11 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				ARCHS = (
-					arm64,
-				);
+				ARCHS = arm64;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "fitness-app_iOS/fitness-app_iOS.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				DEVELOPMENT_TEAM = 8666X623RN;
 				ENABLE_BITCODE = NO;
 				"EXCLUDED_ARCHS[sdk=iphoneos*]" = x86_64;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -372,9 +346,21 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				"LIBRARY_SEARCH_PATHS[arch=arm64]" = "$(inherited) $(PROJECT_DIR)/Externals/arm64/$(CONFIGURATION) $(SDKROOT)/usr/lib/swift $(TOOLCHAIN_DIR)/usr/lib/swift/$(PLATFORM_NAME) $(TOOLCHAIN_DIR)/usr/lib/swift-5.0/$(PLATFORM_NAME)";
-				"LIBRARY_SEARCH_PATHS[arch=x86_64]" = "$(inherited) $(PROJECT_DIR)/Externals/x86_64/$(CONFIGURATION) $(SDKROOT)/usr/lib/swift $(TOOLCHAIN_DIR)/usr/lib/swift/$(PLATFORM_NAME) $(TOOLCHAIN_DIR)/usr/lib/swift-5.0/$(PLATFORM_NAME)";
-				PRODUCT_BUNDLE_IDENTIFIER = com.luca-.fitness-app;
+				"LIBRARY_SEARCH_PATHS[arch=arm64]" = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Externals/arm64/$(CONFIGURATION)",
+					"$(SDKROOT)/usr/lib/swift",
+					"$(TOOLCHAIN_DIR)/usr/lib/swift/$(PLATFORM_NAME)",
+					"$(TOOLCHAIN_DIR)/usr/lib/swift-5.0/$(PLATFORM_NAME)",
+				);
+				"LIBRARY_SEARCH_PATHS[arch=x86_64]" = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Externals/x86_64/$(CONFIGURATION)",
+					"$(SDKROOT)/usr/lib/swift",
+					"$(TOOLCHAIN_DIR)/usr/lib/swift/$(PLATFORM_NAME)",
+					"$(TOOLCHAIN_DIR)/usr/lib/swift-5.0/$(PLATFORM_NAME)",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.Tteam.fitness-app;
 				PRODUCT_NAME = "fitness-app";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -449,12 +435,11 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				ARCHS = (
-					arm64,
-				);
+				ARCHS = arm64;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "fitness-app_iOS/fitness-app_iOS.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				DEVELOPMENT_TEAM = 8666X623RN;
 				ENABLE_BITCODE = NO;
 				"EXCLUDED_ARCHS[sdk=iphoneos*]" = x86_64;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -466,9 +451,21 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				"LIBRARY_SEARCH_PATHS[arch=arm64]" = "$(inherited) $(PROJECT_DIR)/Externals/arm64/$(CONFIGURATION) $(SDKROOT)/usr/lib/swift $(TOOLCHAIN_DIR)/usr/lib/swift/$(PLATFORM_NAME) $(TOOLCHAIN_DIR)/usr/lib/swift-5.0/$(PLATFORM_NAME)";
-				"LIBRARY_SEARCH_PATHS[arch=x86_64]" = "$(inherited) $(PROJECT_DIR)/Externals/x86_64/$(CONFIGURATION) $(SDKROOT)/usr/lib/swift $(TOOLCHAIN_DIR)/usr/lib/swift/$(PLATFORM_NAME) $(TOOLCHAIN_DIR)/usr/lib/swift-5.0/$(PLATFORM_NAME)";
-				PRODUCT_BUNDLE_IDENTIFIER = com.luca-.fitness-app;
+				"LIBRARY_SEARCH_PATHS[arch=arm64]" = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Externals/arm64/$(CONFIGURATION)",
+					"$(SDKROOT)/usr/lib/swift",
+					"$(TOOLCHAIN_DIR)/usr/lib/swift/$(PLATFORM_NAME)",
+					"$(TOOLCHAIN_DIR)/usr/lib/swift-5.0/$(PLATFORM_NAME)",
+				);
+				"LIBRARY_SEARCH_PATHS[arch=x86_64]" = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Externals/x86_64/$(CONFIGURATION)",
+					"$(SDKROOT)/usr/lib/swift",
+					"$(TOOLCHAIN_DIR)/usr/lib/swift/$(PLATFORM_NAME)",
+					"$(TOOLCHAIN_DIR)/usr/lib/swift-5.0/$(PLATFORM_NAME)",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.Tteam.fitness-app;
 				PRODUCT_NAME = "fitness-app";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";

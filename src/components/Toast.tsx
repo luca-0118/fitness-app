@@ -32,11 +32,14 @@ export const Toast = {
 
   loading: (message: string) => toast.loading(message),
 
-  promise: (promise: Promise<any>, messages: {
-    loading: string;
-    success: string;
-    error: string;
-  }) => {
+  promise: (
+    promise: Promise<any>,
+    messages: {
+      loading: string;
+      success: string;
+      error: string;
+    },
+  ) => {
     return toast.promise(promise, messages);
   },
 };

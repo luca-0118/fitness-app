@@ -17,42 +17,39 @@ const pageTitles: Record<string, string> = {
   "/exercise-description": "Exercise Description",
 };
 
-const routesWithSave = [
-  "/edit-workout",
-  "/new-workout",
-];
+const routesWithSave = ["/edit-workout", "/new-workout"];
 
 // This component will display the title of the current page based on the URL path
 export default function Header() {
   const location = useLocation();
   const navigate = useNavigate();
-// Get the title for the current path, or default to "Page" if not found
+  // Get the title for the current path, or default to "Page" if not found
   const title = pageTitles[location.pathname] || "Page";
 
   const showSave = routesWithSave.includes(location.pathname);
   const showBack = location.pathname !== "/";
 
-    return (
-        <header className="z-40 pt-6 shrink-0 w-[90%] mx-auto">
-          <div className="relative flex items-center">
-            {showBack && (
-                <button
-                    onClick={() => navigate(-1)}
-                    className="absolute left-0 cursor-pointer"
-                >
-                  <ArrowBackIcon sx={{ fontSize: 32 }} />
-                </button>
-            )}
-            <h1 className="text-[24px] font-bold text-[#F2F3F2] mx-auto">
-              {title}
-            </h1>
-            {showSave && (
-                <div className="absolute right-0">
-                  <SaveButton />
-                </div>
-            )}
+  return (
+    <header className="z-40 pt-6 shrink-0 w-[90%] mx-auto bg-[#1E1E1E]">
+      <div className="relative flex items-center">
+        {showBack && (
+          <button
+            onClick={() => navigate(-1)}
+            className="absolute left-0 cursor-pointer"
+          >
+            <ArrowBackIcon sx={{ fontSize: 32 }} />
+          </button>
+        )}
+        <h1 className="text-[24px] font-bold text-[#F2F3F2] mx-auto">
+          {title}
+        </h1>
+        {showSave && (
+          <div className="absolute right-0">
+            <SaveButton />
           </div>
-            <div className="border-b-2 border-[#414141] mt-2"></div>
-        </header>
-    )
+        )}
+      </div>
+      <div className="border-b-2 border-[#414141] mt-2"></div>
+    </header>
+  );
 }

@@ -1,6 +1,4 @@
-use serde::{Deserialize, Serialize};
-
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Clone)]
 pub struct Exercise {
     pub exercise_id: String,
     pub name: String,
@@ -9,5 +7,9 @@ pub struct Exercise {
     pub body_parts: String,
     pub equipments: String,
     pub secondary_muscles: String,
-    pub instructions: String,
+    pub instructions: Option<String>,
 }
+
+pub type Exercises = Vec<Exercise>;
+
+impl Exercise {}

@@ -73,34 +73,37 @@ function App() {
   }, []);
 
   return (
-      <WorkoutProvider>
-        <BrowserRouter>
-          <div className="h-dvh flex flex-col overflow-hidden">
-            <Header />
+    <WorkoutProvider>
+      <BrowserRouter>
+        <div className="h-dvh flex flex-col overflow-hidden">
+          <Header />
+
+          <main className="flex-1 overflow-y-auto no-scrollbar">
             <Toaster position="top-center" reverseOrder={false} />
-              <main className="flex-1 overflow-y-auto no-scrollbar">
-                <Routes>
-                  <Route path="/" element={<Home />} />
-                  <Route path="/workouts" element={<WorkoutOverview />} />
-                  <Route path="/edit-workout" element={<EditWorkout />} />
-                  <Route path="/add-exercises" element={<AddExercises />} />
-                  <Route path="/session" element={<Session />} />
-                  <Route path="/new-workout" element={<NewWorkout />} />
-                  <Route path="/profile" element={<Profile />} />
-                  <Route path="/history" element={<WorkoutHistory />} />
-                  <Route path="/session-history" element={<SessionHistory />} />
-                  <Route path="/kcal-tracker" element={<KcalTracker />} />
-                  <Route path="/exercises" element={<Exercises  />} />
-                  <Route path="/exercise-description" element={<ExerciseDescription />} />
-                </Routes>
-              </main>
-            <FloatingWorkoutTimer />
-            <BottomNavBar/>
-          </div>
-        </BrowserRouter>
-      </WorkoutProvider>
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/workouts" element={<WorkoutOverview />} />
+              <Route path="/edit-workout" element={<EditWorkout />} />
+              <Route path="/add-exercises" element={<AddExercises />} />
+              <Route path="/session" element={<Session />} />
+              <Route path="/new-workout" element={<NewWorkout />} />
+              <Route path="/profile" element={<Profile />} />
+              <Route path="/history" element={<WorkoutHistory />} />
+              <Route path="/session-history" element={<SessionHistory />} />
+              <Route path="/kcal-tracker" element={<KcalTracker />} />
+              <Route path="/exercises" element={<Exercises />} />
+              <Route
+                path="/exercise-description"
+                element={<ExerciseDescription />}
+              />
+            </Routes>
+          </main>
+          <FloatingWorkoutTimer />
+          <BottomNavBar />
+        </div>
+      </BrowserRouter>
+    </WorkoutProvider>
   );
 }
-
 
 export default App;

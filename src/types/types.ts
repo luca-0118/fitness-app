@@ -9,8 +9,11 @@ type backendFunctions =
   | "start_session"
   | "get_session"
   | "complete_session"
-  | "update_set"
-  | "workout_history";
+  | "update_session_set"
+  | "get_exercises_by_muscle"
+  | "create_workout_with_exercises"
+  | "workout_history"
+  | "get_exercise_by_id";
 
 interface WorkoutDTO {
   uuid: string;
@@ -19,12 +22,14 @@ interface WorkoutDTO {
 }
 
 interface ExerciseDTO {
-  instanceId: number;
-  id: string;
-  name: string;
-  data: string;
-  gif_url: string;
-  exercise_id: string;
+    exercise_id: string;
+    name: string;
+    gif_url: string;
+    target_muscles: string;
+    body_parts: string;
+    equipments: string;
+    secondary_muscles: string;
+    instructions: string;
 }
 
 interface linkExerciseDTO {

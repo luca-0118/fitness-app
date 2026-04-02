@@ -1,4 +1,4 @@
-use crate::{api, Db};
+use crate::{Ctx, api};
 use serde::Serialize;
 
 #[derive(Debug, Serialize)]
@@ -14,13 +14,10 @@ pub struct Exercise {
 
 #[tauri::command]
 pub fn get_exercise_by_id(
-    db: tauri::State<Db>,
+    ctx: tauri::State<Ctx>,
     exercise_id: &str,
 ) -> Result<api::ApiResponse<Exercise>, api::ApiErrorResponse> {
-    let conn = db
-        .conn
-        .lock()
-        .map_err(|_| api::ApiError::FailedDbConnection)?;
+    let conn = ctx.db.conn.lock().unwrap();
 
     let mut query = conn
         .prepare("SELECT * FROM exercises WHERE exerciseid = ?1")

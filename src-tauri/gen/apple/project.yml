@@ -1,6 +1,6 @@
 name: fitness-app
 options:
-  bundleIdPrefix: com.luca-.fitness-app
+  bundleIdPrefix: com.Tteam.fitness-app
   deploymentTarget:
     iOS: 14.0
 fileGroups: [../../src]
@@ -11,7 +11,7 @@ settingGroups:
   app:
     base:
       PRODUCT_NAME: fitness-app
-      PRODUCT_BUNDLE_IDENTIFIER: com.luca-.fitness-app
+      PRODUCT_BUNDLE_IDENTIFIER: com.Tteam.fitness-app
 targetTemplates:
   app:
     type: application

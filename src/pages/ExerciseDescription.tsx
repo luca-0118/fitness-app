@@ -1,6 +1,7 @@
 import { useLocation } from "react-router-dom";
 import { invoke } from "@tauri-apps/api/core";
 import { useEffect, useState } from "react";
+import API from "../classes/api";
 
 export default function ExerciseDescription() {
   const [id, setId] = useState<string>("");
@@ -35,16 +36,14 @@ export default function ExerciseDescription() {
   async function getExerciseById() {
     if (id !== "") {
       try {
-        const res = await invoke<ExerciseResponse>("get_exercise_by_id", {
-          exerciseId: id,
-        });
+        const res = await API.exercises.get(id);
 
-        setEquipments(JSON.parse(res.data.equipments));
-        setgif(res.data.gif_url);
-        setInstructions(JSON.parse(res.data.instructions));
-        setName(res.data.name);
-        setSecondaryMuscles(JSON.parse(res.data.secondary_muscles));
-        setTargetMuscle(JSON.parse(res.data.target_muscles));
+        setEquipments(JSON.parse(res.equipments));
+        setgif(res.gif_url);
+        setInstructions(JSON.parse(res.instructions));
+        setName(res.name);
+        setSecondaryMuscles(JSON.parse(res.secondary_muscles));
+        setTargetMuscle(JSON.parse(res.target_muscles));
       } catch (err) {
         console.error(err);
         setError(true);
@@ -54,9 +53,19 @@ export default function ExerciseDescription() {
 
   if (!error) {
     return (
-      <div className="flex w-screen">
+      <div
+        className="
+    fixed inset-0 
+    top-15
+    bottom-15
+    bg-[#1E1E1E] 
+    overflow-y-auto
+    pt-[env(safe-area-inset-top)]
+    pb-[env(safe-area-inset-bottom)]
+  "
+      >
         <div className="grid grid-cols-2 gap-4 py-4 w-[90%] mx-auto">
-          <div className="col-span-2 bg-[#1E1E1E] border border-[#414141] rounded-xl p-6 font-bold flex flex-col ">
+          <div className="col-span-2 bg-[#1E1E1E] border border-[#414141] rounded-xl p-6 font-bold flex flex-col pb-10 ">
             <h2 className="font-bold text-[#F2F3F2] text-2xl  mb-2 border-b-2 border-[#414141] w-[90%] flex mx-auto">
               <div>{name.charAt(0).toUpperCase() + name.slice(1)}</div>
             </h2>

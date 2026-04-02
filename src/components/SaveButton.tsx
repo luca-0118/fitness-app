@@ -13,12 +13,14 @@ export default function SaveButton() {
             new Promise(async (Resolve, Reject) => {
                 if (!workoutName) Reject("No name");
 
-                const workoutUuid = await API.workouts.create(workoutName);
+                const exerciseIds = exercises.map(e => e.id);
+
+                const workoutUuid = await API.workouts.create({name: workoutName, exercises: exerciseIds });
                 console.log("workout sucessfully created!");
 
-                for (const exercise of exercises) {
-                    await API.workouts.linkExercise(workoutUuid, exercise.id);
-                }
+                // for (const exercise of exercises) {
+                //     await API.workouts.linkExercise(workoutUuid, exercise.id);
+                // }
 
                 Resolve(workoutUuid);
             }),

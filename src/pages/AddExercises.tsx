@@ -1,10 +1,7 @@
 import ExerciseWidget from "../components/ExerciseWidget";
-import { useEffect, useState } from "react";
+import {useMemo, useState} from "react";
 import { useWorkout } from "../context/WorkoutContext";
-import { useNavigate } from "react-router-dom";
-import API from "../classes/api";
 import SearchBar from "../components/SearchBar";
-import { invoke } from "@tauri-apps/api/core";
 import bicep from "../assets/biceps.jpg";
 import tricep from "../assets/triceps.jpg";
 import chest from "../assets/chest.jpg";
@@ -18,66 +15,32 @@ import lats from "../assets/lats.png";
 import quads from "../assets/quads.png.jpg";
 import shoulders from "../assets/shoulders.png";
 import Filter from "../components/Filter";
+import UseMuscleFilters from "../Hooks/UseMuscleFilters.ts";
+import ExerciseDescriptionOverlay from "../components/ExerciseDescriptionOverlay";
 
 export default function AddExercises() {
-  const [allExercises, setAllExercise] = useState<ExerciseDTO[]>([]);
   const [searchText, setSearchText] = useState("");
-  const [activeQuery, setActiveQuery] = useState("");
-  const [muscle, setMuscle] = useState<string>("");
   const { addExercise } = useWorkout();
-  const navigate = useNavigate();
 
-  async function fetchExercises() {
-    const result = await API.exercises.list();
-    setAllExercise(result);
-  }
 
-  interface ExerciseResponse {
-    data: ExerciseDTO[];
-    ok: boolean;
-  }
+  const {sortedExercises, setMuscle,muscleGroup} = UseMuscleFilters();
 
-  async function loadExercises() {
-    try {
-      const res = await invoke<ExerciseResponse>("get_exercises_by_muscle", {
-        muscle: muscle,
-      });
-      setAllExercise(res.data);
-    } catch (err) {
-      console.error(err);
-    }
-  }
+  const filteredExercises = useMemo(() => {
+    const searchQuery = searchText.toLowerCase();
+    return sortedExercises.filter(exercise =>
+        exercise.name
+            .toLowerCase()
+            .includes(searchQuery)
+    );
+  }, [sortedExercises, searchText]);
 
-  useEffect(() => {
-    fetchExercises();
-  }, []);
-
-  useEffect(() => {
-    setActiveQuery(searchText);
-  }, [searchText]);
-
-  useEffect(() => {
-    if (muscle === "") return;
-    loadExercises();
-  }, [muscle]);
-
-  const filteredExercises = allExercises.filter((exercise) =>
-    exercise.name.toLowerCase().includes(activeQuery.toLowerCase()),
-  );
-
-  function handleFilterClick(muscleInput: string) {
-    if (muscle === muscleInput) {
-      setMuscle("");
-      fetchExercises();
-    } else setMuscle(muscleInput);
-  }
 
   return (
     <>
       <SearchBar
         value={searchText}
         onChange={setSearchText}
-        onSearch={() => setActiveQuery(searchText)}
+        onSearch={() => {}}
       />
       <div>
         <div
@@ -87,80 +50,80 @@ export default function AddExercises() {
         >
           <Filter
             gif={chest}
-            isSelected={muscle === "pectorals"}
-            onClick={() => handleFilterClick("pectorals")}
+            isSelected={muscleGroup === "pectorals"}
+            onClick={() => setMuscle("pectorals")}
           />
 
           <Filter
             gif={bicep}
-            isSelected={muscle === "biceps"}
-            onClick={() => handleFilterClick("biceps")}
+            isSelected={muscleGroup === "biceps"}
+            onClick={() => setMuscle("biceps")}
           />
           <Filter
             gif={tricep}
-            isSelected={muscle === "triceps"}
-            onClick={() => handleFilterClick("triceps")}
+            isSelected={muscleGroup === "triceps"}
+            onClick={() => setMuscle("triceps")}
           />
           <Filter
             gif={lats}
-            isSelected={muscle === "lats"}
-            onClick={() => handleFilterClick("lats")}
+            isSelected={muscleGroup === "lats"}
+            onClick={() => setMuscle("lats")}
           />
           <Filter
             gif={back}
-            isSelected={muscle === "upper back"}
-            onClick={() => handleFilterClick("upper back")}
+            isSelected={muscleGroup === "upper back"}
+            onClick={() => setMuscle("upper back")}
           />
           <Filter
             gif={shoulders}
-            isSelected={muscle === "delts"}
-            onClick={() => handleFilterClick("delts")}
+            isSelected={muscleGroup === "delts"}
+            onClick={() => setMuscle("delts")}
           />
           <Filter
             gif={forearms}
-            isSelected={muscle === "forearms"}
-            onClick={() => handleFilterClick("forearms")}
+            isSelected={muscleGroup === "forearms"}
+            onClick={() => setMuscle("forearms")}
           />
           <Filter
             gif={abs}
-            isSelected={muscle === "abs"}
-            onClick={() => handleFilterClick("abs")}
+            isSelected={muscleGroup === "abs"}
+            onClick={() => setMuscle("abs")}
           />
           <Filter
             gif={quads}
-            isSelected={muscle === "quads"}
-            onClick={() => handleFilterClick("quads")}
+            isSelected={muscleGroup === "quads"}
+            onClick={() => setMuscle("quads")}
           />
           <Filter
             gif={hamstrings}
-            isSelected={muscle === "hamstrings"}
-            onClick={() => handleFilterClick("hamstrings")}
+            isSelected={muscleGroup === "hamstrings"}
+            onClick={() => setMuscle("hamstrings")}
           />
           <Filter
             gif={glutes}
-            isSelected={muscle === "glutes"}
-            onClick={() => handleFilterClick("glutes")}
+            isSelected={muscleGroup === "glutes"}
+            onClick={() => setMuscle("glutes")}
           />
           <Filter
             gif={calves}
-            isSelected={muscle === "calves"}
-            onClick={() => handleFilterClick("calves")}
+            isSelected={muscleGroup === "calves"}
+            onClick={() => setMuscle("calves")}
           />
         </div>
+
         {filteredExercises.map((exercise) => {
           return (
-            <ExerciseWidget
-              key={exercise.id}
+            <ExerciseDescriptionOverlay
+              key={exercise.exercise_id}
               name={exercise.name}
-              gif={exercise.data}
-              id={exercise.id}
+              gif={exercise.gif_url}
+              id={exercise.exercise_id}
               onSelect={() => {
                 addExercise({
-                  id: exercise.id,
+                  id: exercise.exercise_id,
                   name: exercise.name,
-                  gif: exercise.data,
+                  gif: exercise.gif_url,
                 });
-                navigate(-1);
               }}
             />
           );

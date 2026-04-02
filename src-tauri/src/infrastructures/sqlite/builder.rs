@@ -1,10 +1,19 @@
-
 use std::path::PathBuf;
 
 use rusqlite::Connection;
-use tauri::{App, Manager};
+use tauri::{App,Manager};
 
-pub fn instantiate(app: &mut App) -> PathBuf {
+
+
+pub fn build_database(app: &mut App) {
+    let db_path = instantiate(app);
+    let mut conn = establish_connection(&db_path);
+    migrate(&mut conn);
+    conn.close().expect("Couldnt close Connection");
+}
+
+
+fn instantiate(app: &mut App) -> PathBuf {
             let db_path = app.path().resolve(
                 "workoutbase.db",
                 tauri::path::BaseDirectory::AppLocalData,
@@ -18,7 +27,7 @@ pub fn instantiate(app: &mut App) -> PathBuf {
                 }
 
                 // Embed and write the template database
-                let template_bytes = include_bytes!("../resources/workoutbase.db");
+                let template_bytes = include_bytes!("../../resources/workoutbase.db");
                 std::fs::write(&db_path, template_bytes)
                     .expect("Failed to write database template");
             }
@@ -27,46 +36,43 @@ pub fn instantiate(app: &mut App) -> PathBuf {
 }
 
 // Logic for establishing a connection.
-pub fn establish_connection(dbpath: &PathBuf) -> Connection {
+fn establish_connection(dbpath: &PathBuf) -> Connection {
     Connection::open(dbpath)
         .expect("Failed to open or create database")
 }
 
-
 // Creates all the default structure for the database (for workouts and connecting exercises to workouts.)
-pub fn migrate(conn: &Connection) {
-
-    //Workout exercises table
-    // NOTE PRAGMA foreign_keys = ON; is required, otherwise foreign keys won't work.
-    conn.execute("PRAGMA foreign_keys = ON", [])
-        .expect("foreign keys disabled");
-    
-    // conn.execute("DROP TABLE IF EXISTS Workouts", []).expect("TODO: panic message");
-
-    conn.execute(
+fn migrate(conn: &mut Connection) {
+    let tx = conn.transaction().unwrap();
+    tx.execute(
         "CREATE TABLE IF NOT EXISTS Workouts (
         ID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-        Uuid TEXT UNIQUE NOT NULL,
+        Uuid TEXT NOT NULL UNIQUE,
         Name TEXT NOT NULL,
         Desc TEXT
         );",
         [],
     )
         .expect("failed to initialize schema Workouts");
-    
-    conn.execute(
+
+    //Workout exercises table
+    // NOTE PRAGMA foreign_keys = ON; is required, otherwise foreign keys won't work.
+    tx.execute("PRAGMA foreign_keys = ON", [])
+        .expect("foreign keys disabled");
+
+    tx.execute(
         "CREATE TABLE IF NOT EXISTS WorkoutExercises (
         ID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-        WorkoutId INTEGER NOT NULL,
-        ExerciseId INTEGER NOT NULL,
-        FOREIGN KEY (WorkoutId) REFERENCES Workouts(ID),
-        FOREIGN KEY (ExerciseId) REFERENCES exercises(exerciseId)
+        WorkoutId TEXT NOT NULL,
+        ExerciseId TEXT NOT NULL,
+        FOREIGN KEY (WorkoutId) REFERENCES Workouts(Uuid),
+        FOREIGN KEY (ExerciseId) REFERENCES exercises(exerciseid)
         )",
         [],
     )
         .expect("failed to initialize schema WorkoutExercises");
 
-    conn.execute("CREATE TABLE IF NOT EXISTS workoutHistory (
+    tx.execute("CREATE TABLE IF NOT EXISTS workoutHistory (
         ID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
         sessionId TEXT UNIQUE NOT NULL,
         workoutId TEXT NOT NULL,
@@ -75,7 +81,7 @@ pub fn migrate(conn: &Connection) {
         FOREIGN KEY (workoutId) REFERENCES Workouts(Uuid)
     )",[]).unwrap();
 
-    conn.execute("CREATE TABLE IF NOT EXISTS completedExercises (
+    tx.execute("CREATE TABLE IF NOT EXISTS completedExercises (
         ID TEXT NOT NULL PRIMARY KEY,
         sessionId TEXT NOT NULL,
         exerciseId TEXT NOT NULL,
@@ -83,18 +89,32 @@ pub fn migrate(conn: &Connection) {
         FOREIGN KEY (sessionId) REFERENCES workoutHistory(sessionId)
     )", []).unwrap();
 
-    conn.execute("CREATE TABLE IF NOT EXISTS completedCardioExercises (
-        ID TEXT NOT NULL PRIMARY KEY,
+    tx.execute("CREATE TABLE IF NOT EXISTS completedCardioExercises (
+        ID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+        completedExerciseId TEXT NOT NULL ,
         time FLOAT,
         distance FLOAT,
-        FOREIGN KEY (ID) REFERENCES completedExercises(ID)
+        FOREIGN KEY (completedExerciseId) REFERENCES completedExercises(ID) ON DELETE CASCADE
     )",[]).unwrap();
 
-    conn.execute("CREATE TABLE IF NOT EXISTS completedWeightExercises (
-        ID TEXT NOT NULL PRIMARY KEY,
+    tx.execute("CREATE TABLE IF NOT EXISTS completedWeightExercises (
+        ID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+        completedExerciseId TEXT NOT NULL,
         reps FLOAT,
         weight FLOAT,
-        FOREIGN KEY (ID) REFERENCES completedExercises(ID)
+        FOREIGN KEY (completedExerciseId) REFERENCES completedExercises(ID) ON DELETE CASCADE
     )",[]).unwrap();
 
+    tx.commit().unwrap();
+}
+
+
+pub fn get_connection(app: &App) -> Connection {
+    let db_path = app.path().resolve(
+        "workoutbase.db",
+        tauri::path::BaseDirectory::AppLocalData,
+    ).expect("pathbuf not found");
+
+    Connection::open(db_path)
+        .expect("Failed to open or create database")
 }

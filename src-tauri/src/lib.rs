@@ -1,76 +1,99 @@
-use rusqlite::Connection;
-use tauri::Manager;
-use std::sync::Mutex;
-
+use std::sync::{Mutex, MutexGuard};
+use tauri::{Manager};
 mod api;
-mod logic;
-mod models;
-mod endpoints;
-mod services;
+mod infrastructures;
+mod repository;
+mod interface;
+mod application;
+mod domain;
+mod lars;
 
-struct Db {
-    conn: Mutex<Connection>,
+use infrastructures::sqlite::Db;
+use repository::workout_repository::WorkoutRepository;
+use crate::api::{ApiError, ApiErrorResponse};
+use crate::application::session_service::SessionService;
+use crate::domain::{CompletedExerciseRepo, ExerciseRepo, WorkoutExerciseRepo, WorkoutHistoryRepo, WorkoutRepo};
+use crate::application::workout_service::WorkoutService;
+use crate::repository::completed_exercise_repository::CompletedExerciseRepository;
+use crate::repository::exercise_repository::ExerciseRepository;
+use crate::repository::workout_exercise_repository::WorkoutExerciseRepository;
+use crate::repository::workout_history_repository::WorkoutHistoryRepository;
+
+struct Ctx {
+    service: Service,
+    db: Db
+}
+
+struct Service {
+    workout: WorkoutService,
+    session: Mutex<SessionService>,
+}
+
+impl Service {
+    pub fn session(&'_ self) -> Result<MutexGuard<'_, SessionService>,ApiErrorResponse> {
+        self.session.lock().map_err(|_|ApiError::PoisonedLock.into())
+    }
 }
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
-
-    // FIXME THIS CONNECTION IS USED BY EVERY SINGLE QUERY. IT ALLOWS US TO EASILY CHANGE QUERIES.
-    // IT NEEDS TO BE LIKE THIS TO EASILY CHANGE IT.
+    // Tauri building process
 
     // sets up the default structure of the database.
-    
-
-    // Tauri building process
     tauri::Builder::default()
         .setup(|app| {
-            // Creates database file in appdata, allows it to be mutable
-            let dbpath = services::database::instantiate(app);
             
-            //Connects to database.
-            let conn = services::database::establish_connection(&dbpath);
-            
-            // Adds all the required tables.
-            services::database::migrate(&conn);
+            // moves the database file to the right location
+            // and sets up additional tables.
+            infrastructures::sqlite::build_database(app);
 
-            app.manage(Db {
-                conn: Mutex::new(conn),
+            //creates an connection to the database.
+            let conn = infrastructures::sqlite::get_connection(app);
+
+            // creates a new db object with the connection from sqlite
+            let db = Db::new(conn);
+
+            app.manage(Ctx {
+                db: db.clone(),
+                service: Service {
+                    // creates a new workout service
+                    workout: WorkoutService::new(
+
+                        //these are repositories that use the databases.
+                        //All functions that are used with the database are in here.
+                        WorkoutRepository::new(db.clone()),
+                        ExerciseRepository::new(db.clone()),
+                        WorkoutExerciseRepository::new(db.clone()),
+                    ),
+                    //adds the new sessionService
+                    session: Mutex::new(SessionService::new(
+                        WorkoutExerciseRepository::new(db.clone()),
+                        WorkoutHistoryRepository::new(db.clone()),
+                        CompletedExerciseRepository::new(db.clone())
+                    ))
+                }
             });
-            
+            //finish
             Ok(())
         })
-
-        //Used for future state management.
-        .manage(Mutex::new( models::Session{
-            session_uuid: String::new(),
-            workout_uuid: String::new(),
-            workout_name: String::new(),
-            start_time: String::new(),
-            end_time:String::new(),
-            exercises: Vec::new(),
-        }))
-
-
         .plugin(tauri_plugin_opener::init())
 
         // Add all frontend functions here
         .invoke_handler(tauri::generate_handler![
-            endpoints::get_all_exercises::get_all_exercises,
-            endpoints::workout::get_workout,
-            endpoints::workout::create_workout,
-            endpoints::workout::list_workouts,
-            endpoints::workout::link_exercise,
-            endpoints::session::start_session,
-            endpoints::get_exercises_by_muscle::get_exercises_by_muscle,
-            endpoints::session::get_session,
-            endpoints::session::update_set,
-            endpoints::session::complete_session,
-            endpoints::session::workout_history,
-            endpoints::get_exercise_by_id::get_exercise_by_id
+            interface::tauri_commands::list_workouts,
+            interface::tauri_commands::create_workout,
+            interface::tauri_commands::get_all_exercises,
+            interface::tauri_commands::get_exercises_by_muscle,
+            interface::tauri_commands::create_workout_with_exercises,
+            interface::tauri_commands::get_workout,
+            interface::tauri_commands::start_session,
+            interface::tauri_commands::get_session,
+            interface::tauri_commands::update_session_set,
+            interface::tauri_commands::complete_session,
+            interface::tauri_commands::workout_history,
+            lars::get_exercise_by_id
+            
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
-
-
-

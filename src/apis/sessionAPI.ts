@@ -14,7 +14,7 @@ export default  class sessionAPI {
      * @returns A boolean indicating if the session is started sucessfully.
      */
     public async start(workout_id: string): Promise<Boolean> {
-        const resp= await ApiClient.send<string>("start_session", {workoutId: workout_id});
+        const resp= await ApiClient.send<string>("start_session", {req: workout_id});
 
         const sessionId= ApiClient.assertOk(resp);
         
@@ -34,6 +34,7 @@ export default  class sessionAPI {
         const session_id = localStorage.getItem(SESSION_STORAGE_KEYS.id);
         if (!session_id) return "session not found";
 
+        // LOL this sessionID is absolutely useless.....
         const resp = await ApiClient.send<ISessionState>("get_session",{sessionId: session_id});
         const sessionData = ApiClient.assertOk(resp);
         console.log(sessionData);
@@ -52,7 +53,7 @@ export default  class sessionAPI {
             return { success: false, resp: error };
         }
 
-        const resp = await ApiClient.send<string>("update_set", { setUpdate });
+        const resp = await ApiClient.send<string>("update_session_set", { req: setUpdate });
         const data = ApiClient.assertOk(resp);
 
         console.log(`updated ${setUpdate.type} set:`, data);

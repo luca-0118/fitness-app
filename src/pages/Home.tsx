@@ -8,7 +8,18 @@ export default function Home() {
 
   return (
     <>
-      <div className="flex w-screen">
+      <div
+        className="
+    fixed inset-0 
+    top-15
+    bottom-15
+    bg-[#1E1E1E] 
+    z-1000
+    overflow-y-auto
+    pt-[env(safe-area-inset-top)]
+    pb-[env(safe-area-inset-bottom)]
+  "
+      >
         <div className="grid grid-cols-2 gap-4 py-4 w-[90%] mx-auto">
           <div className="col-span-2 bg-[#1E1E1E] border border-[#414141] rounded-xl p-6 font-bold flex flex-col items-center">
             <h2 className="border-b-2 border-[#414141] w-full text-center mb-4 text-lg">

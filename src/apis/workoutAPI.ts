@@ -1,22 +1,42 @@
 import { ApiClient } from "../classes/api";
 
+interface createWorkoutInput {
+    name:string;
+    desc?:string;
+    exercises?: string[];
+}
+
 export default class workoutAPI {
-    public async create(_name: string, _desc?: string): Promise<string> {
-        if (!_name.trim()) {
+    public async create(dto: createWorkoutInput): Promise<string> {
+        if (!dto.name.trim()) {
             const errMessage = "Workout requires a name"
             console.error(errMessage);
             return errMessage;
         }
 
-        const workout: WorkoutDTO = {
-            uuid: "",
-            name: _name,
-            desc: _desc,
-        };
+        let result: ApiError | ApiSucess<string>;
+        if (!dto.exercises) {
+            const req = {
+                uuid: "",
+                name: dto.name,
+                desc: dto.desc,
 
-        const result = await ApiClient.send<string>("create_workout", { workout });
+            };
+            result = await ApiClient.send<string>("create_workout", { req });
+        } else {
+            const req = {
+                uuid: "",
+                name: dto.name,
+                desc: dto.desc,
+                exercises: dto.exercises
+            };
+            result = await ApiClient.send<string>("create_workout_with_exercises",{ req });
+
+        }
         return ApiClient.assertOk(result);
     }
+
+
 
     public async list(): Promise<Array<WorkoutDTO>> {
         const result = await ApiClient.send<WorkoutDTO[]>("list_workouts");
@@ -45,7 +65,7 @@ export default class workoutAPI {
             return err;
         }
 
-        const resp = await ApiClient.send<IdetailedWorkoutDTO>("get_workout", { workoutUuid: _workoutUuid });
+        const resp = await ApiClient.send<IdetailedWorkoutDTO>("get_workout", { req: _workoutUuid });
         return ApiClient.assertOk(resp);
     }
 
