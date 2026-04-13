@@ -1,4 +1,5 @@
 import WeightLineChart from "../components/WeightLineChart.tsx";
+import AddFoodButton from "../components/AddFoodButton.tsx";
 
 export default function KcalTracker() {
   return (
@@ -9,6 +10,7 @@ export default function KcalTracker() {
         </h2>
         <WeightLineChart />
       </div>
+      <AddFoodButton to="/add-food" />
   </div>
   );
 }
