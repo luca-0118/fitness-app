@@ -40,10 +40,10 @@ export default function SessionPage() {
 
   return (
     <>
-      <div className="overflow-y-auto no-scrollbar min-h-full flex flex-col p-4">
+      <div className="min-h-full flex flex-col p-4">
         <WorkoutTimer/>
 
-        <section id={"session-exercise-list"} className={"w-full h-full flex flex-col gap-2"}>
+        <section id={"session-exercise-list"} className={"w-full h-full flex flex-col gap-2 overflow-y-auto custom-scrollbar"}>
         {session.data.exercises.map((exercise,idx) => <SessionExerciseItem onSetUpdate={updateSet} exercise={exercise} onClick={() => handleExerciseOpen(idx)} isOpen={openExercise === idx}/>)}
         </section>
 

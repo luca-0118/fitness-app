@@ -148,7 +148,7 @@ export type muscleGroups =
 export interface IdetailedWorkoutHistory {
   workout_name: string;
   session_uuid: string;
-  start_time: string;
-  end_time: string;
+  start_date: string;
+  end_date: string;
   exercises: ISessionExercises[];
 }

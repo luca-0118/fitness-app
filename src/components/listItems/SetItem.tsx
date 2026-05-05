@@ -19,7 +19,7 @@ interface SetItemProps{
 export default function SetItem({ set, onChange,exerciseId,setNr}: SetItemProps) {
     if (set.type === "Weighted") {
         return <div className={"set flex flex-col gap-0"}>
-            <strong className={"text-textcolor"}>Set {setNr+1}</strong>
+            <strong className={"text-textcolor select-none"}>Set {setNr+1}</strong>
             <WeightedSet weight={set.weight.toString()}
                          reps={set.reps}
                          onChange={
@@ -37,7 +37,7 @@ export default function SetItem({ set, onChange,exerciseId,setNr}: SetItemProps)
 
     if (set.type ==="Timed")
         return <div className={"set flex flex-col gap-1"}>
-            <strong className={"text-textcolor"}>Set {setNr+1}</strong>
+            <strong className={"text-textcolor select-none"}>Set {setNr+1}</strong>
             <TimedSet time={set.time}
                       distance={set.distance}
                       onChange={
@@ -64,11 +64,11 @@ function WeightedSet({reps, weight, onChange}:WeightedSetProps) {
         <div className="flex flex-col gap-2">
 
             <div className="flex items-center justify-between">
-                <label className="text-textcolor text-base">reps:</label>
+                <label className="text-textcolor text-base select-none">reps:</label>
                 <input
                     type="number"
                     value={reps}
-                    className="w-32 bg-components border border-bordercolor rounded-lg px-3 py-2 text-textcolor focus:outline-none focus:border-accent disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="w-32 bg-components border border-bordercolor rounded-lg px-3 py-2 text-textcolor focus:outline-none focus:border-accent disabled:opacity-50 disabled:cursor-not-allowed "
                     onChange={(e) => {
                         const val = Number(e.target.value);
                         onChange(val, weight);
@@ -77,7 +77,7 @@ function WeightedSet({reps, weight, onChange}:WeightedSetProps) {
             </div>
 
             <div className="flex items-center justify-between">
-                <label className="text-textcolor text-base">weight:</label>
+                <label className="text-textcolor text-base select-none">weight:</label>
                 <input
                     type="text"
                     value={weight}
@@ -105,7 +105,7 @@ function TimedSet({time,distance,onChange}:TimedSetProps) {
     return <div className="flex flex-col gap-2">
                 
                 <div className="flex items-center justify-between">
-                    <label className="text-textcolor text-base">Time in minutes:</label>
+                    <label className="text-textcolor text-base select-none">Time in minutes:</label>
                     <input
                         type="text"
                         inputMode="numeric"
@@ -120,7 +120,7 @@ function TimedSet({time,distance,onChange}:TimedSetProps) {
                 </div>
 
                 <div className="flex items-center justify-between">
-                    <label className="text-textcolor text-base">Distance</label>
+                    <label className="text-textcolor text-base select-none">Distance</label>
                     <input
                         type="text"
                         inputMode="decimal"

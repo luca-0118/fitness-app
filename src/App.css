@@ -26,12 +26,23 @@ body {
 .no-scrollbar::-webkit-scrollbar {
   display: none;
 }
-
 /* Hide scrollbar for IE, Edge and Firefox */
 .no-scrollbar {
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
+
+
+.custom-scrollbar {
+  &::-webkit-scrollbar-thumb{
+    @apply bg-neutral-500 rounded
+  }
+  &::-webkit-scrollbar{
+    @apply bg-neutral-700 w-2 rounded pl-1
+  }
+}
+
+
 
 .apexcharts-canvas:focus {
   outline: none;
@@ -46,8 +57,27 @@ body {
   stroke: transparent !important;
 }
 
+@font-face {
+  font-family: BokutohPro;
+  font-style: normal;
+  font-weight: 800;
+  font-display: swap;
+  src: url("./fonts/BokutohPro.otf") format("opentype");
+}
+
+@font-face {
+  font-family: SeuratProB;
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("./fonts/SeuratProB.otf") format("opentype");
+}
+
 /* Light Theme (default) */
 @theme {
+  --font-BokutohPro: "BokutohPro";
+  --font-SeuratProB: "SeuratProB";
+
   --color-background: oklch(0.9631 0.0017 145.56); /* background color for background of app can be used by implementing "bg-background" in your className */
   --color-components: oklch(0.9167 0.0017 145.64); /* background color for components can be used by implementing "bg-components" in your className */
   --color-components-hover: oklch(0.791 0.0017 145.64); /* hover color for components can be used by implementing "hover:bg-components-hover" in your className */

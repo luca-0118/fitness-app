@@ -19,3 +19,9 @@ export function formatSecondsToHMS(totalSeconds: number): string {
 
     return `${pad(hours)}:${pad(minutes)}:${pad(seconds)}`;
 }
+
+
+export function capitalize(str: string): string {
+    if (!str) return str;
+    return str.charAt(0).toUpperCase() + str.slice(1);
+}
