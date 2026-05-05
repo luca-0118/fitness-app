@@ -1,8 +1,8 @@
 use serde::{Deserialize, Serialize};
 use tauri::webview::cookie::time::UtcDateTime;
-use uuid::Uuid;
+use uuid::{Timestamp, Uuid};
 use crate::api::{ApiError, ApiErrorResponse};
-use crate::domain::{AddExerciseParams, AddTimedSetParams, AddWeighedSetParams, CompletedExerciseRepo, CompletedWorkouts, SaveSessionParams, Session, SessionExercise, Set, WorkoutExerciseRepo, WorkoutHistoryRepo};
+use crate::domain::{AddExerciseParams, AddTimedSetParams, AddWeighedSetParams, CompletedExerciseRepo, CompletedWorkouts, DetailedWorkout, SaveSessionParams, Session, SessionExercise, Set, WorkoutExerciseRepo, WorkoutHistoryRepo};
 use crate::repository::completed_exercise_repository::CompletedExerciseRepository;
 use crate::repository::workout_exercise_repository::WorkoutExerciseRepository;
 use crate::repository::workout_history_repository::WorkoutHistoryRepository;
@@ -104,6 +104,17 @@ impl SessionService {
         
         Ok(workout_history)
     }
+    
+    pub fn detailed_workout_history(&self, id: String) -> Result<DetailedWorkout,ApiErrorResponse> {
+        let workout_history = self
+            .workout_history
+            .get_single(id)
+            .map_err(|e| {
+                println!("error getting workout_history: {:?}", e);
+                ApiError::DatabaseError
+            })?;
+        Ok(workout_history)
+    }
 
     pub fn save_session(&mut self) -> Result<String,ApiErrorResponse> {
         let session = self.current_session.clone().ok_or(ApiError::SessionNotFound)?;
@@ -191,12 +202,13 @@ impl SessionService {
                 exercise_id: exercise.exercise_id,
                 name: exercise.name,
                 gif_url:exercise.gif_url,
+                body_part: "".to_string(), //TODO I hate.
                 sets: instantiate_sets(exercise.body_parts)
             }
         }).collect();
 
         // create new SessionObject
-        let session_uuid = Uuid::new_v4().to_string();
+        let session_uuid = Uuid::now_v7().to_string();
         let session = Session{
             session_uuid: session_uuid.clone(),
             workout_uuid: workout_details.uuid,

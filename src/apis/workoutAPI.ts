@@ -2,7 +2,7 @@ import { ApiClient } from "../classes/api";
 import {
     ApiError,
     ApiSucess,
-    IdetailedWorkoutDTO,
+    IdetailedWorkoutDTO, IdetailedWorkoutHistory,
     IworkoutHistory,
     linkExerciseDTO,
     WorkoutDTO, workoutHistoryDTO
@@ -84,6 +84,12 @@ export default class workoutAPI {
                 endDate
             }
         })
+    }
+
+    public async historyDetails(id:string): Promise<IdetailedWorkoutHistory> {
+        const resp = await ApiClient.send<IdetailedWorkoutHistory>("workout_history_single",{req: id});
+        console.log(resp);
+        return  ApiClient.assertOk(resp);
     }
 }
 

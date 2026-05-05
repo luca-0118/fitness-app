@@ -89,6 +89,7 @@ pub fn run() {
             interface::tauri_commands::update_session_set,
             interface::tauri_commands::complete_session,
             interface::tauri_commands::workout_history,
+            interface::tauri_commands::workout_history_single,
             lars::get_products,
             interface::tauri_commands::remove_workout,
             lars::get_exercise_by_id,

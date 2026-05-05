@@ -117,7 +117,6 @@ fn migrate(conn: &mut Connection,state: AppState) {
         ID TEXT NOT NULL PRIMARY KEY,
         sessionId TEXT NOT NULL,
         exerciseId TEXT NOT NULL,
-        Time_completed TEXT NOT NULL DEFAULT 'test',
         FOREIGN KEY (sessionId) REFERENCES workoutHistory(sessionId)
     )", []).unwrap();
 
@@ -126,6 +125,7 @@ fn migrate(conn: &mut Connection,state: AppState) {
         completedExerciseId TEXT NOT NULL ,
         time FLOAT,
         distance FLOAT,
+        timeCompleted TEXT,
         FOREIGN KEY (completedExerciseId) REFERENCES completedExercises(ID) ON DELETE CASCADE
     )",[]).unwrap();
 
@@ -134,6 +134,7 @@ fn migrate(conn: &mut Connection,state: AppState) {
         completedExerciseId TEXT NOT NULL,
         reps FLOAT,
         weight FLOAT,
+        timeCompleted TEXT,
         FOREIGN KEY (completedExerciseId) REFERENCES completedExercises(ID) ON DELETE CASCADE
     )",[]).unwrap();
 

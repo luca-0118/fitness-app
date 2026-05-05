@@ -14,7 +14,8 @@ export type backendFunctions =
   | "create_workout_with_exercises"
   | "workout_history"
   | "get_exercise_by_id"
-  | "remove_workout";
+  | "remove_workout"
+  | "workout_history_single";
 
 export interface WorkoutDTO {
   uuid: string;
@@ -142,3 +143,12 @@ export type muscleGroups =
     | "calves"
     | "cardiovascular system"
     | null;
+
+
+export interface IdetailedWorkoutHistory {
+  workout_name: string;
+  session_uuid: string;
+  start_time: string;
+  end_time: string;
+  exercises: ISessionExercises[];
+}

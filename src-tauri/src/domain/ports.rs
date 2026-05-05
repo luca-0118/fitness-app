@@ -1,5 +1,5 @@
 use rusqlite::Error;
-use crate::domain::{CompletedWorkout, CompletedWorkouts, Exercises, Workout, Workouts};
+use crate::domain::{CompletedWorkout, CompletedWorkouts, DetailedWorkout, Exercises, Session, Workout, Workouts};
 use crate::infrastructures::sqlite::Db;
 
 pub struct CreateWorkoutParams {
@@ -37,6 +37,7 @@ pub trait WorkoutHistoryRepo {
     fn new(db: Db) -> Self;
     fn add(&self,session: SaveSessionParams) -> Result<bool,Error>;
     fn get_history(&self) -> Result<CompletedWorkouts, Error>;
+    fn get_single(&self, id: String) -> Result<DetailedWorkout, Error>;
 }
 
 pub struct AddWeighedSetParams{

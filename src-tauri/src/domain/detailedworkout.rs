@@ -1,29 +1,31 @@
 use serde::{Deserialize, Serialize};
+use crate::domain::{SessionExercise, Set};
 
-#[derive(Serialize,Deserialize,Clone)]
-pub struct Session {
+#[derive(Serialize, Deserialize, Clone)]
+pub struct DetailedWorkout {
     pub session_uuid: String,
     pub workout_uuid: String,
     pub workout_name: String,
     pub start_time: String,
     pub end_time: String,
-    pub exercises: Vec<SessionExercise>
+    pub exercises: Vec<CompletedExercise>
 }
 
 #[derive(Serialize,Deserialize,Clone)]
-pub struct SessionExercise {
+pub struct CompletedExercise {
     pub exercise_id: String,
+    pub completed_id: String,
     pub name: String,
     pub body_part: String,
     pub gif_url: String,
-    pub sets: Vec<Set>
+    pub sets: Vec<CompletedSet>
 }
 
 #[derive(Debug, Serialize, Deserialize,Clone)]
 #[serde(tag = "type")]
-pub enum Set {
+pub enum CompletedSet {
     Weighted {
-        reps: i64,
+        reps: f64,
         weight: f64,
         time_completed: String,
     },

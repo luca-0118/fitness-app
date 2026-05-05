@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
 use crate::application::session_service::UpdateSessionSetRequest;
-use crate::domain::{CompletedWorkout, Exercise, Session, SessionExercise, Set, Workout};
+use crate::domain::{CompletedExercise, CompletedSet, CompletedWorkout, DetailedWorkout, Exercise, Session, SessionExercise, Set, Workout};
 
 #[derive(serde::Serialize, serde::Deserialize, Debug)]
 pub struct WorkoutDTO {
@@ -103,6 +103,16 @@ impl From<SessionExercise> for SessionExerciseDTO {
         }
     }
 }
+impl From<CompletedExercise> for SessionExerciseDTO {
+    fn from(ce: CompletedExercise) -> Self {
+        Self {
+            exercise_id: ce.exercise_id,
+            name: ce.name,
+            gif_url: ce.gif_url,
+            sets: ce.sets.into_iter().map(SetDTO::from).collect()
+        }
+    }
+}
 
 #[derive(Debug, Serialize, Deserialize,Clone)]
 #[serde(tag = "type")]
@@ -133,6 +143,32 @@ impl From<Set> for SetDTO {
             },
 
             Set::Timed {
+                distance,
+                time,
+                time_completed
+            } => SetDTO::Timed {
+                distance,
+                time,
+                time_completed
+            },
+        }
+    }
+}
+
+impl From<CompletedSet> for SetDTO {
+    fn from(s: CompletedSet) -> Self {
+        match s {
+            CompletedSet::Weighted {
+                reps,
+                weight,
+                time_completed
+            } => SetDTO::Weighted {
+                reps: reps as i64,
+                weight,
+                time_completed
+            },
+
+            CompletedSet::Timed {
                 distance,
                 time,
                 time_completed
@@ -214,3 +250,39 @@ impl From<CompletedWorkout> for WorkoutHistoryDTO {
     }
 }
 
+#[derive(Debug, Serialize, Deserialize)]
+pub struct DetailedHistoryDTO{
+    pub workout_name: String,
+    pub session_uuid: String,
+    pub start_date: String,
+    pub end_date: String,
+    pub exercises: Vec<SessionExerciseDTO>,
+}
+
+
+
+impl From<Session> for DetailedHistoryDTO {
+    fn from(session: Session) -> Self {
+        let exercises = session.exercises.into_iter().map(SessionExerciseDTO::from).collect();
+        Self{
+            workout_name: session.workout_name,
+            session_uuid: session.session_uuid,
+            start_date: session.start_time,
+            end_date: session.end_time,
+            exercises
+        }
+    }
+}
+
+impl From<DetailedWorkout> for DetailedHistoryDTO {
+    fn from(dw: DetailedWorkout) -> Self {
+        let exercises = dw.exercises.into_iter().map(SessionExerciseDTO::from).collect();
+        Self{
+            workout_name: dw.workout_name,
+            session_uuid: dw.session_uuid,
+            start_date: dw.start_time,
+            end_date: dw.end_time,
+            exercises
+        }
+    }
+}

@@ -81,7 +81,7 @@ impl WorkoutService {
 
 
     pub fn create_workout(&self, dto: CreateWorkoutRequest) -> Result<String, ApiErrorResponse> {
-        let uuid = Uuid::new_v4().to_string();
+        let uuid = Uuid::now_v7().to_string();
 
         let request = CreateWorkoutParams{
             uuid: uuid.clone(),
