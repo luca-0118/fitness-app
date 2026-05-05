@@ -29,7 +29,7 @@ export class DbDate extends Date{
     }
 
     public toHS() {
-        return `${this.getHours()}:${this.getMinutes()}`
+        return `${this.getHours()}:${this.getMinutes().toString().padStart(2, "0")}`
     }
 
     static TimeDifference(date1:DbDate,date2:DbDate): {hours:number,minutes:number,seconds:number} {

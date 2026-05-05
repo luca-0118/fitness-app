@@ -1,6 +1,7 @@
-import {ExerciseSetUpdate, ISessionExercises} from "../../types/types.ts";
+import {ExerciseSet, ExerciseSetUpdate, ISessionExercises} from "../../types/types.ts";
 import {ChevronDownIcon} from "flowbite-react/icons/chevron-down-icon";
 import SetItem from "./SetItem.tsx";
+import {useMemo} from "react";
 
 interface SessionExerciseItemProps {
     exercise: ISessionExercises
@@ -20,16 +21,25 @@ interface SessionExerciseItemProps {
  * @constructor
  */
 export default function SessionExerciseItem({exercise, onClick, isOpen,onSetUpdate}:SessionExerciseItemProps) {
-    const chevronOpenStyle = isOpen ? "":"rotate-180";
+    const chevronRotation = isOpen ? "rotate-0" : "rotate-180";
+
+    // Checks if sets all sets are completed, when they are, we turn the border green.
+    const isInvalidSet = (set: ExerciseSet) =>
+        (set.type === "Weighted" && (set.reps === 0 || set.weight === 0)) ||
+        (set.type === "Timed" && (set.time === 0 || set.distance === 0));
+
+    const exerciseCompleted = useMemo(() => !exercise.sets.some(isInvalidSet),
+        [exercise.sets]
+    );
 
 
-    return <div className={"session-exercise-item w-full h-fit border border-bordercolor rounded flex flex-col cursor-default"}>
+    return <div className={`session-exercise-item w-full h-fit border ${exerciseCompleted ? "border-green-400 border-2" : "border-bordercolor"} rounded flex flex-col cursor-default`}>
         <div className={"exercise-header flex flex-row gap-4 items-center justify-center w-full h-full pr-4"} onClick={onClick}>
             <div className="img-container w-fit">
                 <img className={"h-24 w-24 object-cover rounded-l"} src={exercise.gif_url} alt="" loading={"lazy"} decoding={"async"}/>
             </div>
         <h2 className={"exercise-name text-textcolor text-lg font-semibold select-none flex-1"}>{exercise.name} </h2>
-            <ChevronDownIcon className={`${chevronOpenStyle} text-4xl text-accent transition-all`}/>
+            <ChevronDownIcon className={`${chevronRotation} text-4xl text-accent transition-all`}/>
         </div>
         {isOpen ? <div className={"exercise-set-list flex flex-col h-full w-full flex-1 p-2 gap-4 border-t border-t-bordercolor"}>
             {exercise.sets.map((set,idx) => <SetItem key={exercise.exercise_id+idx} onChange={onSetUpdate} set={set} exerciseId={exercise.exercise_id} setNr={idx}/>)}

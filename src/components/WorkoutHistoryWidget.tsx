@@ -14,7 +14,7 @@ export default function WorkoutHistoryWidget({ workout,onClick }: WorkoutHistory
                     <h2 className="text-lg font-semibold text-textcolor">{workout.workoutName}</h2>
                 </div>
                 <p className="text-sm text-muted leading-tight">{`${workout.startDate.getDate()}-${workout.startDate.getMonth()}-${workout.startDate.getFullYear()}`}</p>
-                <p className="text-sm text-muted leading-tight">{`${workout.startDate.getHours()}:${workout.startDate.getMinutes()} - ${workout.endDate.getHours()}:${workout.endDate.getMinutes()}`}</p>
+                <p className="text-sm text-muted leading-tight">{`${workout.startDate.getHours()}:${workout.startDate.getMinutes()} - ${workout.endDate.getHours()}:${workout.endDate.getMinutes().toString().padStart(2, "0")}`}</p>
             </div>
         </div>
     );

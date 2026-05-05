@@ -24,7 +24,10 @@ export default function DetailedWorkoutHistoryPage() {
         <section id={"detailed-workout-banner"} className={"w-full flex flex-col py-4 bg-components justify-center items-center rounded"}>
             <h1 className={"text-4xl text-accent"}>{completedWorkout.data.workout_name}</h1>
             <p className={"text-textcolor"}>{startDate.toDMY()}</p>
-            <p className={"text-textcolor"}>{startDate.toHS()}-{endDate.toHS()} ({hours}h {minutes}m {seconds}s  )</p>
+            <div className={"text-textcolor flex flex-row gap-2"}>
+                <p>{startDate.toHS()}-{endDate.toHS()}</p>
+                <p className={"text-textcolor opacity-65"}>( {hours}h {minutes}m {seconds}s )</p>
+            </div>
         </section>
         <section id={"completed-exercises"} className={"flex flex-col gap-2"}>
             {completedWorkout.data.exercises.map((exercise,idx) => <CompletedExercise key={exercise.exercise_id+String(idx)} exercise={exercise}/>)}
