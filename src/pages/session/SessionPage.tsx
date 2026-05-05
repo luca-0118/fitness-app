@@ -33,6 +33,27 @@ export default function SessionPage() {
     });
   }
 
+  const handleSetAdd = (type: "Weighted"|"Timed",exercise_id:string) => {
+    const exercise = session.data?.exercises.find(exercise => exercise.exercise_id == exercise_id);
+    if(!exercise) return;
+
+    const set: ExerciseSetUpdate = (type === "Weighted") ? {
+      type: "Weighted",
+          exercise_id,
+          set_nr: exercise.sets.length,
+          reps:0,
+          weight:0
+    } : {
+      type: "Timed",
+      exercise_id,
+      set_nr: exercise.sets.length,
+      time:0,
+      distance:0
+    }
+
+    setUpdater.mutate(set);
+  }
+
   const elapsedSeconds = useElapsedTime(session.data?.start_time ?? "");
 
   if (session.isLoading) return <h1>Loading....</h1>;
@@ -44,7 +65,7 @@ export default function SessionPage() {
         <WorkoutTimer/>
 
         <section id={"session-exercise-list"} className={"w-full h-full flex flex-col gap-2 overflow-y-auto custom-scrollbar"}>
-        {session.data.exercises.map((exercise,idx) => <SessionExerciseItem onSetUpdate={updateSet} exercise={exercise} onClick={() => handleExerciseOpen(idx)} isOpen={openExercise === idx}/>)}
+        {session.data.exercises.map((exercise,idx) => <SessionExerciseItem onSetAdd={handleSetAdd} onSetUpdate={updateSet} exercise={exercise} onClick={() => handleExerciseOpen(idx)} isOpen={openExercise === idx}/>)}
         </section>
 
         <PrimaryButton className={"flex flex-col p-2 w-full h-fit"} onClick={handleSave}>

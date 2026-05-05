@@ -2,12 +2,14 @@ import {ExerciseSet, ExerciseSetUpdate, ISessionExercises} from "../../types/typ
 import {ChevronDownIcon} from "flowbite-react/icons/chevron-down-icon";
 import SetItem from "./SetItem.tsx";
 import {useMemo} from "react";
+import PrimaryButton from "../ui/buttons/PrimaryButton.tsx";
 
 interface SessionExerciseItemProps {
     exercise: ISessionExercises
     onClick: () => void
     isOpen: boolean
     onSetUpdate: (update:ExerciseSetUpdate) => void
+    onSetAdd?: (type: "Weighted"|"Timed",exercise_id:string) => void;
 }
 
 
@@ -20,7 +22,7 @@ interface SessionExerciseItemProps {
  * @param options.onSetUpdate - the function which should fire once the set updates.
  * @constructor
  */
-export default function SessionExerciseItem({exercise, onClick, isOpen,onSetUpdate}:SessionExerciseItemProps) {
+export default function SessionExerciseItem({exercise, onClick, isOpen,onSetUpdate,onSetAdd}:SessionExerciseItemProps) {
     const chevronRotation = isOpen ? "rotate-0" : "rotate-180";
 
     // Checks if sets all sets are completed, when they are, we turn the border green.
@@ -43,7 +45,11 @@ export default function SessionExerciseItem({exercise, onClick, isOpen,onSetUpda
         </div>
         {isOpen ? <div className={"exercise-set-list flex flex-col h-full w-full flex-1 p-2 gap-4 border-t border-t-bordercolor"}>
             {exercise.sets.map((set,idx) => <SetItem key={exercise.exercise_id+idx} onChange={onSetUpdate} set={set} exerciseId={exercise.exercise_id} setNr={idx}/>)}
+            <PrimaryButton onClick={() => {
+                onSetAdd?.(exercise.sets[0].type,exercise.exercise_id)
+            }} className={"h-fit bg-green-500 shadow-none hover:bg-green-500 active:bg-green-600"}><p className={"w-full items-center"}>Add set</p></PrimaryButton>
         </div>:null}
+
     </div>
 }
 
