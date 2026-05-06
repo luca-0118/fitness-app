@@ -10,7 +10,7 @@ export default function Home() {
   return (
     <>
       <div
-        className="flex w-full h-full flex-col p-4"
+        className="flex w-full h-full flex-col px-4 pt-4"
       >
         <div className="grid grid-cols-2 gap-4 py-4 w-full overflow-y-scroll no-scrollbar">
           <div className="col-span-2 bg-components border border-bordercolor rounded-xl p-6 font-bold flex flex-col items-center">

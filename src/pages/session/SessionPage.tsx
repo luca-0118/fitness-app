@@ -11,6 +11,7 @@ import API from "../../classes/api.ts";
 import {useNavigate} from "react-router-dom";
 import {ROUTES} from "../../types/consts.ts";
 import toast from "react-hot-toast";
+import PageContainer from "../../components/ui/PageContainer.tsx";
 
 export default function SessionPage() {
   const [openExercise,setOpenExercise] = useState<number|null>(null);
@@ -60,20 +61,18 @@ export default function SessionPage() {
   if (session.isError || !session.data) return <h1>Loading....</h1>;
 
   return (
-    <>
-      <div className="min-h-full flex flex-col p-4">
+      <PageContainer className="custom-scrollbar">
         <WorkoutTimer/>
 
-        <section id={"session-exercise-list"} className={"w-full h-full flex flex-col gap-2 overflow-y-auto custom-scrollbar"}>
+        <section id={"session-exercise-list"} className={"w-full flex flex-col gap-2"}>
         {session.data.exercises.map((exercise,idx) => <SessionExerciseItem onSetAdd={handleSetAdd} onSetUpdate={updateSet} exercise={exercise} onClick={() => handleExerciseOpen(idx)} isOpen={openExercise === idx}/>)}
         </section>
 
-        <PrimaryButton className={"flex flex-col p-2 w-full h-fit"} onClick={handleSave}>
+        <PrimaryButton className={"flex flex-col p-2 mb-2 w-full h-fit"} onClick={handleSave}>
           <p className={"text-2xl"}>Complete workout</p>
           <p>{formatSecondsToHMS(elapsedSeconds)}</p>
         </PrimaryButton>
 
-      </div>
-    </>
+    </PageContainer>
   );
 }
