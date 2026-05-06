@@ -1,8 +1,46 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import Chart from 'react-apexcharts';
 import { ApexOptions } from 'apexcharts';
 
+const getCSSVariable = (name: string) =>
+    getComputedStyle(document.documentElement)
+        .getPropertyValue(name)
+        .trim();
+
 const WeightLineChart: React.FC = () => {
+    const [themeColors, setThemeColors] = useState({
+        borderColor: '',
+        textColor: '',
+        accentColor: '',
+        greenColor: '',
+        redColor: '',
+        blueColor: '',
+    });
+
+    useEffect(() => {
+        const updateTheme = () => {
+            setThemeColors({
+                borderColor: getCSSVariable('--color-bordercolor'),
+                textColor: getCSSVariable('--color-textcolor'),
+                accentColor: getCSSVariable('--color-accent'),
+                greenColor: getCSSVariable('--color-button-start'),
+                redColor: getCSSVariable('--color-button-stop'),
+                blueColor: getCSSVariable('--color-chart'),
+            });
+        };
+
+        updateTheme();
+
+        const observer = new MutationObserver(updateTheme);
+
+        observer.observe(document.documentElement, {
+            attributes: true,
+            attributeFilter: ['data-theme'],
+        });
+
+        return () => observer.disconnect();
+    }, []);
+
     const series = [
         {
             name: 'Weight (kg)',
@@ -23,15 +61,26 @@ const WeightLineChart: React.FC = () => {
         markers: {
             size: 4,
         },
-        colors: ['#F67631'], // line color
+        colors: [themeColors.accentColor], // line color
         xaxis: {
             categories: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+            labels: {
+                style: {
+                    colors: themeColors.textColor,
+                },
+            },
         },
         yaxis: {
-            title: { text: 'kg' },
+            title: {
+                text: 'kg',
+                style: { color: themeColors.textColor },
+            },
+            labels: {
+                style: { colors: themeColors.textColor },
+            },
         },
         grid: {
-            borderColor: '#414141',
+            borderColor: themeColors.borderColor,
         },
     };
 
