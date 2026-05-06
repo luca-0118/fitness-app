@@ -1,5 +1,4 @@
 import React from "react";
-import { BarcodeIcon } from "./SVG";
 import SearchIcon from '@mui/icons-material/Search';
 
 interface SearchBarProps {

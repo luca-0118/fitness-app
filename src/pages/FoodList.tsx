@@ -111,7 +111,9 @@ export default function FoodList() {
             onSearch={handleSearch}
             placeholderText="food"
           />
-            <BarcodeScanner  onProductScan={handleProductFromChild} onError={handleErrorFromChild} onLoading={handleLoadingFromChild} onSearching={handleSearchingFromChild}/>
+          <div className="h-11 w-13">
+            <BarcodeScanner onProductScan={handleProductFromChild} onError={handleErrorFromChild} onLoading={handleLoadingFromChild} onSearching={handleSearchingFromChild}/>
+          </div>
         </div>
       </div>
 
