@@ -111,7 +111,6 @@ export default function FoodItemComponent({ name, nutriments, barcode, brand, on
         <div className="w-full max-w-md mx-auto mt-5 bg-components border border-bordercolor rounded-xl p-5">
           <h2 className="text-textcolor text-lg font-bold mb-3">Additional info</h2>
           <p className="text-textcolor text-sm">
-            barcode: {barcode} <br />
             brand: {brand} <br />
           </p>
         </div>
