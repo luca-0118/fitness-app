@@ -30,7 +30,7 @@ export default function CreateWorkoutPage() {
       exercises: tempWorkout.exercises.map(exercise => exercise.id)
     })
     .then((resp) => {
-      if (typeof resp == "string") return toast.error(resp);
+      if (typeof resp !== "string") return toast.error(resp.msg);
 
       // Ensures we remove the previously made query and re-request the workouts.
       void queryClient.invalidateQueries({queryKey: ["workouts"]});
@@ -39,7 +39,7 @@ export default function CreateWorkoutPage() {
 
       setTimeout(() => {
       navigate(ROUTES.WORKOUTS);
-      },1000)
+      },300)
     });
   }
 
