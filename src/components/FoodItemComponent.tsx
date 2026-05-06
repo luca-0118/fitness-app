@@ -24,6 +24,14 @@ export default function FoodItemComponent({ name, nutriments, barcode, brand, on
   function handleOverlayClick() {
     setOverlay(!overlay);
   }
+
+    if (!nutriments) {
+    return (
+      <div>
+      </div>
+    );
+  }
+
   const calories = nutriments["energy-kcal_100g"] ?? 0;
   const carbs = nutriments["carbohydrates_100g"] ?? 0
   const protein = nutriments["proteins_100g"] ?? 0;
@@ -35,6 +43,7 @@ export default function FoodItemComponent({ name, nutriments, barcode, brand, on
   return overlay ? (
     <div className="z-10 bg-gray-600 fixed top-0 right-0 left-0 bottom-0 w-full h-full pt-40 mt-10 " onClick={() => onClick()}>
       <div className="fixed inset-0 top-15 bottom-15 bg-background z-20 overflow-y-auto px-5 py-5 no-scrollbar">
+        <h2 className="text-textcolor text-center text-2xl font-bold mb-3">{name}</h2>
         <div className="w-full max-w-md mx-auto bg-components border border-bordercolor rounded-xl p-5">
           <h1 className="text-textcolor text-xl font-bold mb-4">Product Details per 100g</h1>
 
@@ -44,7 +53,7 @@ export default function FoodItemComponent({ name, nutriments, barcode, brand, on
               <div className="font-semibold block text-accent">
                 Calories
               </div>
-              <div className="inline-flex items-baseline">
+              <div className="text-textcolor inline-flex items-baseline">
                 {calories.toFixed()}
               </div>
             </div>
@@ -52,7 +61,7 @@ export default function FoodItemComponent({ name, nutriments, barcode, brand, on
               <div className="font-semibold block text-[#DC143C]">
                 Carbs
               </div>
-              <div className="inline-flex items-baseline">
+              <div className="text-textcolor inline-flex items-baseline">
                 {carbs.toFixed(1)}g
               </div>
             </div>
@@ -60,7 +69,7 @@ export default function FoodItemComponent({ name, nutriments, barcode, brand, on
               <div className="font-semibold block text-[#4DA3FF]">
                 Proteins
               </div>
-              <div className="inline-flex items-baseline">
+              <div className="text-textcolor inline-flex items-baseline">
                 {protein.toFixed(1)}g
               </div>
             </div>
@@ -68,7 +77,7 @@ export default function FoodItemComponent({ name, nutriments, barcode, brand, on
               <div className="font-semibold block text-[#32CD32]">
                 Fats
               </div>
-              <div className="inline-flex items-baseline">
+              <div className="text-textcolor inline-flex items-baseline">
                 {fat.toFixed(1)}g
               </div>
             </div>
@@ -76,7 +85,7 @@ export default function FoodItemComponent({ name, nutriments, barcode, brand, on
               <div className="font-semibold block text-[#FFD700]">
                 Sugar
               </div>
-              <div className="inline-flex items-baseline">
+              <div className="text-textcolor inline-flex items-baseline">
                 {sugar.toFixed(1)}g
               </div>
             </div>
@@ -84,7 +93,7 @@ export default function FoodItemComponent({ name, nutriments, barcode, brand, on
               <div className="font-semibold block text-[#9153cc]">
                 Fiber
               </div>
-              <div className="inline-flex items-baseline">
+              <div className="text-textcolor inline-flex items-baseline">
                 {fiber.toFixed(1)}g
               </div>
             </div>
@@ -92,7 +101,7 @@ export default function FoodItemComponent({ name, nutriments, barcode, brand, on
               <div className="font-semibold block text-[#FF4500]">
                 Sodium
               </div>
-              <div className="inline-flex items-baseline">
+              <div className="text-textcolor inline-flex items-baseline">
                 {sodium.toFixed(1)}g
               </div>
             </div>
@@ -127,10 +136,10 @@ export default function FoodItemComponent({ name, nutriments, barcode, brand, on
           </div>
           <div className="w-full max-w-md mx-auto mt-5">
             <div className=" flex">
-              <button onClick={() => { setOverlay(false) }} className="cursor-pointer mx-auto sticky bottom-2 h-16 justify-center items-center font-bold w-[90%] rounded-full bg-components hover:bg-components-hover active:bg-components-hover flex z-30">
+              <button onClick={() => { setOverlay(false) }} className="cursor-pointer mx-auto sticky bottom-2 h-16 justify-center items-center font-bold w-[90%] rounded-full text-textcolor bg-components hover:bg-components-hover active:bg-components-hover flex z-30">
                 Cancel
               </button>
-              <button className="cursor-pointer mx-auto sticky bottom-2 h-16 justify-center items-center font-bold w-[90%] rounded-full bg-accent hover:bg-accent-action active:bg-accent-action flex z-30">
+              <button className="cursor-pointer mx-auto sticky bottom-2 h-16 justify-center items-center font-bold w-[90%] rounded-full text-textcolor bg-accent hover:bg-accent-action active:bg-accent-action flex z-30">
                 Add product
               </button>
             </div>
@@ -144,7 +153,7 @@ export default function FoodItemComponent({ name, nutriments, barcode, brand, on
       onClick={() => handleOverlayClick()}
     >
       <div className="pl-3 p-6">
-        <div className="flex-1 text-xl text-left cursor-pointer mb-auto">
+        <div className="flex-1 text-xl text-textcolor text-left cursor-pointer mb-auto">
           {name}
         </div>
       </div>

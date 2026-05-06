@@ -27,10 +27,10 @@ pub enum ApiError {
 
     #[error(transparent)]
     Sqlite(#[from] rusqlite::Error),
-    
+
     #[error("Lock is poisoned")]
     PoisonedLock,
-    
+
     #[error("No session has been found")]
     SessionNotFound,
 

@@ -2,11 +2,12 @@ use reqwest::Client;
 
 #[tauri::command]
 pub async fn get_product_by_barcode(product: String) -> Result<serde_json::Value, String> {
-        let client = Client::builder()
+    let client = Client::builder()
         .user_agent("Fitness app/1.0 (lars200221@gmail.com)")
-        .build().unwrap();
+        .build()
+        .unwrap();
 
-let body = client
+    let body = client
     .get(format!(
         "https://world.openfoodfacts.net/api/v2/product/{}?product_type=all&cc=nl&lc=nl&fields=product_name%2Cnutriments%2Cbrands_tags",
         product
@@ -19,4 +20,3 @@ let body = client
 
     Ok(body)
 }
-

@@ -1,4 +1,4 @@
-use crate::{Ctx, api};
+use crate::{api, Ctx};
 use serde::Serialize;
 
 #[derive(Debug, Serialize)]
@@ -9,7 +9,7 @@ pub struct Exercise {
     body_parts: String,
     equipments: String,
     secondary_muscles: String,
-    instructions: String
+    instructions: String,
 }
 
 #[tauri::command]
@@ -42,7 +42,7 @@ pub fn get_exercise_by_id(
             body_parts: body_parts,
             equipments: equipments,
             secondary_muscles: secondary_muscles,
-            instructions: instructions
+            instructions: instructions,
         };
 
         return Ok(api::ApiResponse {

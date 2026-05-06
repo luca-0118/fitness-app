@@ -73,14 +73,17 @@ export default function AddExercises() {
       <>
         <div className="h-screen">
           <div className="fixed top-16 left-0 right-0 z-30 bg-background overflow-hidden">
-            <SearchBar
-                value={searchText}
-                onChange={(query) => {
-                  setSearchText(query);
-                  setQuery(query);
-                }}
-                onSearch={() => {}}
-            />
+            <div className="pl-4 pr-4"> 
+              <SearchBar
+                  value={searchText}
+                  onChange={(query) => {
+                    setSearchText(query);
+                    setQuery(query);
+                  }}
+                  onSearch={() => {}}
+                  placeholderText="exercise"
+              />
+            </div>
             <div
                 className="overflow-x-scroll flex
                   [&::-webkit-scrollbar-thumb]:bg-neutral-500

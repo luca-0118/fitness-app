@@ -1,27 +1,29 @@
 use std::sync::{Mutex, MutexGuard};
-use tauri::{Manager};
+use tauri::Manager;
 mod api;
-mod infrastructures;
-mod repository;
-mod interface;
 mod application;
 mod domain;
+mod infrastructures;
+mod interface;
 pub mod lars;
+mod repository;
 
-use infrastructures::sqlite::Db;
-use repository::workout_repository::WorkoutRepository;
 use crate::api::{ApiError, ApiErrorResponse};
 use crate::application::session_service::SessionService;
-use crate::domain::{CompletedExerciseRepo, ExerciseRepo, WorkoutExerciseRepo, WorkoutHistoryRepo, WorkoutRepo};
 use crate::application::workout_service::WorkoutService;
+use crate::domain::{
+    CompletedExerciseRepo, ExerciseRepo, WorkoutExerciseRepo, WorkoutHistoryRepo, WorkoutRepo,
+};
 use crate::repository::completed_exercise_repository::CompletedExerciseRepository;
 use crate::repository::exercise_repository::ExerciseRepository;
 use crate::repository::workout_exercise_repository::WorkoutExerciseRepository;
 use crate::repository::workout_history_repository::WorkoutHistoryRepository;
+use infrastructures::sqlite::Db;
+use repository::workout_repository::WorkoutRepository;
 
 struct Ctx {
     service: Service,
-    db: Db
+    db: Db,
 }
 
 struct Service {
@@ -30,18 +32,25 @@ struct Service {
 }
 
 impl Service {
-    pub fn session(&'_ self) -> Result<MutexGuard<'_, SessionService>,ApiErrorResponse> {
-        self.session.lock().map_err(|_|ApiError::PoisonedLock.into())
+    pub fn session(&'_ self) -> Result<MutexGuard<'_, SessionService>, ApiErrorResponse> {
+        self.session
+            .lock()
+            .map_err(|_| ApiError::PoisonedLock.into())
     }
 }
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
-
     // sets up the default structure of the database.
-    tauri::Builder::default()
+    let mut builder = tauri::Builder::default();
+
+    #[cfg(any(target_os = "android", target_os = "ios"))]
+    {
+        builder = builder.plugin(tauri_plugin_barcode_scanner::init());
+    }
+
+    builder
         .setup(|app| {
-            
             // moves the database file to the right location
             // and sets up additional tables.
             infrastructures::sqlite::build_database(app);
@@ -57,7 +66,6 @@ pub fn run() {
                 service: Service {
                     // creates a new workout service
                     workout: WorkoutService::new(
-
                         //these are repositories that use the databases.
                         //All functions that are used with the database are in here.
                         WorkoutRepository::new(db.clone()),
@@ -68,15 +76,14 @@ pub fn run() {
                     session: Mutex::new(SessionService::new(
                         WorkoutExerciseRepository::new(db.clone()),
                         WorkoutHistoryRepository::new(db.clone()),
-                        CompletedExerciseRepository::new(db.clone())
-                    ))
-                }
+                        CompletedExerciseRepository::new(db.clone()),
+                    )),
+                },
             });
             //finish
             Ok(())
         })
         .plugin(tauri_plugin_opener::init())
-
         // Add all frontend functions here
         .invoke_handler(tauri::generate_handler![
             interface::tauri_commands::list_workouts,
@@ -93,7 +100,6 @@ pub fn run() {
             interface::tauri_commands::remove_workout,
             lars::get_exercise_by_id,
             lars::get_product_by_barcode
-            
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

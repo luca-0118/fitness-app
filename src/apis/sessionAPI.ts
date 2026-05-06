@@ -6,7 +6,7 @@ export const SESSION_STORAGE_KEYS = {
     workoutName: "workoutSessionName",
 } as const;
 
-export default  class sessionAPI {j
+export default  class sessionAPI {
 
     /**
      * Starts a session for a workout.

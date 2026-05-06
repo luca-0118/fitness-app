@@ -2,9 +2,9 @@ import FoodItemComponent from "../components/FoodItemComponent.tsx";
 import SearchBar from "../components/SearchBar.tsx";
 import { invoke } from "@tauri-apps/api/core";
 import { useState } from "react";
-import SearchIcon from '@mui/icons-material/Search';
+import BarcodeScanner from "../components/barcodeScanner.tsx";
 
-interface Nutriments {
+export interface Nutriments {
   "energy-kcal_100g"?: number;
   "carbohydrates_100g"?: number;
   "proteins_100g"?: number;
@@ -13,8 +13,7 @@ interface Nutriments {
   "fiber_100g"?: number;
   "sodium_100g"?: number;
 }
-
-interface searchItem {
+export interface searchItem {
   id: string;
   product_name: string;
   nutriments: Nutriments;
@@ -26,48 +25,100 @@ interface searchReturn {
   page_count: number;
   page_size: number;
   products: searchItem[];
+  product: searchItem[];
   skip: number;
 }
-//pls work github
 export default function FoodList() {
   const [product, setProduct] = useState<searchItem[]>([]);
+  const [productBarcode, setProductBarcode] = useState<any>()
   const [searchText, setSearchText] = useState("");
+  const [rememberText, setRememberText] = useState("");
   const [recents, setRecents] = useState<searchItem[]>([])
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<any>("");
+  const [Searching, setSearching] = useState(false);
+  
+  const fetchSearchAPI = async (product: string, page: number) => {
+    if (!product.trim()) {
+      setProduct([]);
+      setError(null);
+      return;
+    }
+    setLoading(true);
+    setError(null);
 
-  async function fetchSearchAPI(product: string, page: number) {
     try {
       const result = await invoke<searchReturn>("get_products", {
         product: product,
         page: page,
       });
-      setProduct(result.products);
+      setProduct(result.products ?? []);
 
-      console.log(result);
     } catch (err) {
       console.error("Error:", err);
-    }
-  }
 
-  function handleSearch() {
-    fetchSearchAPI(searchText, 1)
+      setError("db error");
+      setProduct([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSearch = () => {
+    setSearching(true);
+    setRememberText(searchText);
+    setProduct([]);
+    setProductBarcode(null)
+    void fetchSearchAPI(searchText, 1);
+
+    if (searchText.length === 0) {
+      setSearching(false)
+    }
+
+  };
+
+  const getStatusMessage = () => {
+    if (loading) return { text: "Searching..." };
+    if (!loading && error) return { text: error, css: "text-red-400  font-bold" };
+    if (!loading && !error && product.length === 0 && !Searching && !productBarcode)
+      return { text: "Search a product" };
+    if (!loading && !error && product.length === 0 && Searching && !productBarcode )
+      return { text: `No products found for "${rememberText}".` };
+    return null;
+  };
+
+  function handleProductFromChild(data: any){
+    setProductBarcode(data)
+    setProduct([])
+  }
+  function handleErrorFromChild(data: any){
+    setError(data)
+  }
+  function handleLoadingFromChild(data: any){
+    setLoading(data)
+  }
+  function handleSearchingFromChild(data: any){
+    setSearching(data)
   }
 
   return (
     <>
-      {!searchText ?
-        <div className="fixed top-16 left-0 right-0 z-3 bg-[#161818] overflow-hidden">
-          <div className=" mr-10 ml-7 flex">
+      <div className="z-3 bg-background overflow-hidden">
+        <div className="mr-4 ml-4 flex pt-2 pb-1">
+          <SearchBar
+            value={searchText}
+            onChange={setSearchText}
+            onSearch={handleSearch}
+            placeholderText="food"
+          />
+            <BarcodeScanner  onProductScan={handleProductFromChild} onError={handleErrorFromChild} onLoading={handleLoadingFromChild} onSearching={handleSearchingFromChild}/>
+        </div>
+      </div>
 
-            <SearchBar
-              value={searchText}
-              onChange={setSearchText}
-              onSearch={() => { }}
-              placeholderText="food"
-              onclick={() => setProduct([])}
-            />
-            <button className="ml-3" onClick={() => handleSearch()}><SearchIcon /></button>
-          </div>
-          recent searches
+
+      {!loading && !Searching && !error && recents.length > 0 && !productBarcode ? (
+        <div className="">
+          <div className="text-textcolor text-center my-4 font-semibold">Recent searches</div>
           {recents.map((item) => (
             <FoodItemComponent
               key={item.id}
@@ -82,24 +133,22 @@ export default function FoodList() {
               }}
             />
           ))}
-        </div >
-        :
-        <div className="fixed top-16 left-0 right-0 z-3 bg-[#161818] overflow-hidden">
-
-          <div className=" mr-10 ml-7 flex">
-            <SearchBar
-              value={searchText}
-              onChange={setSearchText}
-              onSearch={() => { }}
-              placeholderText="food"
-              onclick={() => {setProduct([]), handleSearch()}}
-            />
-            <button className="ml-3" onClick={() => handleSearch()}><SearchIcon /></button>
-          </div>
+        </div>
+      ) : (
+        <div className="">
+          {(() => {
+            const status = getStatusMessage();
+            return status ? (
+              <div className={`${status.css} text-center text-textcolor my-6`}>
+                {status.text}
+              </div>
+            ) : null;
+          })()}
 
           {product.map((item) => (
+            item.nutriments ?
             <FoodItemComponent
-              key={item.id}
+              key={item.id ?? item.code}
               name={item.product_name}
               nutriments={item.nutriments}
               barcode={item.code}
@@ -110,10 +159,17 @@ export default function FoodList() {
                 }
               }}
             />
-          ))}
-
+            : null
+            ))}
+            
+            {productBarcode ? 
+            <FoodItemComponent key={1} name={productBarcode.product_name} nutriments={productBarcode.nutriments} barcode="1" brand={productBarcode.brands_tags[0]} onClick={()=> null}/>
+          : null  
+          }
         </div>
-      }
+
+        
+      )}
     </>
-  )
+  );
 }

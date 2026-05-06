@@ -1,46 +1,36 @@
 import React from "react";
 import { BarcodeIcon } from "./SVG";
+import SearchIcon from '@mui/icons-material/Search';
 
 interface SearchBarProps {
     value: string;
     onChange: (value: string) => void;
     onSearch: () => void;
+    onBarcodeClick?: () => void;
     placeholderText: string;
-    onclick: () => void
 }
 
-const SearchBar: React.FC<SearchBarProps> = ({ value, onChange, onSearch, placeholderText, onclick }) => {
-    const showBarcode = placeholderText === "food";
+const SearchBar: React.FC<SearchBarProps> = ({ value, onChange, onSearch, placeholderText}) => {
+
 
     return (
-        <div>
-            <div className="input_wrapper relative w-87 justify-center mx-auto mb-3 mt-3" onClick={() => onclick()}>
+        <div className="flex items-center gap-2 w-full justify-between mt-3 mb-2">
+            <div className="relative flex-1">
                 <input
-
                     type="text"
                     placeholder={`Search ${placeholderText}`}
                     value={value}
                     onChange={(e) => onChange(e.target.value)}
-                    className="w-full bg-components border border-bordercolor rounded-lg pl-3 pr-12 py-2 text-textcolor focus:outline-none focus:border-accent"
+                    className="w-full bg-components border border-bordercolor rounded-lg pl-3 py-2 text-textcolor focus:outline-none focus:border-accent"
                 />
-                <button
-                    className="search__button absolute right-2 top-1/2 -translate-y-1/2 text-accent hover:text-accent-action active:text-accent-action transition-colors"
-                    type="button"
-                    onClick={onSearch}
-                >
-                    <SearchIcon />
-                </button>
-                <div className="absolute right-2 top-1/2 -translate-y-1/2 flex gap-3">
-                    {showBarcode && (
-                        <button
-                            className="text-accent hover:text-accent-action active:text-accent-action transition-colors cursor-pointer"
-                            type="button"
-                        >
-                            <BarcodeIcon className="text-current" />
-                        </button>
-                    )}
-                </div>
             </div>
+            <button
+                className="h-11 w-11 rounded-lg bg-components border border-bordercolor flex items-center justify-center text-accent active:text-accent-action active:bg-components-hover transition-colors"
+                type="button"
+                onClick={onSearch}
+            >
+                <SearchIcon sx={{ color: "currentColor" }} />
+            </button>
         </div>
     );
 };
