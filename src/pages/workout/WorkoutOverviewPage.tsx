@@ -56,7 +56,7 @@ export default function WorkoutOverviewPage() {
           <ul className="w-full flex-1 flex flex-col gap-4">
             {/*one-line if statement*/}
             {workoutList.isLoading ? <><WorkoutItemSkeleton/><WorkoutItemSkeleton/><WorkoutItemSkeleton/><WorkoutItemSkeleton/><WorkoutItemSkeleton/><WorkoutItemSkeleton/></> :null}
-            {workoutItemList.length < 0 && !workoutList.isLoading && !workoutList.isError ? <li className={"text-center"}>No workouts yet. Create a new one!</li> : workoutItemList}
+            {workoutItemList.length < 0 && !workoutList.isLoading && !workoutList.isError ? <li className={"text-center"}>No workouts yet. Create a new one!</li> : [workoutItemList,workoutItemList,workoutItemList,workoutItemList,workoutItemList]}
           </ul>
         </DragDropProvider>
 
