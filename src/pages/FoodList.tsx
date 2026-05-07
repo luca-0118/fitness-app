@@ -97,9 +97,6 @@ export default function FoodList() {
   function handleLoadingFromChild(data: any){
     setLoading(data)
   }
-  function handleSearchingFromChild(data: any){
-    setSearching(data)
-  }
 
   return (
     <>
@@ -112,7 +109,14 @@ export default function FoodList() {
             placeholderText="food"
           />
           <div className="h-11 w-13">
-            <BarcodeScanner onProductScan={handleProductFromChild} onError={handleErrorFromChild} onLoading={handleLoadingFromChild} onSearching={handleSearchingFromChild}/>
+            <BarcodeScanner
+                onProductScan={handleProductFromChild}
+                onError={handleErrorFromChild}
+                onLoading={handleLoadingFromChild}
+
+                searching={Searching}
+                setSearching={setSearching}
+            />
           </div>
         </div>
       </div>
