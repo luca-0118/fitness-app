@@ -154,6 +154,17 @@ fn migrate(conn: &mut Connection, state: AppState) {
     )
     .unwrap();
 
+    tx.execute(
+        "CREATE TABLE IF NOT EXISTS food (
+        ID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+        barcode TEXT not null, 
+        date TEXT not null, 
+        amount INTEGER not null
+    )",
+        [],
+    )
+    .unwrap();
+
     tx.commit().unwrap();
 }
 
