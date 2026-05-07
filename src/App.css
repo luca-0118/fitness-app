@@ -115,7 +115,51 @@ body {
   --color-icons: oklch(0.9215 0.0017 145.64);
 }
 
+/* purple theme */
+:root[data-theme="purple"] {
+  --color-background: oklch(0.3074 0.1907 318.65);
+  --color-components: oklch(0.4117 0.1907 318.65);
+  --color-components-hover: oklch(0.4876 0.1907 318.65);
+  --color-bordercolor: oklch(0.5326 0.1907 318.65);
 
+  --color-textcolor: oklch(0.9631 0.0017 145.56);
+  --color-muted: oklch(0.791 0.0017 145.64);
+
+  --color-accent: oklch(0.6255 0.29 326.65);
+  --color-accent-action: oklch(0.7373 0.29 326.65);
+
+  --color-button-start: oklch(0.7227 0.192 149.58);
+  --color-button-stop: oklch(0.6368 0.2078 25.33);
+  --color-button-pause: oklch(0.7952 0.1617 86.05);
+
+  --color-chart: oklch(0.7952 0.1617 86.05);
+
+  --color-navbar: oklch(0.3643 0.1907 318.65);
+  --color-icons: oklch(0.9215 0.0017 145.64);
+}
+
+/* grass theme */
+:root[data-theme="grass"] {
+  --color-background: oklch(0.5539 0.0905 132.78);
+  --color-components: oklch(0.6346 0.0905 132.78);
+  --color-components-hover: oklch(0.6867 0.0905 132.78);
+  --color-bordercolor: oklch(0.6701 0.0905 132.78);
+
+  --color-textcolor: oklch(0.9631 0.0017 145.56);
+  --color-muted: oklch(0.791 0.0017 145.64);
+
+  --color-accent: oklch(0.7701 0.0905 132.78);
+  --color-accent-action: oklch(0.8835 0.0905 132.78);
+
+  --color-button-start: oklch(0.7227 0.192 149.58);
+  --color-button-stop: oklch(0.6368 0.2078 25.33);
+  --color-button-pause: oklch(0.7952 0.1617 86.05);
+
+  --color-chart: oklch(0.7952 0.1617 86.05);
+
+  --color-navbar: oklch(0.4638 0.0905 132.78);
+  --color-icons: oklch(0.9215 0.0017 145.64);
+}
 
 
 @keyframes shake {
