@@ -1,6 +1,6 @@
 import { listFilterParams } from "../../types/types";
 import ExerciseApi from "../api/ExerciseApi";
-import Exercise from "../entities/Exercise";
+import Exercise from "../entities/exercise/Exercise.ts";
 
 export default class ExerciseService {
     

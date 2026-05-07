@@ -1,10 +1,10 @@
 import {useQuery} from "@tanstack/react-query";
-import API from "../classes/api.ts";
-import {IdetailedWorkoutHistory} from "../types/types.ts";
+import WorkoutSession from "../core/entities/workout/WorkoutSession.ts";
+import HistoryService from "../core/features/HistoryService.ts";
 
 export default function useCompletedWorkout(id:string) {
-    return useQuery<IdetailedWorkoutHistory>({
+    return useQuery<WorkoutSession>({
         queryKey: ["workout","completed",id],
-        queryFn: async () => await API.workouts.historyDetails(id)
+        queryFn: async () => HistoryService.getSingleCompletedWorkout(id)
         });
 }

@@ -1,4 +1,4 @@
-import { ExerciseDTO } from "../../types/types";
+import { ExerciseDTO } from "../../../types/types.ts";
 
 export default class Exercise {
     readonly exercise_id: string;

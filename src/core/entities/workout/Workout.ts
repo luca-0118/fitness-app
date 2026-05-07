@@ -1,6 +1,6 @@
-import { IdetailedWorkoutDTO, WorkoutDTO } from "../../types/types";
-import entity from "./entity";
-import Exercise from "./Exercise";
+import { IdetailedWorkoutDTO, WorkoutDTO } from "../../../types/types.ts";
+import entity from "../entity.ts";
+import Exercise from "../exercise/Exercise.ts";
 
 export default class Workout implements entity {
 

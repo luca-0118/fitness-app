@@ -1,14 +1,19 @@
 import HistoryApi from "../api/HistoryApi";
-import CompletedWorkout from "../entities/CompletedWorkout";
+import WorkoutSession from "../entities/workout/WorkoutSession.ts";
 
 export default class HistoryService {
     
-    static async list() 
+    static async list(): Promise<WorkoutSession[]>
     {
         const history = await HistoryApi.getWorkoutHistory();
 
-        const mapped = history.map(h => CompletedWorkout.fromDto(h)) 
+        return history.map(h => WorkoutSession.fromDto(h));
+    }
 
+    static async getSingleCompletedWorkout(workoutId: string)
+    {
+        const completedWorkout = await HistoryApi.getOneWorkout(workoutId);
 
+        return WorkoutSession.fromDto(completedWorkout);
     }
 }

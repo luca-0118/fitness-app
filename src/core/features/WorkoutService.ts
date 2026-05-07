@@ -1,6 +1,6 @@
 import WorkoutApi from "../api/WorkoutApi";
-import Exercise from "../entities/Exercise";
-import Workout from "../entities/Workout";
+import Exercise from "../entities/exercise/Exercise.ts";
+import Workout from "../entities/workout/Workout.ts";
 
 export default class WorkoutService {
 
@@ -14,10 +14,8 @@ export default class WorkoutService {
         const workouts = await WorkoutApi.list();
 
         // transforms all the workoutDTO's into Workout objects.
-        const mappedWorkouts = workouts.map(workout => 
+        return workouts.map(workout =>
             Workout.fromDto(workout));
-
-        return mappedWorkouts;
     } 
 
     /**
@@ -25,7 +23,7 @@ export default class WorkoutService {
      * @param workoutId The uuid of an workout
      * @returns Workout object
      */
-    static async getDetailedWorkout(workoutId: string)
+    static async getDetailedWorkout(workoutId: string): Promise<Workout>
     {
         // Grabs the response from the api call.
         const workoutDTO = await WorkoutApi.single(workoutId);

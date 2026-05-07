@@ -1,6 +1,5 @@
 import {useInfiniteQuery} from "@tanstack/react-query";
-import API from "../../classes/api.ts";
-import {muscleGroups} from "../UseExerciseList.ts";
+import {muscleGroups} from "../../types/types.ts";
 import ExerciseService from "../../core/features/ExerciseService.ts";
 
 interface useExercisesProps{

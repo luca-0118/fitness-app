@@ -114,7 +114,7 @@ export interface ITimedSetUpdate extends IBaseSetUpdate {
 
 export type ExerciseSetUpdate = ITimedSetUpdate | IWeightedSetUpdate;
 
-export interface workoutHistoryDTO {
+export interface WorkoutHistoryDTO {
   workout_name: string;
   session_uuid: string;
   start_date: string;

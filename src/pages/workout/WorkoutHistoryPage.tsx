@@ -1,5 +1,5 @@
 import WorkoutHistoryWidget from "../../components/WorkoutHistoryWidget.tsx";
-import useWorkoutHistory from "../../Hooks/useWorkoutHistory.ts";
+import useWorkoutHistory from "../../Hooks/queries/useWorkoutHistory.ts";
 import {useNavigate} from "react-router-dom";
 import {ROUTES} from "../../types/consts.ts";
 
@@ -18,8 +18,8 @@ export default function WorkoutHistoryPage() {
         <>
             <div className={"flex w-full h-full flex-col p-4 overflow-y-scroll no-scrollbar"}>
                 <div className="pt-2">
-                    {history.data.map((workout,idx) => (
-                        <WorkoutHistoryWidget key={idx} workout={workout} onClick={() => handleNavigate(workout.sessionUuid)} />
+                    {history.data.map((completedWorkout,idx) => (
+                        <WorkoutHistoryWidget key={idx} completedWorkout={completedWorkout} onClick={() => handleNavigate(completedWorkout.sessionUuid)} />
                     ))}
                 </div>
             </div>

@@ -1,5 +1,9 @@
 export class DbDate extends Date{
-    constructor(dbDate:string) {
+    constructor(dbDate?:string) {
+        if (!dbDate) {
+            super();
+            return;
+        }
         // Normalize the string: handle the fractional seconds and timezone offset
         // Format: "2026-05-05 9:23:28.0317886 +00"
 
