@@ -44,6 +44,7 @@ const fetchBarcodeAPI = async (product: string) => {
   };
 
   const handleBarcodeSearch = async () => {
+      // TODO check for permissions front-end
       onError(null);
       setSearching(true);
 
