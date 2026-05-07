@@ -5,7 +5,7 @@ import {
     IdetailedWorkoutDTO, IdetailedWorkoutHistory,
     IworkoutHistory,
     linkExerciseDTO,
-    WorkoutDTO, workoutHistoryDTO
+    WorkoutDTO, WorkoutHistoryDTO
 } from "../types/types.ts";
 
 interface createWorkoutInput {
@@ -69,7 +69,7 @@ export default class workoutAPI {
     }
 
     public async history(): Promise<IworkoutHistory[]> {
-        const resp = await ApiClient.send<workoutHistoryDTO[]>("workout_history");
+        const resp = await ApiClient.send<WorkoutHistoryDTO[]>("workout_history");
 
         const data = ApiClient.assertOk(resp);
 

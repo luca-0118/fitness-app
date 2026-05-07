@@ -4,8 +4,8 @@ import { useNavigate, useParams} from "react-router-dom";
 import useDetailedWorkout from "../../Hooks/queries/useDetailedWorkout.ts";
 import PrimaryButton from "../../components/ui/buttons/PrimaryButton.tsx";
 import {ExerciseDTO} from "../../types/types.ts";
-import API from "../../classes/api.ts";
 import {ROUTES} from "../../types/consts.ts";
+import SessionService from "../../core/features/SessionService.ts";
 
 // FIXME Do we want DND in the workoutDetail page?
 // import { DragDropProvider,} from "@dnd-kit/react";
@@ -30,9 +30,8 @@ export function WorkoutDetailPage() {
 
   // starts a session, and then routes to the page.
   const onStart = () => {
-    API.session.start(workoutId)
-        .then(() => {
-          navigate(ROUTES.SESSION);
+    SessionService.startWorkout(workoutId).then(() => {
+      navigate(ROUTES.SESSION);
     });
   }
 
