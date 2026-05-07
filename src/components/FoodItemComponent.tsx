@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { invoke } from "@tauri-apps/api/core";
 
 interface Nutriments {
   "energy-kcal_100g"?: number;
@@ -20,6 +21,7 @@ interface FoodItemProps {
 
 export default function FoodItemComponent({ name, nutriments, barcode, brand, onClick }: FoodItemProps) {
   const [overlay, setOverlay] = useState<Boolean>(false);
+  const [amount, setAmount] = useState<number>(0)
 
   function handleOverlayClick() {
     setOverlay(!overlay);
@@ -31,6 +33,10 @@ export default function FoodItemComponent({ name, nutriments, barcode, brand, on
       </div>
     );
   }
+  async function addFoodToDatabase(barcode:String, date: String, amount:number){
+       await invoke ("add_food", {barcode:barcode, date:date, amount:amount});
+  }
+
 
   const calories = nutriments["energy-kcal_100g"] ?? 0;
   const carbs = nutriments["carbohydrates_100g"] ?? 0
@@ -111,7 +117,6 @@ export default function FoodItemComponent({ name, nutriments, barcode, brand, on
         <div className="w-full max-w-md mx-auto mt-5 bg-components border border-bordercolor rounded-xl p-5">
           <h2 className="text-textcolor text-lg font-bold mb-3">Additional info</h2>
           <p className="text-textcolor text-sm">
-            barcode: {barcode} <br />
             brand: {brand} <br />
           </p>
         </div>
@@ -124,6 +129,7 @@ export default function FoodItemComponent({ name, nutriments, barcode, brand, on
               type="text"
               placeholder="0"
               className="bg-components text-textcolor placeholder:text-gray-500 border border-bordercolor rounded-xl p-2 w-25 focus:outline-none focus:ring-2 focus:ring-accent"
+              onChange={(e)=>{setAmount(Number(e.target.value))}}
             />
             <select
               defaultValue="gr"
@@ -139,7 +145,7 @@ export default function FoodItemComponent({ name, nutriments, barcode, brand, on
               <button onClick={() => { setOverlay(false) }} className="cursor-pointer mx-auto sticky bottom-2 h-16 justify-center items-center font-bold w-[90%] rounded-full text-textcolor bg-components hover:bg-components-hover active:bg-components-hover flex z-30">
                 Cancel
               </button>
-              <button className="cursor-pointer mx-auto sticky bottom-2 h-16 justify-center items-center font-bold w-[90%] rounded-full text-textcolor bg-accent hover:bg-accent-action active:bg-accent-action flex z-30">
+              <button className="cursor-pointer mx-auto sticky bottom-2 h-16 justify-center items-center font-bold w-[90%] rounded-full text-textcolor bg-accent hover:bg-accent-action active:bg-accent-action flex z-30" onClick={()=>{addFoodToDatabase(barcode, Date(), amount)}}>
                 Add product
               </button>
             </div>
