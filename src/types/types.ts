@@ -1,4 +1,8 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
+
+import TimedSet from "../core/entities/sets/TimedSet.ts";
+import WeightedSet from "../core/entities/sets/WeightedSet.ts";
+
 export type backendFunctions =
   | "create_workout"
   | "list_workouts"
@@ -90,7 +94,6 @@ export interface ITimedSet extends IBaseSet {
   distance: number;
 }
 
-export type ExerciseSet = ITimedSet | IWeightedSet
 
 export interface IBaseSetUpdate {
   exercise_id: string;
@@ -159,3 +162,7 @@ export type listFilterParams = {
     filter?: muscleGroups;
     query?: string;
 }
+
+export type SetUpdate = IWeightedSetUpdate | ITimedSetUpdate;
+export type ExerciseSet =  TimedSet | WeightedSet;
+export type setType = "Weighted" | "Timed";

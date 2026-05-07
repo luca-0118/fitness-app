@@ -1,5 +1,5 @@
 import {useParams} from "react-router-dom";
-import useCompletedWorkout from "../../Hooks/useCompletedWorkout.ts";
+import useCompletedWorkout from "../../Hooks/queries/useCompletedWorkout.ts";
 import PageContainer from "../../components/ui/PageContainer.tsx";
 import {DbDate} from "../../classes/dbDate.ts";
 import CompletedExercise from "../../components/listItems/CompletedExercise.tsx";

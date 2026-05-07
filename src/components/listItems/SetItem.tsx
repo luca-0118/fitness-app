@@ -1,5 +1,7 @@
 import { parseNumberInput } from "../../types/Helpers.ts";
 import {ExerciseSet, ExerciseSetUpdate} from "../../types/types.ts";
+import WeightedSet from "../../core/entities/sets/WeightedSet.ts";
+import TimedSet from "../../core/entities/sets/TimedSet.ts";
 
 interface SetItemProps{
     set: ExerciseSet;
@@ -17,14 +19,15 @@ interface SetItemProps{
  * @constructor
  */
 export default function SetItem({ set, onChange,exerciseId,setNr}: SetItemProps) {
-    if (set.type === "Weighted") {
+
+    if (set instanceof WeightedSet) {
         return <div className={"set flex flex-col gap-0"}>
             <strong className={"text-textcolor select-none"}>Set {setNr+1}</strong>
-            <WeightedSet weight={set.weight.toString()}
+            <WeightedSetComponent weight={set.weight.toString()}
                          reps={set.reps}
                          onChange={
                             (reps,weight) => onChange({
-                                type: set.type,
+                                type: "Weighted",
                                 weight: Number(weight),
                                 reps,
                                 exercise_id: exerciseId,
@@ -35,14 +38,14 @@ export default function SetItem({ set, onChange,exerciseId,setNr}: SetItemProps)
         </div>
     }
 
-    if (set.type ==="Timed")
+    if (set instanceof TimedSet)
         return <div className={"set flex flex-col gap-1"}>
             <strong className={"text-textcolor select-none"}>Set {setNr+1}</strong>
-            <TimedSet time={set.time}
+            <TimedSetComponent time={set.time}
                       distance={set.distance}
                       onChange={
                             (time,distance) => onChange({
-                                type: set.type,
+                                type: "Timed",
                                 time,
                                 distance,
                                 exercise_id: exerciseId,
@@ -59,7 +62,7 @@ interface WeightedSetProps {
     onChange: (reps: number, weight: string) => void;
 }
 
-function WeightedSet({reps, weight, onChange}:WeightedSetProps) {
+function WeightedSetComponent({reps, weight, onChange}:WeightedSetProps) {
     return (
         <div className="flex flex-col gap-2">
 
@@ -101,7 +104,7 @@ interface TimedSetProps {
     distance:number;
     onChange: (time:number,distance:number) => void
 }
-function TimedSet({time,distance,onChange}:TimedSetProps) {
+function TimedSetComponent({time,distance,onChange}:TimedSetProps) {
     return <div className="flex flex-col gap-2">
                 
                 <div className="flex items-center justify-between">

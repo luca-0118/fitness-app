@@ -4,6 +4,7 @@ import WorkoutSession from "../entities/workout/WorkoutSession.ts";
 import WorkoutApi from "../api/WorkoutApi.ts";
 import Workout from "../entities/workout/Workout.ts";
 import ExerciseExecution from "../entities/exercise/ExerciseExecution.ts";
+import {SetUpdate} from "../../types/types.ts";
 
 
 
@@ -45,5 +46,10 @@ export default class SessionService {
             session.start_time,
             exercises
         );
+    }
+
+    static async updateSet(setUpdate: SetUpdate)
+    {
+        void SessionApi.updateSet(setUpdate);
     }
 }

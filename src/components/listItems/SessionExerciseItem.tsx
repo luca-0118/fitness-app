@@ -4,6 +4,8 @@ import SetItem from "./SetItem.tsx";
 import {useMemo} from "react";
 import PrimaryButton from "../ui/buttons/PrimaryButton.tsx";
 import ExerciseExecution from "../../core/entities/exercise/ExerciseExecution.ts";
+import WeightedSet from "../../core/entities/sets/WeightedSet.ts";
+import TimedSet from "../../core/entities/sets/TimedSet.ts";
 
 interface SessionExerciseItemProps {
     sessionExercise: ExerciseExecution
@@ -28,8 +30,8 @@ export default function SessionExerciseItem({sessionExercise, onClick, isOpen,on
 
     // Checks if sets all sets are completed, when they are, we turn the border green.
     const isInvalidSet = (set: ExerciseSet) =>
-        (set.type === "Weighted" && (set.reps === 0 || set.weight === 0)) ||
-        (set.type === "Timed" && (set.time === 0 || set.distance === 0));
+        (set instanceof WeightedSet && (set.reps === 0 || set.weight === 0)) ||
+        (set instanceof TimedSet && (set.time === 0 || set.distance === 0));
 
     const exerciseCompleted = useMemo(() => !sessionExercise.sets.some(isInvalidSet),
         [sessionExercise.sets]
