@@ -3,9 +3,17 @@ import { NutritionDonutChart } from "../components/NutritionDonutChart";
 import WeeklyCaloriesChart from "../components/WeeklyCaloriesChart.tsx";
 import {ROUTES} from "../types/consts.ts";
 import PrimaryButton from "../components/ui/buttons/PrimaryButton.tsx";
+import { useQuery } from "@tanstack/react-query";
+import WorkoutApi from "../core/api/WorkoutApi.ts";
 
 export default function Home() {
   const navigate = useNavigate();
+
+  const response = useQuery({queryKey: ["random"],queryFn: WorkoutApi.list});
+  if(!response.isError && !response.isLoading && response.data) {
+    console.log("data..",response.data[0]);
+    
+  }
 
   return (
     <>
