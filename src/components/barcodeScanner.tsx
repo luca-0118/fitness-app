@@ -45,7 +45,6 @@ const fetchBarcodeAPI = async (product: string) => {
   };
 
   const handleBarcodeSearch = async () => {
-      // TODO check for permissions front-end
       onError(null);
       setSearching(true);
 
@@ -57,9 +56,9 @@ const fetchBarcodeAPI = async (product: string) => {
           await fetchBarcodeAPI(scanned.content);
       }
 
-      catch (err) {
+      catch (err: any) {
           console.error("Barcode scan failed:", err);
-          onError(err)
+          onError(err?.message || "Barcode scanner fout");
       }
 
       finally {
