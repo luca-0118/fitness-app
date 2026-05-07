@@ -14,10 +14,11 @@ interface states{
 
   searching: boolean
   setSearching: any
+  setBarcode: any
 }
 
 
-export default function BarcodeScanner({onProductScan, onLoading, onError, searching, setSearching}: states ){
+export default function BarcodeScanner({onProductScan, onLoading, onError, searching, setSearching, setBarcode}: states ){
 
 const fetchBarcodeAPI = async (product: string) => {
     if (!product.trim()) {
@@ -52,7 +53,7 @@ const fetchBarcodeAPI = async (product: string) => {
           const scanned = await scan({
             formats: [Format.EAN13, Format.EAN8,Format.QRCode],
           });
-
+          setBarcode(scanned.content)
           await fetchBarcodeAPI(scanned.content);
       }
 
