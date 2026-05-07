@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import WorkoutExerciseItem from "../../components/listItems/WorkoutExerciseItem.tsx";
 import { useNavigate, useParams} from "react-router-dom";
-import useDetailedWorkout from "../../Hooks/useDetailedWorkout.ts";
+import useDetailedWorkout from "../../Hooks/queries/useDetailedWorkout.ts";
 import PrimaryButton from "../../components/ui/buttons/PrimaryButton.tsx";
 import {ExerciseDTO} from "../../types/types.ts";
 import API from "../../classes/api.ts";

@@ -1,13 +1,6 @@
 import { ApiClient } from "../classes/api";
-import {muscleGroups} from "../Hooks/UseExerciseList.ts";
-import {ExerciseDTO} from "../types/types.ts";
+import {ExerciseDTO, listFilterParams} from "../types/types.ts";
 
-type listFilterParams = {
-    page_size?: number;
-    page?: number;
-    filter?: muscleGroups;
-    query?: string;
-}
 
 export default class ExercisesAPI {
     public async list(param: listFilterParams): Promise<ExerciseDTO[]> {

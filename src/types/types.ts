@@ -152,3 +152,10 @@ export interface IdetailedWorkoutHistory {
   end_date: string;
   exercises: ISessionExercises[];
 }
+
+export type listFilterParams = {
+    page_size?: number;
+    page?: number;
+    filter?: muscleGroups;
+    query?: string;
+}

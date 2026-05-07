@@ -3,7 +3,7 @@ import { useState, useEffect, useMemo } from "react";
 import { DragDropProvider } from "@dnd-kit/react";
 import { move } from "@dnd-kit/helpers";
 import { DndManagerdelay } from "../../components/DndManager.tsx";
-import useWorkouts from "../../Hooks/useWorkouts.ts";
+import useWorkouts from "../../Hooks/queries/useWorkouts.ts";
 import PrimaryButton from "../../components/ui/buttons/PrimaryButton.tsx";
 import {Link} from "react-router-dom";
 import {ROUTES} from "../../types/consts.ts";

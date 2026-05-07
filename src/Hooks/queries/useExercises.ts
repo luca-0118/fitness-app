@@ -1,6 +1,7 @@
 import {useInfiniteQuery} from "@tanstack/react-query";
-import API from "../classes/api.ts";
-import {muscleGroups} from "./UseExerciseList.ts";
+import API from "../../classes/api.ts";
+import {muscleGroups} from "../UseExerciseList.ts";
+import ExerciseService from "../../core/features/ExerciseService.ts";
 
 interface useExercisesProps{
     query?:string,
@@ -14,8 +15,8 @@ interface useExercisesProps{
  */
 export default function useExercises({query="row",filter=null}: useExercisesProps) {
     return useInfiniteQuery({queryKey: ["exercises",query,filter],
-                    queryFn: async ({pageParam}) => await API.exercises.list({page:pageParam,page_size:50,query,filter}),
+                    queryFn: async ({pageParam}) => await ExerciseService.getExercises({page:pageParam,page_size:50,query,filter}),
                     initialPageParam: 0,
-                    getNextPageParam: (lastPage,pages) => lastPage.length === 50 ? (pages.length || 0) +1 : null
+                    getNextPageParam: (lastPage,pages) => lastPage.length === 50 ? (pages.length || 0) +1 : null // checks if the last page was fully filled.
     });
 }

@@ -16,7 +16,7 @@ import cardio from "../../assets/cardio.png";
 import Filter from "../../components/Filter.tsx";
 import ExerciseItem from "../../components/listItems/ExerciseItem.tsx";
 import {ExerciseDTO, muscleGroups} from "../../types/types.ts";
-import useExercises from "../../Hooks/useExercises.ts";
+import useExercises from "../../Hooks/queries/useExercises.ts";
 import ExerciseItemSkeleton from "../../components/skeletons/ExerciseItemSkeleton.tsx";
 import {useOutletContext} from "react-router-dom";
 import {WorkoutOutletContext} from "../../components/routers/WorkoutRoutes.tsx";
