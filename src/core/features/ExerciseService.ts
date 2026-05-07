@@ -2,6 +2,17 @@ import { listFilterParams } from "../../types/types";
 import ExerciseApi from "../api/ExerciseApi";
 import Exercise from "../entities/exercise/Exercise.ts";
 
+
+/**
+ * |------------------------------------------------------------|
+ * | This Service should contain any api calls and then creation|
+ * | of Exercise entities that are made.                        |
+ * |------------------------------------------------------------|
+ */
+
+/**
+ *
+ */
 export default class ExerciseService {
     
 

@@ -2,6 +2,18 @@ import WorkoutApi from "../api/WorkoutApi";
 import Exercise from "../entities/exercise/Exercise.ts";
 import Workout from "../entities/workout/Workout.ts";
 
+
+
+/**
+ * |------------------------------------------------------------|
+ * | Contains all functionality regarding workouts.             |
+ * | Includes mapping to entities and using api wrappers.       |
+ * |------------------------------------------------------------|
+ */
+
+/**
+ *
+ */
 export default class WorkoutService {
 
     /**

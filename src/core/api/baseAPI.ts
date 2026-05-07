@@ -2,9 +2,13 @@ import { invoke, InvokeArgs } from "@tauri-apps/api/core";
 import { ApiSucess, backendFunctions } from "../../types/types";
 
 /**
- * The default class for all api's, it contains methods we use in all api's
+ * The default class for all api's.
+ *
+ * Each of the functions defined here, can be reused in other apis, to keep code consistent.
+ *
+ * This class is abstract, meaning it can't be used/ instantiated.
  */
-export default class BaseApi {
+export default abstract class BaseApi {
 
     /**
      * Calls the backend function to return the data.
