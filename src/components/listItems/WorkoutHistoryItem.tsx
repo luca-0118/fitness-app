@@ -1,11 +1,11 @@
-import WorkoutSession from "../core/entities/workout/WorkoutSession.ts";
+import WorkoutSession from "../../core/entities/workout/WorkoutSession.ts";
 
 interface WorkoutHistoryWidgetProps {
     completedWorkout: WorkoutSession;
     onClick: () => void;
 }
 
-export default function WorkoutHistoryWidget({ completedWorkout,onClick }: WorkoutHistoryWidgetProps) {
+export default function WorkoutHistoryItem({ completedWorkout,onClick }: WorkoutHistoryWidgetProps) {
 
     return (
         <div onClick={onClick} className="bg-components border-bordercolor border rounded-xl px-2 mb-3 flex w-[90%] items-center mx-auto hover:bg-components-hover active:bg-components-hover cursor-pointer">

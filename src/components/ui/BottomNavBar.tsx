@@ -3,7 +3,7 @@ import PersonSharpIcon from "@mui/icons-material/PersonSharp";
 import FitnessCenterIcon from "@mui/icons-material/FitnessCenter";
 import RestaurantSharpIcon from "@mui/icons-material/RestaurantSharp";
 import HomeSharpIcon from "@mui/icons-material/HomeSharp";
-import {ROUTES} from "../types/consts.ts";
+import {ROUTES} from "../../types/consts.ts";
 
 export default function BottomNavBar() {
     return (

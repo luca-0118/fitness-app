@@ -1,5 +1,5 @@
-import FoodItemComponent from "../components/FoodItemComponent.tsx";
-import SearchBar from "../components/SearchBar.tsx";
+import FoodItemComponent from "../../components/food/FoodItemComponent.tsx";
+import SearchBar from "../../components/SearchBar.tsx";
 import { invoke } from "@tauri-apps/api/core";
 import { useState } from "react";
 import SearchIcon from '@mui/icons-material/Search';

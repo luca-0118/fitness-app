@@ -1,7 +1,7 @@
 import "./App.css";
 import { BrowserRouter} from "react-router-dom";
-import Header from "./components/Header";
-import BottomNavBar from "./components/BottomNavBar.tsx";
+import Header from "./components/ui/Header.tsx";
+import BottomNavBar from "./components/ui/BottomNavBar.tsx";
 import { WorkoutProvider } from "./context/WorkoutContext";
 // import FoodList from "./pages/FoodList.tsx"
 // import Home from "./pages/Home.tsx";

@@ -1,7 +1,7 @@
-import WeightLineChart from "../components/WeightLineChart.tsx";
-import AddFoodButton from "../components/AddFoodButton.tsx";
-import {NutritionDonutChart} from "../components/NutritionDonutChart.tsx";
-import EatenTodayList from "../components/EatenTodayList.tsx";
+import WeightLineChart from "../../components/charts/WeightLineChart.tsx";
+import AddFoodButton from "../../components/food/AddFoodButton.tsx";
+import {NutritionDonutChart} from "../../components/charts/NutritionDonutChart.tsx";
+import EatenTodayList from "../../components/food/EatenTodayList.tsx";
 
 export default function KcalTracker() {
   return (

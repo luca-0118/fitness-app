@@ -1,7 +1,7 @@
 import {Route, Routes} from "react-router-dom";
 import Home from "../../pages/Home.tsx";
 import Profile from "../../pages/Profile.tsx";
-import KcalTracker from "../../pages/KcalTracker.tsx";
+import KcalTracker from "../../pages/food/KcalTracker.tsx";
 import WorkoutRoutes from "./WorkoutRoutes.tsx";
 import SessionPage from "../../pages/session/SessionPage.tsx";
 

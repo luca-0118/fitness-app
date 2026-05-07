@@ -1,5 +1,5 @@
 import { useLocation, useNavigate } from "react-router-dom";
-import SaveButton from "./SaveButton.tsx";
+import SaveButton from "../SaveButton.tsx";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 // Map of URL paths to page titles
 const pageTitles: Record<string, string> = {

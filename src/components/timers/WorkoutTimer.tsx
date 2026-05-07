@@ -1,6 +1,6 @@
-import CountDownTimer from "../CountDownTimer.tsx";
-import StopWatch from "../StopWatch.tsx";
-import TabataTimer from "../TabataTimer.tsx";
+import CountDownTimer from "./CountDownTimer.tsx";
+import StopWatch from "./StopWatch.tsx";
+import TabataTimer from "./TabataTimer.tsx";
 import {useState} from "react";
 
 /**

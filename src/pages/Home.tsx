@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
-import { NutritionDonutChart } from "../components/NutritionDonutChart";
-import WeeklyCaloriesChart from "../components/WeeklyCaloriesChart.tsx";
+import { NutritionDonutChart } from "../components/charts/NutritionDonutChart.tsx";
+import WeeklyCaloriesChart from "../components/charts/WeeklyCaloriesChart.tsx";
 import {ROUTES} from "../types/consts.ts";
 import PrimaryButton from "../components/ui/buttons/PrimaryButton.tsx";
 import { useQuery } from "@tanstack/react-query";
