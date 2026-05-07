@@ -26,7 +26,7 @@ export default function KcalTracker() {
                   <NutritionDonutChart />
               </div>
               <div className="col-span-2">
-                  <AddFoodButton to="/food-list" />
+                  <AddFoodButton to="/food-page/food-list" />
               </div>
               <EatenTodayList />
               <div className="bg-components border border-bordercolor rounded-xl p-6 col-span-2 items-center">

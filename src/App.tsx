@@ -1,11 +1,13 @@
 import "./App.css";
 import { useEffect } from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Header from "./components/Header";
 import BottomNavBar from "./components/BottomNavBar.tsx";
 import { WorkoutProvider } from "./context/WorkoutContext";
 
-import FoodList from "./pages/FoodList.tsx"
+import FoodPage from "./pages/FoodPage.tsx";
+import FoodList from "./pages/FoodList.tsx";
+import CustomFood from "./pages/CustomFood.tsx";
 import Home from "./pages/Home.tsx";
 import WorkoutOverview from "./pages/WorkoutOverview.tsx";
 import EditWorkout from "./pages/EditWorkout.tsx";
@@ -93,7 +95,13 @@ function App() {
               <Route path="/session-history" element={<SessionHistory />} />
               <Route path="/kcal-tracker" element={<KcalTracker />} />
               <Route path="/exercises" element={<Exercises />} />
-              <Route path="/food-list" element={<FoodList />} />
+              <Route path="/food-list" element={<Navigate to="/food-page/food-list" replace />} />
+              <Route path="/custom-food" element={<Navigate to="/food-page/custom-food" replace />} />
+              <Route path="/food-page" element={<FoodPage />}>
+                <Route index element={<Navigate to="food-list" replace />} />
+                <Route path="food-list" element={<FoodList />} />
+                <Route path="custom-food" element={<CustomFood />} />
+              </Route>
               <Route path="/exercise-description"element={<ExerciseDescription />}/>
               <Route path="/product-details" element={<ProductDetails />} />
             </Routes>

@@ -19,7 +19,7 @@ export default function SelectedExerciseModal({dispatch,state, saveFunc}:Selecte
     useEffect(() =>{
         const rows = state.exercises.map((exercise) =>
             <ExerciseRow exercise={exercise}
-                         dispatcher={dispatch}
+                dispatcher={dispatch}
             />);
         setExerciseRows(rows);
     },[state.exercises]);
