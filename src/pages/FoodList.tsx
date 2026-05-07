@@ -65,7 +65,6 @@ export default function FoodList() {
   };
 
   const handleSearch = () => {
-    setSearching(true);
     setRememberText(searchText);
     setProduct([]);
     setProductBarcode(null)

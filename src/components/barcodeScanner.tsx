@@ -5,7 +5,7 @@ import {
   Format,
   scan,
 } from "@tauri-apps/plugin-barcode-scanner";
-import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import ClearIcon from '@mui/icons-material/Clear';
 
 interface states{
   onProductScan: any
@@ -17,7 +17,7 @@ interface states{
 }
 
 
-export default function BarcodeScanner({onProductScan, onLoading, onError,  searching, setSearching}: states ){
+export default function BarcodeScanner({onProductScan, onLoading, onError, searching, setSearching}: states ){
 
 const fetchBarcodeAPI = async (product: string) => {
     if (!product.trim()) {
@@ -72,7 +72,7 @@ return(
             <div className="fixed inset-0 z-50 bg-black/70 flex flex-col items-center justify-center">
                 <div>
                     <button onClick={() => setSearching(false)} className="absolute left-0 cursor-pointer text-textcolor">
-                        <ArrowBackIcon sx={{ fontSize: 32 }} />
+                        <ClearIcon sx={{ fontSize: 32 }} />
                     </button>
 
                     {/* Title */}
