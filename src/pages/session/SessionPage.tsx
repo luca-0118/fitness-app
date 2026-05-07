@@ -3,7 +3,6 @@ import {ExerciseSetUpdate} from "../../types/types.ts";
 import WorkoutTimer from "../../components/timers/WorkoutTimer.tsx";
 import useSession from "../../Hooks/session/useSession.ts";
 import SessionExerciseItem from "../../components/listItems/SessionExerciseItem.tsx";
-import useUpdateSet from "../../Hooks/useUpdateSet.ts";
 import useElapsedTime from "../../Hooks/useElapsedTime.ts";
 import PrimaryButton from "../../components/ui/buttons/PrimaryButton.tsx";
 import {formatSecondsToHMS} from "../../types/Helpers.ts";
@@ -12,11 +11,12 @@ import {useNavigate} from "react-router-dom";
 import {ROUTES} from "../../types/consts.ts";
 import toast from "react-hot-toast";
 import PageContainer from "../../components/ui/PageContainer.tsx";
+import useSetUpdate from "../../Hooks/session/useSetUpdate.ts";
 
 export default function SessionPage() {
   const [openExercise,setOpenExercise] = useState<number|null>(null);
   const session = useSession();
-  const setUpdater = useUpdateSet();
+  const setUpdater = useSetUpdate();
   const navigate = useNavigate();
 
   const updateSet = (update: ExerciseSetUpdate) => {
