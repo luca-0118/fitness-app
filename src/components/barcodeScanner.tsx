@@ -10,10 +10,14 @@ interface states{
   onProductScan: any
   onLoading: any
   onError: any
-  onSearching: any
+
+  searching: boolean
+  setSearching: any
+  setBarcode: any
 }
 
-export default function BarcodeScanner({onProductScan, onLoading, onError, onSearching}: states ){
+
+export default function BarcodeScanner({onProductScan, onLoading, onError, setSearching, setBarcode}: states ){
 
 const fetchBarcodeAPI = async (product: string) => {
     if (!product.trim()) {
@@ -40,18 +44,31 @@ const fetchBarcodeAPI = async (product: string) => {
   };
 
   const handleBarcodeSearch = async () => {
-  onError(null);
-  try {
-    const scanned = await scan({
-      formats: [Format.EAN13, Format.EAN8,Format.QRCode],
-    });
-    onSearching(true);
-    void fetchBarcodeAPI(scanned.content);
-  } catch (err) {
-    console.error("Barcode scan failed:", err);
-    onError(err)
-  }
-};
+      onError(null);
+      setSearching(true);
 
-return <button className="w-11 h-11 p-2 mt-3 mx-2 border-bordercolor border rounded-md text-accent active:text-accent-action bg-components " onClick={()=>handleBarcodeSearch()}><BarcodeIcon className="text-current" /></button>
-}
+      try {
+          const scanned = await scan({
+            formats: [Format.EAN13, Format.EAN8,Format.QRCode],
+          });
+          setBarcode(scanned.content)
+          await fetchBarcodeAPI(scanned.content);
+      }
+
+      catch (err: any) {
+          console.error("Barcode scan failed:", err);
+          onError(err?.message || "Barcode scanner fout");
+      }
+
+      finally {
+        setSearching(false);
+      }
+  };
+
+return(
+    <button
+      className="w-11 h-11 p-2 mt-3 mx-2 border-bordercolor border rounded-md text-accent active:text-accent-action bg-components "
+      onClick={()=>handleBarcodeSearch()}>
+          <BarcodeIcon className="text-current" />
+    </button>
+)}
