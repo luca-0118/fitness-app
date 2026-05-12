@@ -159,7 +159,11 @@ fn migrate(conn: &mut Connection, state: AppState) {
         ID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
         barcode TEXT not null, 
         date TEXT not null, 
-        amount INTEGER not null
+        amount INTEGER not null,
+        calories INTEGER not null,
+        carbs INTEGER not null,
+        fats INTEGER not null,
+        protein INTEGER not null
     )",
         [],
     )

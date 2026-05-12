@@ -33,8 +33,8 @@ export default function FoodItemComponent({ name, nutriments, barcode, brand, on
       </div>
     );
   }
-  async function addFoodToDatabase(barcode:String, date: String, amount:number){
-       await invoke ("add_food", {barcode:barcode, date:date, amount:amount});
+  async function addFoodToDatabase(barcode:String, date: String, amount:number, calories:number, carbs:number, fat:number, protein:number){
+       await invoke ("add_food", {barcode:barcode, date:date, amount:amount, calories:calories, carbs:carbs, fats:fat, protein:protein});
   }
 
 
@@ -146,7 +146,7 @@ export default function FoodItemComponent({ name, nutriments, barcode, brand, on
               <button onClick={() => { setOverlay(false) }} className="cursor-pointer mx-auto sticky bottom-2 h-16 justify-center items-center font-bold w-[90%] rounded-full text-textcolor bg-components hover:bg-components-hover active:bg-components-hover flex z-30">
                 Cancel
               </button>
-              <button className="cursor-pointer mx-auto sticky bottom-2 h-16 justify-center items-center font-bold w-[90%] rounded-full text-textcolor bg-accent hover:bg-accent-action active:bg-accent-action flex z-30" onClick={()=>{addFoodToDatabase(barcode, Date(), amount)}}>
+              <button className="cursor-pointer mx-auto sticky bottom-2 h-16 justify-center items-center font-bold w-[90%] rounded-full text-textcolor bg-accent hover:bg-accent-action active:bg-accent-action flex z-30" onClick={()=>{addFoodToDatabase(barcode, new Date().toISOString(), amount, Number(calories.toFixed())/100 * amount, Number(carbs.toFixed(1))/100 * amount, Number(fat.toFixed(1))/100 * amount, Number(protein.toFixed(1))/100 * amount)}}>
                 Add product
               </button>
             </div>

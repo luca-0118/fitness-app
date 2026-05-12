@@ -9,3 +9,6 @@ pub use get_products_by_search::*;
 
 pub mod add_food;
 pub use add_food::*;
+
+pub mod get_food_by_date;
+pub use get_food_by_date::*;
