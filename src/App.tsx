@@ -95,11 +95,8 @@ function App() {
               <Route path="/session-history" element={<SessionHistory />} />
               <Route path="/kcal-tracker" element={<KcalTracker />} />
               <Route path="/exercises" element={<Exercises />} />
-              <Route path="/food-list" element={<Navigate to="/food-page/food-list" replace />} />
-              <Route path="/custom-food" element={<Navigate to="/food-page/custom-food" replace />} />
               <Route path="/food-page" element={<FoodPage />}>
-                <Route index element={<Navigate to="food-list" replace />} />
-                <Route path="food-list" element={<FoodList />} />
+                <Route index element={<FoodList />} />
                 <Route path="custom-food" element={<CustomFood />} />
               </Route>
               <Route path="/exercise-description"element={<ExerciseDescription />}/>
