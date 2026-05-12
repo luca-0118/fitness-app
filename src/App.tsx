@@ -1,6 +1,6 @@
 import "./App.css";
 import { useEffect } from "react";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Header from "./components/Header";
 import BottomNavBar from "./components/BottomNavBar.tsx";
 import { WorkoutProvider } from "./context/WorkoutContext";
