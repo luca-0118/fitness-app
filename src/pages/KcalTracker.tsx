@@ -2,6 +2,7 @@ import WeightLineChart from "../components/WeightLineChart.tsx";
 import AddFoodButton from "../components/AddFoodButton.tsx";
 import {NutritionDonutChart} from "../components/NutritionDonutChart.tsx";
 import EatenTodayList from "../components/EatenTodayList.tsx";
+import Calender from "../components/Calender.tsx";
 
 export default function KcalTracker() {
   return (
@@ -27,6 +28,7 @@ export default function KcalTracker() {
               </div>
               <div className="col-span-2">
                   <AddFoodButton to="/food-list" />
+                    <Calender/>
               </div>
               <EatenTodayList />
               <div className="bg-components border border-bordercolor rounded-xl p-6 col-span-2 items-center">
