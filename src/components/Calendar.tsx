@@ -15,7 +15,7 @@ export default function Calender({ onDateChange }: CalendarProps){
     }
 
     return (
-    <button id="DatePicker" className="relative">
+    <button id="DatePicker" className="relative contain-content">
         <input onChange={(e)=>handleDateClick(e.target.value)} type="date" className="opacity-0 w-full absolute" />
         <CalendarMonthIcon className=''/>
     </button>
