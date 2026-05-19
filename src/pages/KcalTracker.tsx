@@ -22,7 +22,7 @@ export default function KcalTracker() {
 
               <EatenTodayList />
             </div>
-              <div className="col-span-2">
+              <div className="col-span-2 w-90 mx-auto">
                   <AddFoodButton to="/food-list" />
               </div>
           </div>
