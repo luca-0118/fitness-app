@@ -38,11 +38,11 @@ function FoodComp({ item }: { item: DatabaseFoodItem }) {
             </div>
 
             <div className="flex items-center gap-4">
-                <div className="text-sm text-gray-300 text-right">
+                <div className="text-sm text-muted text-right">
                     {item.amount}g
                 </div>
 
-                <div className="text-sm text-gray-300 text-right">
+                <div className="text-sm text-muted text-right">
                     {item.calories} kcal
                 </div>
             </div>
@@ -168,7 +168,7 @@ export default function EatenTodayList() {
                                 >
                                 <div>
                                     <div className="text-textcolor font-semibold">{cat.key.charAt(0).toUpperCase()+cat.key.slice(1)}</div>
-                                    <div className="text-sm text-gray-400">{cat.items.length} items | total {totalKcal} kcal</div>
+                                    <div className="text-sm text-muted">{cat.items.length} items | total {totalKcal} kcal</div>
                                 </div>
                                     <div className="text-textcolor text-2xl">{isOpen ? "−" : <ArrowDropDownIcon/>}</div>
                                 </button>
