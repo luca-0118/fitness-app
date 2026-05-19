@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import { invoke } from "@tauri-apps/api/core";
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
+import Calender from "./Calendar";
 
 interface DatabaseFoodItem {
     id: number;
@@ -13,17 +15,20 @@ interface DatabaseFoodItem {
     mealtime: string;
 }
 
+const MEAL_CATEGORY_KEYS = ["ochtend", "middag", "avond"] as const;
+
+type MealCategoryKey = (typeof MEAL_CATEGORY_KEYS)[number];
+
 interface MealCategory {
-    cat: string;
+    key: MealCategoryKey;
     items: DatabaseFoodItem[];
 }
 
-function kcalCalc(calories: number, amount: number) {
-  return Math.round(calories * amount);
+function totalCalories(items: DatabaseFoodItem[]) {
+    return items.reduce((total, item) => total + item.calories, 0);
 }
 
 function FoodComp({ item }: { item: DatabaseFoodItem }) {
-    const kcal = kcalCalc(item.calories, item.amount);
 
     return (
     <div className="w-full rounded-xl pl-4 flex items-stretch justify-between bg-background overflow-hidden">
@@ -34,11 +39,11 @@ function FoodComp({ item }: { item: DatabaseFoodItem }) {
 
             <div className="flex items-center gap-4">
                 <div className="text-sm text-gray-300 text-right">
-                    idk gram
+                    {item.amount}g
                 </div>
 
                 <div className="text-sm text-gray-300 text-right">
-                    {kcal} kcal
+                    {item.calories} kcal
                 </div>
             </div>
         </div>
@@ -52,19 +57,22 @@ function FoodComp({ item }: { item: DatabaseFoodItem }) {
 }
 
 export default function EatenTodayList() {
-    const [open, setOpen] = useState<Record<string, boolean>>({ ochtend: false, middag: false, avond: false });
+    const [open, setOpen] = useState<Record<MealCategoryKey, boolean>>(
+        MEAL_CATEGORY_KEYS.reduce((acc, key) => ({ ...acc, [key]: false }), {} as Record<MealCategoryKey, boolean>)
+    );
     const [mealCategories, setMealCategories] = useState<MealCategory[]>([]);
     const [loading, setLoading] = useState(true);
+    const [date, setDate] = useState(new Date());
 
     useEffect(() => {
         fetchFoodByDate();
-    }, []);
+    }, [date]);
 
     const fetchFoodByDate = async () => {
         try {
             setLoading(true);
             const result = await invoke<DatabaseFoodItem[]>("get_food_by_date", {
-                date: '2026-05-18'
+                date: date.toISOString().split("T")[0]
             });
             
             const grouped = groupByMealTime(result);
@@ -77,31 +85,41 @@ export default function EatenTodayList() {
         }
     };
 
+    const handlePreviousDay = () => {
+        setDate((currentDate) => {
+            const newDate = new Date(currentDate);
+            newDate.setDate(newDate.getDate() - 1);
+            return newDate;
+        });
+    };
+
+    const handleNextDay = () => {
+        setDate((currentDate) => {
+            const newDate = new Date(currentDate);
+            newDate.setDate(newDate.getDate() + 1);
+            return newDate;
+        });
+    };
+
     const groupByMealTime = (items: DatabaseFoodItem[]): MealCategory[] => {
-        const mealCat: Record<string, DatabaseFoodItem[]> = {
-            ochtend: [],
-            middag: [],
-            avond: []
-        };
+        const mealCat = MEAL_CATEGORY_KEYS.reduce(
+            (acc, key) => ({ ...acc, [key]: [] as DatabaseFoodItem[] }),
+            {} as Record<MealCategoryKey, DatabaseFoodItem[]>
+        );
 
         items.forEach((item) => {
-            const mealTime = item.mealtime.toLowerCase();
-            if (mealTime in mealCat) { //check als category klopt
+            const mealTime = item.mealtime.toLowerCase() as MealCategoryKey;
+            if (mealTime in mealCat) {
                 mealCat[mealTime].push(item);
-            }
-            else {
-                console.log(`category error: ${mealTime}`)
+            } else {
+                console.log(`category error: ${mealTime}`);
             }
         });
 
-        return [
-            { cat: "Ochtend", items: mealCat.ochtend },
-            { cat: "Middag", items: mealCat.middag },
-            { cat: "Avond", items: mealCat.avond },
-        ];
+        return MEAL_CATEGORY_KEYS.map((key) => ({ key, items: mealCat[key] || [] }));
     };
 
-    const toggle = (key: string) => {
+    const toggle = (key: MealCategoryKey) => {
         setOpen((currentOpen) => {
             const states = { ...currentOpen };
             states[key] = !currentOpen[key];
@@ -109,18 +127,26 @@ export default function EatenTodayList() {
         });
     };
 
-    const getTotalCalories = (items: DatabaseFoodItem[]) => {
-        return items.reduce((total, item) => total + kcalCalc(item.calories, item.amount), 0);
-    };
-
     return (
         <div className="bg-components border border-bordercolor rounded-xl p-0 col-span-2">
             <div className="flex items-center justify-between px-4 py-3 border-b border-bordercolor">
-                <button className="flex items-center gap-2 text-textcolor opacity-80 hover:opacity-100">
+                <button
+                    onClick={handlePreviousDay}
+                    className="flex items-center gap-2 text-textcolor opacity-80 hover:opacity-100"
+                >
                     <ArrowBackIcon sx={{ fontSize: 24 }} />
                 </button>
-                <h2 className="text-center font-bold text-lg text-textcolor">Eaten today</h2>
-                <button className="flex items-center gap-2 text-textcolor opacity-80 hover:opacity-100">
+                    <div className="flex-1 relative flex items-center justify-center">
+                        <div className="text-center">
+                            <h2 className="font-bold text-lg text-textcolor">Eaten on day</h2>
+                            <div className="text-sm text-muted">{date.toDateString()}</div>
+                        </div>
+                        <div className="absolute right-10 text-textcolor"><Calender onDateChange={setDate} /></div>
+                    </div>
+                <button
+                    onClick={handleNextDay}
+                    className="flex items-center gap-2 text-textcolor opacity-80 hover:opacity-100"
+                >
                     <ArrowForwardIcon sx={{ fontSize: 24 }} />
                 </button>
             </div>
@@ -131,20 +157,20 @@ export default function EatenTodayList() {
                 ) : mealCategories.length === 0 ? (
                     <div className="text-center text-textcolor py-4">No food data</div>
                 ) : (
-                    mealCategories.map((cat) => { //ik moet cat even aanpassen lol
-                        const isOpen = open[cat.cat];
-                        const totalKcal = getTotalCalories(cat.items);
+                    mealCategories.map((cat) => {
+                        const isOpen = open[cat.key];
+                        const totalKcal = totalCalories(cat.items);
                         return (
-                            <div key={cat.cat} className="rounded-2xl overflow-hidden border border-accent">
+                            <div key={cat.key} className="rounded-2xl overflow-hidden border border-accent">
                                 <button
-                                    onClick={() => toggle(cat.cat)}
+                                    onClick={() => toggle(cat.key)}
                                     className={`w-full text-left px-4 py-3 flex items-center justify-between bg-background`}
                                 >
                                 <div>
-                                    <div className="text-textcolor font-semibold">{cat.cat}</div>
+                                    <div className="text-textcolor font-semibold">{cat.key.charAt(0).toUpperCase()+cat.key.slice(1)}</div>
                                     <div className="text-sm text-gray-400">{cat.items.length} items | total {totalKcal} kcal</div>
                                 </div>
-                                    <div className="text-textcolor text-2xl">{isOpen ? "−" : "🢓"}</div>
+                                    <div className="text-textcolor text-2xl">{isOpen ? "−" : <ArrowDropDownIcon/>}</div>
                                 </button>
 
                                 <div className={`${isOpen ? "block" : "hidden"} bg-components-hover flex flex-col gap-1 px-3 py-2`}>
