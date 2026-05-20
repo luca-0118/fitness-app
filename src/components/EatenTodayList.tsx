@@ -16,9 +16,9 @@ interface DatabaseFoodItem {
 }
 
 const Categories = [
-    { key: "ochtend", catName: "Ochtend" },
-    { key: "middag", catName: "Middag" },
-    { key: "avond", catName: "Avond" },
+    { key: "ochtend", catName: "Breakfast" },
+    { key: "middag", catName: "Lunch" },
+    { key: "avond", catName: "Dinner" },
 ] as const;
 
 type MealCategoryKey = typeof Categories[number]["key"];
