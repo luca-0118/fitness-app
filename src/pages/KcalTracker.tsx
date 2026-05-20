@@ -1,5 +1,4 @@
 import AddFoodButton from "../components/AddFoodButton.tsx";
-import {NutritionDonutChart} from "../components/NutritionDonutChart.tsx";
 import EatenTodayList from "../components/EatenTodayList.tsx";
 
 export default function KcalTracker() {
@@ -18,9 +17,6 @@ export default function KcalTracker() {
   "
           >
               <div className="py-4 w-[90%] mx-auto flex flex-col gap-4">
-              <div className="bg-components border border-bordercolor rounded-xl px-6 font-bold flex flex-col items-center">
-                  <NutritionDonutChart />
-              </div>
               <EatenTodayList />
               <div>
                 <AddFoodButton to="/food-list" />
