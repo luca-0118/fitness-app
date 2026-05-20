@@ -2,14 +2,29 @@ import React from 'react';
 import Chart from 'react-apexcharts';
 import { ApexOptions } from 'apexcharts';
 import { useEffect, useState } from 'react';
+import {invoke} from "@tauri-apps/api/core";
 
 const getCSSVariable = (name: string) =>
     getComputedStyle(document.documentElement)
         .getPropertyValue(name)
         .trim();
 
+interface macronutrients {
+    calories: number;
+    carbs: number;
+    protein: number;
+    fats: number;
+}
+
 
 export const NutritionDonutChart: React.FC = () => {
+    const [macros, setMacros] = useState<macronutrients>({
+        calories: 0,
+        carbs: 0,
+        protein: 0,
+        fats: 0,
+    });
+
     const [themeColors, setThemeColors] = useState({
         borderColor: '',
         textColor: '',
@@ -43,7 +58,12 @@ export const NutritionDonutChart: React.FC = () => {
         return () => observer.disconnect();
     }, []);
 
-    const Rawseries = [1200, 45, 30, 25];
+    const Rawseries = [
+        Math.round(macros.calories),
+        Math.round(macros.carbs),
+        Math.round(macros.protein),
+        Math.round(macros.fats)
+    ];
     const max = [2000, 60, 60, 60];
     const labels = ['Calories', 'Carbs', 'Proteins', 'Fats'];
     const colors = [themeColors.accentColor, themeColors.redColor, themeColors.blueColor, themeColors.greenColor];
@@ -86,7 +106,6 @@ export const NutritionDonutChart: React.FC = () => {
     const bar: ApexOptions = {
         chart: {
             type: 'bar',
-            background: 'transparent',
             toolbar: {
                 show: false,
             },
@@ -98,6 +117,7 @@ export const NutritionDonutChart: React.FC = () => {
         plotOptions: {
             bar: {
                 horizontal: true,
+                borderRadiusApplication: 'around',
                 borderRadius: 10,
                 barHeight: '100%',
                 colors: {
@@ -124,6 +144,42 @@ export const NutritionDonutChart: React.FC = () => {
         max: max[i],
         series: series[i],
     }));
+
+    useEffect(() => {
+        fetchMacros()
+    }, []);
+
+    const fetchMacros = async () => {
+        try {
+            const result = await invoke<macronutrients[]>("get_food_by_date", {
+                date: new Date(),
+            });
+            console.log(result);
+
+            const totals = result.reduce(
+                (acc, item) => ({
+                    calories: acc.calories + item.calories,
+                    carbs: acc.carbs + item.carbs,
+                    protein: acc.protein + item.protein,
+                    fats: acc.fats + item.fats,
+                }),
+                {
+                    calories: 0,
+                    carbs: 0,
+                    protein: 0,
+                    fats: 0,
+                }
+            );
+
+            setMacros(totals);
+
+            console.log("Totals:", totals);
+
+        } catch (err) {
+            console.error("Error fetching macros:", err);
+        }
+    };
+
 
     return (
         <div style={{ width: '100%', textAlign: 'center', color: 'white'}}>
