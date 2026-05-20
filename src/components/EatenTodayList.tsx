@@ -51,7 +51,7 @@ function FoodComp({ item }: { item: DatabaseFoodItem }) {
                         {item.amount}g
                     </div>
                     <div className="text-sm text-muted text-right">
-                        {item.calories} kcal
+                        {Math.round(item.calories)} kcal
                     </div>
                 </div>
             </div>
@@ -179,7 +179,7 @@ export default function EatenTodayList() {
                                 >
                                     <div>
                                         <div className="text-textcolor font-semibold">{cat.catName}</div>
-                                        <div className="text-sm text-muted">{cat.items.length} items | total {totalKcal} kcal</div>
+                                        <div className="text-sm text-muted">{cat.items.length} items | total {Math.round(totalKcal)} kcal</div>
                                     </div>
                                     <div className="text-textcolor text-2xl">{isOpen ? "−" : <ArrowDropDownIcon />}</div>
                                 </button>
