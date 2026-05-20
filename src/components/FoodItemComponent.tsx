@@ -33,8 +33,8 @@ export default function FoodItemComponent({ name, nutriments, barcode, brand, on
       </div>
     );
   }
-  async function addFoodToDatabase(barcode:String, date: String, amount:number){
-       await invoke ("add_food", {barcode:barcode, date:date, amount:amount});
+  async function addFoodToDatabase(barcode:String, date: String, amount:number, calories:number, carbs:number, fat:number, protein:number){
+       await invoke ("add_food", {barcode:barcode, date:date, amount:amount, calories:calories, carbs:carbs, fats:fat, protein:protein});
   }
 
 
@@ -136,9 +136,7 @@ export default function FoodItemComponent({ name, nutriments, barcode, brand, on
               defaultValue="gr"
               className="bg-components text-textcolor border border-bordercolor rounded-xl p-2 w-32 focus:outline-none focus:ring-2 focus:ring-accent ml-3"
             >
-              <option value="kg">kg</option>
               <option value="gr">gr</option>
-              <option value="mg">mg</option>
             </select>
           </div>
           <div className="w-full max-w-md mx-auto mt-5">
@@ -146,7 +144,7 @@ export default function FoodItemComponent({ name, nutriments, barcode, brand, on
               <button onClick={() => { setOverlay(false) }} className="cursor-pointer mx-auto sticky bottom-2 h-16 justify-center items-center font-bold w-[90%] rounded-full text-textcolor bg-components hover:bg-components-hover active:bg-components-hover flex z-30">
                 Cancel
               </button>
-              <button className="cursor-pointer mx-auto sticky bottom-2 h-16 justify-center items-center font-bold w-[90%] rounded-full text-textcolor bg-accent hover:bg-accent-action active:bg-accent-action flex z-30" onClick={()=>{addFoodToDatabase(barcode, Date(), amount)}}>
+              <button className="cursor-pointer mx-auto sticky bottom-2 h-16 justify-center items-center font-bold w-[90%] rounded-full text-textcolor bg-accent hover:bg-accent-action active:bg-accent-action flex z-30" onClick={()=>{addFoodToDatabase(barcode, new Date().toISOString(), amount, Number(calories.toFixed())/100 * amount, Number(carbs.toFixed(1))/100 * amount, Number(fat.toFixed(1))/100 * amount, Number(protein.toFixed(1))/100 * amount)}}>
                 Add product
               </button>
             </div>
