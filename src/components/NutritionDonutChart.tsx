@@ -61,7 +61,7 @@ export const NutritionDonutChart: React.FC = () => {
         colors,
         plotOptions: {
             radialBar: {
-                hollow: { size: '35%' },
+                hollow: { size: '55%' },
                 track: {
                     background: themeColors.borderColor,
                     margin: 6,
@@ -83,29 +83,91 @@ export const NutritionDonutChart: React.FC = () => {
         },
     }
 
+    const bar: ApexOptions = {
+        chart: {
+            type: 'bar',
+            background: 'transparent',
+            toolbar: {
+                show: false,
+            },
+            sparkline: {
+                enabled: true,
+            },
+        },
+        colors: [themeColors.accentColor],
+        plotOptions: {
+            bar: {
+                horizontal: true,
+                borderRadius: 10,
+                barHeight: '100%',
+                colors: {
+                    backgroundBarColors: [themeColors.borderColor],
+                    backgroundBarRadius: 10,
+                },
+            },
+        },
+        states: {
+            hover: {
+                filter: { type: 'none' },
+            },
+            active: {
+                filter: { type: 'none' },
+            },
+        },
+    };
+
     const legendData = labels.map((label, i) => ({
         label,
         value: Rawseries[i],
         color: colors[i],
         unit: units[i],
         max: max[i],
+        series: series[i],
     }));
 
     return (
         <div style={{ width: '100%', textAlign: 'center', color: 'white'}}>
-            <Chart
-                options={options}
-                series={series}
-                type="radialBar"
-                height={300}
-            />
-
             <div style={{ marginTop: 16 }}>
                 <div style={{ textAlign: 'left', marginBottom: 16 }}>
                     <span style={{ color: colors[0], fontSize: 24, fontWeight: 700, display: 'block'}}>{labels[0]}</span>
                     <div className="text-[28px] text-textcolor">
                         {Rawseries[0]}
                         <span className="text-lg text-muted">/{max[0]}{units[0]}</span>
+                        <Chart
+                            options={{
+                                ...bar,
+                                xaxis: {
+                                    categories: ['Calories'],
+                                    max: max[0],
+                                    labels: { show: false },
+                                    axisBorder: { show: false },
+                                    axisTicks: { show: false },
+                                },
+                                yaxis: {
+                                    labels: { show: false },
+                                },
+                                grid: {
+                                    show: false,
+                                },
+                                tooltip: {
+                                    enabled: false,
+                                },
+                                dataLabels: {
+                                    enabled: false,
+                                },
+                                legend: {
+                                    show: false,
+                                },
+                            }}
+                            series={[
+                                {
+                                    data: [Rawseries[0]],
+                                },
+                            ]}
+                            type="bar"
+                            height={18}
+                            width={'100%'}
+                        />
                     </div>
                 </div>
 
@@ -113,14 +175,58 @@ export const NutritionDonutChart: React.FC = () => {
                     style={{
                         display: 'grid',
                         gridTemplateColumns: 'repeat(3, minmax(0, 1fr))',
-                        gap: 20,
-                    }}>
+                        gap: 7,
+                    }}
+                >
                     {legendData.slice(1).map((item, idx) => (
-                        <div>
-                            <div key={idx} style={{ display: 'block', justifyContent: 'center', width: '100%', borderColor: item.color}} className="border-2 rounded-xl p-3">
-                                <span style={{color: item.color, display: 'block'}}>{item.label}</span>
-                                <span className="text-textcolor">{item.value}</span>
-                                <span className="text-[10px] text-muted">/{item.max}{item.unit}</span>
+                        <div
+                            key={idx}
+                            className="relative rounded-2xl overflow-hidden h-35"
+                        >
+                            <div
+                                style={{
+                                    position: 'absolute',
+                                    inset: 0,
+                                    opacity: 100,
+                                    pointerEvents: 'none',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                }}
+                            >
+                                <Chart
+                                    options={{
+                                        ...options,
+                                        colors: [item.color],
+                                        chart: {
+                                            ...options.chart,
+                                        },
+                                    }}
+                                    series={[item.series]}
+                                    type="radialBar"
+                                    height={140}
+                                    width={140}
+                                />
+                            </div>
+
+                            <div className="relative z-10 h-full flex flex-col items-center justify-center text-center">
+                            <span
+                                style={{
+                                    color: item.color,
+                                    display: 'block',
+                                }}
+                                >
+                                    {item.label}
+                                </span>
+                                <div>
+                                    <span className="text-textcolor text-xl font-bold">
+                                        {item.value}
+                                    </span>
+                                    <span className="text-[13px] text-muted">
+                                        /{item.max}
+                                        {item.unit}
+                                    </span>
+                                </div>
                             </div>
                         </div>
                     ))}
