@@ -32,6 +32,7 @@ export const NutritionDonutChart: React.FC = () => {
         greenColor: '',
         redColor: '',
         blueColor: '',
+        warningColor: '',
     });
 
     useEffect(() => {
@@ -43,6 +44,7 @@ export const NutritionDonutChart: React.FC = () => {
                 greenColor: getCSSVariable('--color-button-start'),
                 redColor: getCSSVariable('--color-button-stop'),
                 blueColor: getCSSVariable('--color-chart'),
+                warningColor: getCSSVariable('--color-warning'),
             });
         };
 
@@ -72,6 +74,10 @@ export const NutritionDonutChart: React.FC = () => {
     const series = Rawseries.map((value, i) =>
         Math.min((value / max[i]) * 100, 100)
     );
+
+    const clampedCalories = Math.min(Rawseries[0], max[0]); // Clamp to max (2000 in this case)
+
+    const barColor = Rawseries[0] > max[0] ? themeColors.warningColor : themeColors.accentColor;
 
     const options: ApexOptions = {
         chart: {
@@ -113,7 +119,7 @@ export const NutritionDonutChart: React.FC = () => {
                 enabled: true,
             },
         },
-        colors: [themeColors.accentColor],
+        colors: [barColor],
         plotOptions: {
             bar: {
                 horizontal: true,
@@ -194,30 +200,16 @@ export const NutritionDonutChart: React.FC = () => {
                                 ...bar,
                                 xaxis: {
                                     categories: ['Calories'],
-                                    max: max[0],
+                                    max: max[0], // Fixed max
                                     labels: { show: false },
                                     axisBorder: { show: false },
                                     axisTicks: { show: false },
                                 },
-                                yaxis: {
-                                    labels: { show: false },
-                                },
-                                grid: {
-                                    show: false,
-                                },
-                                tooltip: {
-                                    enabled: false,
-                                },
-                                dataLabels: {
-                                    enabled: false,
-                                },
-                                legend: {
-                                    show: false,
-                                },
+                                // ... rest of your options
                             }}
                             series={[
                                 {
-                                    data: [Rawseries[0]],
+                                    data: [clampedCalories], // Use clamped value for the bar
                                 },
                             ]}
                             type="bar"
