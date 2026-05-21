@@ -2,14 +2,29 @@ import React from 'react';
 import Chart from 'react-apexcharts';
 import { ApexOptions } from 'apexcharts';
 import { useEffect, useState } from 'react';
+import {invoke} from "@tauri-apps/api/core";
 
 const getCSSVariable = (name: string) =>
     getComputedStyle(document.documentElement)
         .getPropertyValue(name)
         .trim();
 
+interface macronutrients {
+    calories: number;
+    carbs: number;
+    protein: number;
+    fats: number;
+}
+
 
 export const NutritionDonutChart: React.FC = () => {
+    const [macros, setMacros] = useState<macronutrients>({
+        calories: 0,
+        carbs: 0,
+        protein: 0,
+        fats: 0,
+    });
+
     const [themeColors, setThemeColors] = useState({
         borderColor: '',
         textColor: '',
@@ -17,6 +32,7 @@ export const NutritionDonutChart: React.FC = () => {
         greenColor: '',
         redColor: '',
         blueColor: '',
+        warningColor: '',
     });
 
     useEffect(() => {
@@ -28,6 +44,7 @@ export const NutritionDonutChart: React.FC = () => {
                 greenColor: getCSSVariable('--color-button-start'),
                 redColor: getCSSVariable('--color-button-stop'),
                 blueColor: getCSSVariable('--color-chart'),
+                warningColor: getCSSVariable('--color-warning'),
             });
         };
 
@@ -43,8 +60,27 @@ export const NutritionDonutChart: React.FC = () => {
         return () => observer.disconnect();
     }, []);
 
-    const Rawseries = [1200, 45, 30, 25];
-    const max = [2000, 60, 60, 60];
+    const Rawseries = [
+        Math.round(macros.calories),
+        Math.round(macros.carbs),
+        Math.round(macros.protein),
+        Math.round(macros.fats)
+    ];
+
+    let valuesArray: number[] = [];
+
+    const retrievedData = localStorage.getItem("profileTarget");
+
+    if (retrievedData) {
+        const parsedData = JSON.parse(retrievedData);
+        valuesArray = Object.values(parsedData).map(Number);
+    } else {
+        console.log("No data found in localStorage for 'profileTarget'.");
+    }
+
+
+    const max = valuesArray;
+
     const labels = ['Calories', 'Carbs', 'Proteins', 'Fats'];
     const colors = [themeColors.accentColor, themeColors.redColor, themeColors.blueColor, themeColors.greenColor];
     const units = ['kcal', 'g', 'g', 'g'];
@@ -52,6 +88,10 @@ export const NutritionDonutChart: React.FC = () => {
     const series = Rawseries.map((value, i) =>
         Math.min((value / max[i]) * 100, 100)
     );
+
+    const clampedCalories = Math.min(Rawseries[0], max[0]); // Clamp to max
+
+    const barColor = Rawseries[0] > max[0] ? themeColors.warningColor : themeColors.accentColor;
 
     const options: ApexOptions = {
         chart: {
@@ -86,7 +126,6 @@ export const NutritionDonutChart: React.FC = () => {
     const bar: ApexOptions = {
         chart: {
             type: 'bar',
-            background: 'transparent',
             toolbar: {
                 show: false,
             },
@@ -94,10 +133,11 @@ export const NutritionDonutChart: React.FC = () => {
                 enabled: true,
             },
         },
-        colors: [themeColors.accentColor],
+        colors: [barColor],
         plotOptions: {
             bar: {
                 horizontal: true,
+                borderRadiusApplication: 'around',
                 borderRadius: 10,
                 barHeight: '100%',
                 colors: {
@@ -105,6 +145,9 @@ export const NutritionDonutChart: React.FC = () => {
                     backgroundBarRadius: 10,
                 },
             },
+        },
+        tooltip: {
+            enabled: false,
         },
         states: {
             hover: {
@@ -125,6 +168,42 @@ export const NutritionDonutChart: React.FC = () => {
         series: series[i],
     }));
 
+    useEffect(() => {
+        fetchMacros()
+    }, []);
+
+    const fetchMacros = async () => {
+        try {
+            const result = await invoke<macronutrients[]>("get_food_by_date", {
+                date: new Date(),
+            });
+            console.log(result);
+
+            const totals = result.reduce(
+                (acc, item) => ({
+                    calories: acc.calories + item.calories,
+                    carbs: acc.carbs + item.carbs,
+                    protein: acc.protein + item.protein,
+                    fats: acc.fats + item.fats,
+                }),
+                {
+                    calories: 0,
+                    carbs: 0,
+                    protein: 0,
+                    fats: 0,
+                }
+            );
+
+            setMacros(totals);
+
+            console.log("Totals:", totals);
+
+        } catch (err) {
+            console.error("Error fetching macros:", err);
+        }
+    };
+
+
     return (
         <div style={{ width: '100%', textAlign: 'center', color: 'white'}}>
             <div style={{ marginTop: 16 }}>
@@ -138,30 +217,16 @@ export const NutritionDonutChart: React.FC = () => {
                                 ...bar,
                                 xaxis: {
                                     categories: ['Calories'],
-                                    max: max[0],
+                                    min: 0,
+                                    max: max[0], // Fixed max
                                     labels: { show: false },
                                     axisBorder: { show: false },
                                     axisTicks: { show: false },
                                 },
-                                yaxis: {
-                                    labels: { show: false },
-                                },
-                                grid: {
-                                    show: false,
-                                },
-                                tooltip: {
-                                    enabled: false,
-                                },
-                                dataLabels: {
-                                    enabled: false,
-                                },
-                                legend: {
-                                    show: false,
-                                },
                             }}
                             series={[
                                 {
-                                    data: [Rawseries[0]],
+                                    data: [clampedCalories], // Use clamped value for the bar
                                 },
                             ]}
                             type="bar"

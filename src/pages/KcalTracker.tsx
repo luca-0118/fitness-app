@@ -1,4 +1,6 @@
+import WeightLineChart from "../components/WeightLineChart.tsx";
 import AddFoodButton from "../components/AddFoodButton.tsx";
+import {NutritionDonutChart} from "../components/NutritionDonutChart.tsx";
 import EatenTodayList from "../components/EatenTodayList.tsx";
 
 export default function KcalTracker() {
@@ -16,12 +18,13 @@ export default function KcalTracker() {
     no-scrollbar
   "
           >
-              <div className="py-4 w-[90%] mx-auto flex flex-col gap-4">
+            <div className="grid grid-cols-2 gap-4 py-4 w-[90%] mx-auto">
+
               <EatenTodayList />
-              <div>
-                <AddFoodButton to="/food-list" />
-              </div>
             </div>
+              <div className="col-span-2 w-80 mx-auto">
+                  <AddFoodButton to="/food-list" />
+              </div>
           </div>
       </>
   );
