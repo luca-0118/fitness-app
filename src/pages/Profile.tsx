@@ -171,6 +171,33 @@ export default function Profile() {
                         disabled={isCompleted}
                         className="w-full bg-components border border-bordercolor rounded-lg px-3 py-2 text-textcolor focus:outline-none focus:border-accent disabled:opacity-50 disabled:cursor-not-allowed"
                       />
+                      <label className="text-textcolor text-base">Carb (g):</label>
+                      <input
+                        type="text"
+                        inputMode="decimal"
+                        value={targetWeight}
+                        onChange={(e) => { const v = e.target.value; if (/^\d*\.?\d*$/.test(v)) setTargetWeight(v); }}
+                        disabled={isCompleted}
+                        className="w-full bg-components border border-bordercolor rounded-lg px-3 py-2 text-textcolor focus:outline-none focus:border-accent disabled:opacity-50 disabled:cursor-not-allowed"
+                      />
+                      <label className="text-textcolor text-base">Proteins (g):</label>
+                      <input
+                        type="text"
+                        inputMode="decimal"
+                        value={targetWeight}
+                        onChange={(e) => { const v = e.target.value; if (/^\d*\.?\d*$/.test(v)) setTargetWeight(v); }}
+                        disabled={isCompleted}
+                        className="w-full bg-components border border-bordercolor rounded-lg px-3 py-2 text-textcolor focus:outline-none focus:border-accent disabled:opacity-50 disabled:cursor-not-allowed"
+                      />
+                      <label className="text-textcolor text-base">Fats (g):</label>
+                      <input
+                        type="text"
+                        inputMode="decimal"
+                        value={targetWeight}
+                        onChange={(e) => { const v = e.target.value; if (/^\d*\.?\d*$/.test(v)) setTargetWeight(v); }}
+                        disabled={isCompleted}
+                        className="w-full bg-components border border-bordercolor rounded-lg px-3 py-2 text-textcolor focus:outline-none focus:border-accent disabled:opacity-50 disabled:cursor-not-allowed"
+                      />
                       <div className="flex justify-end">
                         {!isSaved ? (
                         <button onClick={() => { localStorage.setItem('profileTarget', JSON.stringify({ kcal, weight: targetWeight })); setIsSaved(true); }} className="inline-flex items-center gap-2 bg-accent px-3 py-1 rounded-md text-white">
@@ -197,12 +224,6 @@ export default function Profile() {
                 </h2>
                 <WeightLineChart />
             </div>
-            {/*<div className="bg-components border border-bordercolor rounded-xl p-6 col-span-2 items-center">
-            <h2 className="border-b-2 border-bordercolor text-center mb-4 font-bold text-lg text-textcolor">
-              Weekly calorie intake
-            </h2>
-            <WeeklyCaloriesChart />
-          </div>*/}
         </div>
     </div>
   );
