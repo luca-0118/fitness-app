@@ -176,21 +176,17 @@ body {
 
   --rainbow-hue: 0;
 
-  /* Backgrounds */
   --color-background: oklch(0.72 0.08 var(--rainbow-hue));
   --color-components: oklch(0.78 0.07 var(--rainbow-hue));
   --color-components-hover: oklch(0.82 0.08 var(--rainbow-hue));
   --color-bordercolor: oklch(0.86 0.05 var(--rainbow-hue));
 
-  /* Text */
   --color-textcolor: oklch(0.97 0.01 var(--rainbow-hue));
   --color-muted: oklch(0.88 0.02 var(--rainbow-hue));
 
-  /* Accent */
   --color-accent: oklch(0.8 0.12 var(--rainbow-hue));
   --color-accent-action: oklch(0.88 0.14 var(--rainbow-hue));
 
-  /* Buttons */
   --color-button-start: oklch(0.76 0.14 var(--rainbow-hue));
   --color-button-stop: oklch(0.74 0.14 calc(var(--rainbow-hue) + 120));
   --color-button-pause: oklch(0.78 0.14 calc(var(--rainbow-hue) + 240));
@@ -198,13 +194,12 @@ body {
   --color-warning: oklch(0.7 0.25 var(--rainbow-hue));
   --color-chart: oklch(0.78 0.25 var(--rainbow-hue));
 
-  /* Navigation */
   --color-navbar: oklch(0.62 0.15 var(--rainbow-hue));
   --color-icons: oklch(0.95 0.10 var(--rainbow-hue));
 }
 
 :root[data-theme="rainbow!"] {
-  animation: rainbow-theme 0.2s ease-in-out infinite;
+  animation: rainbow-theme 0.3s ease-in-out infinite;
 
   --rainbow-hue: 0;
 
