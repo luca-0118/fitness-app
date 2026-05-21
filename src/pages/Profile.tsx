@@ -33,12 +33,6 @@ export default function Profile() {
                 </h2>
                 <WeightLineChart />
             </div>
-            {/*<div className="bg-components border border-bordercolor rounded-xl p-6 col-span-2 items-center">
-            <h2 className="border-b-2 border-bordercolor text-center mb-4 font-bold text-lg text-textcolor">
-              Weekly calorie intake
-            </h2>
-            <WeeklyCaloriesChart />
-          </div>*/}
         </div>
     </div>
   );
