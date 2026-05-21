@@ -40,6 +40,9 @@ function calculateGoals(tdee: number) {
 
 export default function Profile() {
   const [kcal, setKcal] = useState("");
+  const [carbs, setCarbs] = useState("");
+  const [protein, setProtein] = useState("");
+  const [fats, setFats] = useState("");
   const [isCompleted] = useState(false);
   const [sex, setSex] = useState<Sex>("male");
   const [age, setAge] = useState<number | undefined>(undefined);
@@ -171,12 +174,12 @@ export default function Profile() {
                         disabled={isCompleted}
                         className="w-full bg-components border border-bordercolor rounded-lg px-3 py-2 text-textcolor focus:outline-none focus:border-accent disabled:opacity-50 disabled:cursor-not-allowed"
                       />
-                      <label className="text-textcolor text-base">Carb (g):</label>
+                      <label className="text-textcolor text-base">Carbs (g):</label>
                       <input
                         type="text"
                         inputMode="decimal"
-                        value={targetWeight}
-                        onChange={(e) => { const v = e.target.value; if (/^\d*\.?\d*$/.test(v)) setTargetWeight(v); }}
+                        value={carbs}
+                        onChange={(e) => { const v = e.target.value; if (/^\d*\.?\d*$/.test(v)) setCarbs(v); }}
                         disabled={isCompleted}
                         className="w-full bg-components border border-bordercolor rounded-lg px-3 py-2 text-textcolor focus:outline-none focus:border-accent disabled:opacity-50 disabled:cursor-not-allowed"
                       />
@@ -184,8 +187,8 @@ export default function Profile() {
                       <input
                         type="text"
                         inputMode="decimal"
-                        value={targetWeight}
-                        onChange={(e) => { const v = e.target.value; if (/^\d*\.?\d*$/.test(v)) setTargetWeight(v); }}
+                        value={protein}
+                        onChange={(e) => { const v = e.target.value; if (/^\d*\.?\d*$/.test(v)) setProtein(v); }}
                         disabled={isCompleted}
                         className="w-full bg-components border border-bordercolor rounded-lg px-3 py-2 text-textcolor focus:outline-none focus:border-accent disabled:opacity-50 disabled:cursor-not-allowed"
                       />
@@ -193,14 +196,14 @@ export default function Profile() {
                       <input
                         type="text"
                         inputMode="decimal"
-                        value={targetWeight}
-                        onChange={(e) => { const v = e.target.value; if (/^\d*\.?\d*$/.test(v)) setTargetWeight(v); }}
+                        value={fats}
+                        onChange={(e) => { const v = e.target.value; if (/^\d*\.?\d*$/.test(v)) setFats(v); }}
                         disabled={isCompleted}
                         className="w-full bg-components border border-bordercolor rounded-lg px-3 py-2 text-textcolor focus:outline-none focus:border-accent disabled:opacity-50 disabled:cursor-not-allowed"
                       />
                       <div className="flex justify-end">
                         {!isSaved ? (
-                        <button onClick={() => { localStorage.setItem('profileTarget', JSON.stringify({ kcal, weight: targetWeight })); setIsSaved(true); }} className="inline-flex items-center gap-2 bg-accent px-3 py-1 rounded-md text-white">
+                        <button onClick={() => { localStorage.setItem('profileTarget', JSON.stringify({ kcal, carbs, fats, protein })); setIsSaved(true); }} className="inline-flex items-center gap-2 bg-accent px-3 py-1 rounded-md text-white">
                           <SaveIcon sx={{ fontSize: 16 }} /> Save
                         </button>
                         ) : (

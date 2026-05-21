@@ -66,7 +66,21 @@ export const NutritionDonutChart: React.FC = () => {
         Math.round(macros.protein),
         Math.round(macros.fats)
     ];
-    const max = [2000, 60, 60, 60];
+
+    let valuesArray: number[] = [];
+
+    const retrievedData = localStorage.getItem("profileTarget");
+
+    if (retrievedData) {
+        const parsedData = JSON.parse(retrievedData);
+        valuesArray = Object.values(parsedData).map(Number);
+    } else {
+        console.log("No data found in localStorage for 'profileTarget'.");
+    }
+
+
+    const max = valuesArray;
+
     const labels = ['Calories', 'Carbs', 'Proteins', 'Fats'];
     const colors = [themeColors.accentColor, themeColors.redColor, themeColors.blueColor, themeColors.greenColor];
     const units = ['kcal', 'g', 'g', 'g'];
@@ -75,7 +89,7 @@ export const NutritionDonutChart: React.FC = () => {
         Math.min((value / max[i]) * 100, 100)
     );
 
-    const clampedCalories = Math.min(Rawseries[0], max[0]); // Clamp to max (2000 in this case)
+    const clampedCalories = Math.min(Rawseries[0], max[0]); // Clamp to max
 
     const barColor = Rawseries[0] > max[0] ? themeColors.warningColor : themeColors.accentColor;
 
@@ -203,6 +217,7 @@ export const NutritionDonutChart: React.FC = () => {
                                 ...bar,
                                 xaxis: {
                                     categories: ['Calories'],
+                                    min: 0,
                                     max: max[0], // Fixed max
                                     labels: { show: false },
                                     axisBorder: { show: false },
