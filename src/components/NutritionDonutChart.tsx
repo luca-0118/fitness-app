@@ -132,6 +132,9 @@ export const NutritionDonutChart: React.FC = () => {
                 },
             },
         },
+        tooltip: {
+            enabled: false,
+        },
         states: {
             hover: {
                 filter: { type: 'none' },
@@ -205,7 +208,6 @@ export const NutritionDonutChart: React.FC = () => {
                                     axisBorder: { show: false },
                                     axisTicks: { show: false },
                                 },
-                                // ... rest of your options
                             }}
                             series={[
                                 {
