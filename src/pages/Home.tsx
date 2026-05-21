@@ -24,14 +24,14 @@ export default function Home() {
           </div>
 
           <button
-            onClick={() => navigate("/history")}
+            onClick={() => navigate("/food-list")}
             className="bg-accent hover:bg-accent-action active:bg-accent-action rounded-full p-6 font-bold cursor-pointer col-span-1 text-textcolor"
           >
-            Scan product
+            Add product
           </button>
 
           <button
-              onClick={() => navigate("/history")}
+              onClick={() => navigate("/workouts")}
               className="bg-accent hover:bg-accent-action active:bg-accent-action rounded-full p-6 font-bold cursor-pointer col-span-1 text-textcolor"
           >
             Start workout
