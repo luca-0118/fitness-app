@@ -75,7 +75,10 @@ const WeeklyCaloriesChart: React.FC<WeeklyCaloriesChartProps> = ({
                 filter: {
                     type: "none"
                 }
-            }
+            },
+            hover: {
+                    filter: { type: 'none' },
+            },
         },
         plotOptions: {
             bar: {
