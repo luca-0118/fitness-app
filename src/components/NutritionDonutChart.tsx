@@ -69,7 +69,7 @@ export const NutritionDonutChart: React.FC = () => {
 
     let valuesArray: number[] = [];
 
-    const retrievedData = localStorage.getItem("profileTarget");
+    const retrievedData = localStorage.getItem("nutrientGoals");
 
     if (retrievedData) {
         const parsedData = JSON.parse(retrievedData);
@@ -246,7 +246,7 @@ export const NutritionDonutChart: React.FC = () => {
                     {legendData.slice(1).map((item, idx) => (
                         <div
                             key={idx}
-                            className="relative rounded-2xl overflow-hidden h-35"
+                            className="relative rounded-2xl h-35"
                         >
                             <div
                                 style={{
