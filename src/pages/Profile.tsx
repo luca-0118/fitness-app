@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import ThemeButton from "../components/ThemeButton.tsx";
 import SaveIcon from "@mui/icons-material/Save";
 import WeightLineChart from "../components/WeightLineChart.tsx";
+import KcalBerekenen from "../components/KcalBerekenen.tsx";
 
 export default function Profile() {
   const [kcal, setKcal] = useState("");
@@ -51,7 +52,9 @@ export default function Profile() {
     no-scrollbar
   "
     >
+    
       <div className="py-4 w-[90%] mx-auto flex flex-col gap-4">
+        <KcalBerekenen />
         <div className="bg-components border-bordercolor border rounded-xl w-[90%] mx-auto text-textcolor px-4 py-2">
           <h2 className="border-b border-bordercolor font-bold w-full text-start mb-3">Target</h2>
           <div className="py-2 flex flex-col gap-3">
