@@ -4,12 +4,16 @@ import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import { invoke } from "@tauri-apps/api/core";
 import Calender from "./Calendar";
+import {useLocation, useNavigate} from "react-router-dom";
 
 interface DatabaseFoodItem {
     id: number;
     name: string;
     amount: number;
     calories: number;
+    carbs: number;
+    protein: number;
+    fats: number;
     barcode: string;
     date: string;
     mealtime: MealCategoryKey;
@@ -35,34 +39,61 @@ const createEmptyMealMap = () => {
     ) as Record<MealCategoryKey, DatabaseFoodItem[]>;
 };
 
-function totalCalories(items: DatabaseFoodItem[]) {
-    return items.reduce((total, item) => total + item.calories, 0);
+function totalNutrients(items: DatabaseFoodItem[], nutrient: string | null) {
+    return items.reduce((total, item) => {
+        switch (nutrient) {
+            case "Carbs":
+                return total + item.carbs;
+            case "Proteins":
+                return total + item.protein;
+            case "Fats":
+                return total + item.fats;
+            default:
+                return total + item.calories;
+        }
+    }, 0);
 }
 
-function FoodComp({ item }: { item: DatabaseFoodItem }) {
+function FoodComp({ item, selectedNutrient }: { item: DatabaseFoodItem; selectedNutrient: string | null }) {
     return (
-        <div className="w-full rounded-xl pl-4 flex items-stretch justify-between bg-background overflow-hidden">
-            <div className="flex items-center justify-between flex-1 pr-4 py-3">
-                <div className="text-textcolor font-medium flex items-center">
+        <div
+            className={`w-full rounded-xl pl-4 pr-4 py-3 flex justify-between bg-background overflow-hidden`}
+        >
+            <div className="flex items-center justify-between">
+                <div className="text-textcolor font-medium flex text-left">
                     {item.name}
                 </div>
                 <div className="flex items-center gap-4">
                     <div className="text-sm text-muted text-right">
                         {item.amount}g
                     </div>
+
                     <div className="text-sm text-muted text-right">
-                        {Math.round(item.calories)} kcal
+                        {selectedNutrient === "Carbs"
+                            ? `${Math.round(item.carbs)}g`
+                            : selectedNutrient === "Proteins"
+                                ? `${Math.round(item.protein)}g`
+                                : selectedNutrient === "Fats"
+                                    ? `${Math.round(item.fats)}g`
+                                    : `${Math.round(item.calories)}kcal`} {selectedNutrient === "Carbs"
+                        ? `Carbs`
+                        : selectedNutrient === "Proteins"
+                            ? `Protein`
+                            : selectedNutrient === "Fats"
+                                ? `Fats`
+                                : `kcal`}
                     </div>
                 </div>
             </div>
-            {/* <button className="flex items-center px-2 bg-accent hover:bg-accent-action text-textcolor">
-                <ArrowForwardIcon sx={{ fontSize: 18 }} />
-            </button> */}
         </div>
     );
 }
 
 export default function EatenTodayList() {
+    const location = useLocation();
+    const navigate = useNavigate();
+    const selectedNutrient = location.state?.selectedNutrient || null;
+
     const [open, setOpen] = useState<Record<MealCategoryKey, boolean>>(
         Object.fromEntries(
             Categories.map((cat) => [cat.key, false])
@@ -79,13 +110,12 @@ export default function EatenTodayList() {
     const fetchFoodByDate = async () => {
         try {
             setLoading(true);
-            const result = await invoke<DatabaseFoodItem[]>("get_food_by_date", {date: date.toISOString().split("T")[0],});
+            const result = await invoke<DatabaseFoodItem[]>("get_food_by_date", {
+                date: date.toISOString().split("T")[0],
+            });
             setMealCategories(groupByMealTime(result));
-            console.log("Fetched food items:", result);
-
         } catch (err) {
             console.error("Error fetching food data:", err);
-
         } finally {
             setLoading(false);
         }
@@ -97,6 +127,7 @@ export default function EatenTodayList() {
             newDate.setDate(newDate.getDate() - 1);
             return newDate;
         });
+        navigate("/kcal-tracker"); // Reset when changing day
     };
 
     const handleNextDay = () => {
@@ -105,20 +136,18 @@ export default function EatenTodayList() {
             newDate.setDate(newDate.getDate() + 1);
             return newDate;
         });
+        navigate("/kcal-tracker"); // Reset when changing day
     };
 
     const groupByMealTime = (items: DatabaseFoodItem[]): MealCategory[] => {
         const map = createEmptyMealMap();
-
         for (const item of items) {
             if (item.mealtime in map) {
                 map[item.mealtime].push(item);
             } else {
-                console.error("DB caegory error:", item.mealtime);
-                console.log(map)
+                console.error("DB category error:", item.mealtime);
             }
         }
-
         return Categories.map((cat) => ({
             key: cat.key,
             catName: cat.catName,
@@ -144,12 +173,8 @@ export default function EatenTodayList() {
                 </button>
                 <div className="flex-1 relative flex items-center justify-center">
                     <div className="text-center">
-                        <h2 className="font-bold text-lg text-textcolor">
-                            Eaten on day
-                        </h2>
-                        <div className="text-sm text-muted">
-                            {date.toDateString()}
-                        </div>
+                        <h2 className="font-bold text-lg text-textcolor">Eaten on day</h2>
+                        <div className="text-sm text-muted">{date.toDateString()}</div>
                     </div>
                     <div className="absolute right-10 text-textcolor">
                         <Calender onDateChange={setDate} />
@@ -170,7 +195,7 @@ export default function EatenTodayList() {
                 ) : (
                     mealCategories.map((cat) => {
                         const isOpen = open[cat.key];
-                        const totalKcal = totalCalories(cat.items);
+                        const totalValue = totalNutrients(cat.items, selectedNutrient);
                         return (
                             <div key={cat.key} className="rounded-2xl overflow-hidden border border-accent">
                                 <button
@@ -179,18 +204,18 @@ export default function EatenTodayList() {
                                 >
                                     <div>
                                         <div className="text-textcolor font-semibold">{cat.catName}</div>
-                                        <div className="text-sm text-muted">{cat.items.length} items | total {Math.round(totalKcal)} kcal</div>
+                                        <div className="text-sm text-muted">
+                                            total {Math.round(totalValue)}
+                                            {selectedNutrient === "Calories" || !selectedNutrient ? "kcal" : "g"}
+                                            {selectedNutrient === "Calories" || !selectedNutrient ? " calories" : ` ${selectedNutrient.toLowerCase()}`} | {cat.items.length} items
+                                        </div>
                                     </div>
                                     <div className="text-textcolor text-2xl">{isOpen ? "−" : <ArrowDropDownIcon />}</div>
                                 </button>
-                                <div
-                                    className={`${
-                                        isOpen ? "block" : "hidden"
-                                    } bg-components-hover flex flex-col gap-1 px-3 py-2`}
-                                >
-                                {cat.items.map((item) => (
-                                    <FoodComp key={item.id} item={item}/>
-                                ))}
+                                <div className={`${isOpen ? "block" : "hidden"} bg-components-hover flex flex-col gap-1 px-3 py-2`}>
+                                    {cat.items.map((item) => (
+                                        <FoodComp key={item.id} item={item} selectedNutrient={selectedNutrient} />
+                                    ))}
                                 </div>
                             </div>
                         );
