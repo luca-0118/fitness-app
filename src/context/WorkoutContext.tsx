@@ -45,7 +45,7 @@ export function WorkoutProvider({ children }: { children: ReactNode }) {
   };
 
   const removeExercise = (workout: Iworkout) => {
-    setExercises(exercises.filter((ex) => ex !== workout));
+    setExercises(exercises.filter((ex) => ex.id !== workout.id));
   };
 
   const setExerciseList = (workouts: Iworkout[]) => {
@@ -58,9 +58,9 @@ export function WorkoutProvider({ children }: { children: ReactNode }) {
   };
 
   const selectedIds = useMemo(
-  () => new Set(exercises.map(e => e.id)),
-  [exercises]
-);
+    () => new Set(exercises.map(e => e.id)),
+    [exercises]
+  );
 
   return (
     <WorkoutContext.Provider

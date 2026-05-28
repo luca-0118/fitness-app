@@ -72,6 +72,8 @@ fn migrate(conn: &mut Connection, state: AppState) {
             tx.execute("DROP TABLE IF EXISTS WorkoutExercises", [])
                 .unwrap();
             tx.execute("DROP TABLE IF EXISTS Workouts", []).unwrap();
+
+            tx.execute("DROP TABLE IF EXISTS food", []).unwrap();
         }
         AppState::Stable => {}
     }
@@ -159,7 +161,13 @@ fn migrate(conn: &mut Connection, state: AppState) {
         ID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
         barcode TEXT not null, 
         date TEXT not null, 
-        amount INTEGER not null
+        name TEXT not null, 
+        amount INTEGER not null,
+        calories INTEGER not null,
+        carbs INTEGER not null,
+        fats INTEGER not null,
+        protein INTEGER not null,
+        mealtime TEXT not null
     )",
         [],
     )

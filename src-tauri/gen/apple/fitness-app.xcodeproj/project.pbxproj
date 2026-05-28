@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		19B4AA2A7BEE42E97F4CFB78 /* main.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6B0EEFA86D5A66774E186473 /* main.mm */; };
 		3EC7315D63CE6D60C64A4674 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 69B875FB29A907C4C20DC402 /* CoreGraphics.framework */; };
+		4CAB93CD734612567F9132A5 /* libapp.a in Resources */ = {isa = PBXBuildFile; fileRef = 9EE2F0977F8297938A8537A6 /* libapp.a */; };
 		598874D2E633DC765F3029AE /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9CA9DDFAA93B36BAF04DEDD6 /* Assets.xcassets */; };
 		71C171D4B2DF44AF70759520 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 052B142D607D8AF3E8BBACA3 /* LaunchScreen.storyboard */; };
 		743DADAC15E76A6171557742 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9207E6B1FFA0C3127A47CBE6 /* QuartzCore.framework */; };
@@ -22,39 +23,54 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		00886796FDE7D37DAF30F587 /* mod.rs */ = {isa = PBXFileReference; lastKnownFileType = text; path = mod.rs; sourceTree = "<group>"; };
+		027764F925C33271C4E6B63F /* mod.rs */ = {isa = PBXFileReference; lastKnownFileType = text; path = mod.rs; sourceTree = "<group>"; };
 		052B142D607D8AF3E8BBACA3 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 		066D260B1FF57117B0CFA5E7 /* Metal.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Metal.framework; path = System/Library/Frameworks/Metal.framework; sourceTree = SDKROOT; };
-		0DB7BF93CCADF2157AEEA0CA /* session.rs */ = {isa = PBXFileReference; lastKnownFileType = text; path = session.rs; sourceTree = "<group>"; };
+		09B9BB7823CF5159F9275A85 /* mod.rs */ = {isa = PBXFileReference; lastKnownFileType = text; path = mod.rs; sourceTree = "<group>"; };
+		0C02440CB57B5E46636677F1 /* exercise_repository.rs */ = {isa = PBXFileReference; lastKnownFileType = text; path = exercise_repository.rs; sourceTree = "<group>"; };
 		0F19A5177D7FDD44C5716109 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
-		14EC9F102816AC9D06EB629C /* database.rs */ = {isa = PBXFileReference; lastKnownFileType = text; path = database.rs; sourceTree = "<group>"; };
-		19A74B4655008044DD896FA7 /* session.rs */ = {isa = PBXFileReference; lastKnownFileType = text; path = session.rs; sourceTree = "<group>"; };
+		194448AAC71C0AF459FB5559 /* dto.rs */ = {isa = PBXFileReference; lastKnownFileType = text; path = dto.rs; sourceTree = "<group>"; };
 		238DED287FEFCC9AE928A3CC /* fitness-app_iOS.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "fitness-app_iOS.entitlements"; sourceTree = "<group>"; };
+		244A1472ADA8DC4EF2E927FA /* get_food_by_date.rs */ = {isa = PBXFileReference; lastKnownFileType = text; path = get_food_by_date.rs; sourceTree = "<group>"; };
 		3224E9AF9E57CB1EDA049D5F /* workoutbase.db */ = {isa = PBXFileReference; lastKnownFileType = file; path = workoutbase.db; sourceTree = "<group>"; };
+		37BE18EE9BBBA7043A7D91A7 /* mod.rs */ = {isa = PBXFileReference; lastKnownFileType = text; path = mod.rs; sourceTree = "<group>"; };
 		39749E79E5010512C0D6AF47 /* fitness-app.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "fitness-app.app"; sourceTree = BUILT_PRODUCTS_DIR; };
-		3ADBAB95E6AB1DFA1A9C7D68 /* workout.rs */ = {isa = PBXFileReference; lastKnownFileType = text; path = workout.rs; sourceTree = "<group>"; };
+		40CCFAA609D1A703BB6976A8 /* workout_repository.rs */ = {isa = PBXFileReference; lastKnownFileType = text; path = workout_repository.rs; sourceTree = "<group>"; };
+		49175B95F9E01266765F760A /* builder.rs */ = {isa = PBXFileReference; lastKnownFileType = text; path = builder.rs; sourceTree = "<group>"; };
 		4D65A061E1C3CBA7D3DA5E9C /* libapp.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libapp.a; sourceTree = "<group>"; };
-		4E3EE93AF0D58771995CCF8C /* session.rs */ = {isa = PBXFileReference; lastKnownFileType = text; path = session.rs; sourceTree = "<group>"; };
-		4F87332DC1DC2CE28944275C /* workout.rs */ = {isa = PBXFileReference; lastKnownFileType = text; path = workout.rs; sourceTree = "<group>"; };
-		509D5B2E11ED5404D3EE1F91 /* get_exercises_by_muscle.rs */ = {isa = PBXFileReference; lastKnownFileType = text; path = get_exercises_by_muscle.rs; sourceTree = "<group>"; };
-		626E2605CA5D0704FFCB959D /* workout.rs */ = {isa = PBXFileReference; lastKnownFileType = text; path = workout.rs; sourceTree = "<group>"; };
+		516F00F1E3769D27AB83073E /* workout.rs */ = {isa = PBXFileReference; lastKnownFileType = text; path = workout.rs; sourceTree = "<group>"; };
 		69B875FB29A907C4C20DC402 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		6B0EEFA86D5A66774E186473 /* main.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = main.mm; sourceTree = "<group>"; };
-		75F6FEF053F3A8CBA651C855 /* get_exercise_by_id.rs */ = {isa = PBXFileReference; lastKnownFileType = text; path = get_exercise_by_id.rs; sourceTree = "<group>"; };
-		8662B723F969D2FB60BC35E5 /* get_all_exercises.rs */ = {isa = PBXFileReference; lastKnownFileType = text; path = get_all_exercises.rs; sourceTree = "<group>"; };
-		877AD8F4572CAEF7E07587E0 /* mod.rs */ = {isa = PBXFileReference; lastKnownFileType = text; path = mod.rs; sourceTree = "<group>"; };
-		8F113424E6217E721F7664A6 /* mod.rs */ = {isa = PBXFileReference; lastKnownFileType = text; path = mod.rs; sourceTree = "<group>"; };
+		74A9B68F807FB0A6E5593D7E /* workout_service.rs */ = {isa = PBXFileReference; lastKnownFileType = text; path = workout_service.rs; sourceTree = "<group>"; };
+		7823A661E38A69782B6564D7 /* add_food.rs */ = {isa = PBXFileReference; lastKnownFileType = text; path = add_food.rs; sourceTree = "<group>"; };
+		82D077008CB460C73F1D311D /* mod.rs */ = {isa = PBXFileReference; lastKnownFileType = text; path = mod.rs; sourceTree = "<group>"; };
+		8C873565F1BA1108BCC0BD80 /* get_product_by_barcode.rs */ = {isa = PBXFileReference; lastKnownFileType = text; path = get_product_by_barcode.rs; sourceTree = "<group>"; };
+		8D4158ADB58A957923B00804 /* database.rs */ = {isa = PBXFileReference; lastKnownFileType = text; path = database.rs; sourceTree = "<group>"; };
+		9060D0FFB47DD8E69FFF8046 /* ports.rs */ = {isa = PBXFileReference; lastKnownFileType = text; path = ports.rs; sourceTree = "<group>"; };
+		9170984100075B18ADD4E4C7 /* get_exercises_by_id.rs */ = {isa = PBXFileReference; lastKnownFileType = text; path = get_exercises_by_id.rs; sourceTree = "<group>"; };
 		9207E6B1FFA0C3127A47CBE6 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		96AA3C2E09C7AAEB4B0A1E82 /* MetalKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MetalKit.framework; path = System/Library/Frameworks/MetalKit.framework; sourceTree = SDKROOT; };
 		97E861F454651AD7C2B9BFE4 /* assets */ = {isa = PBXFileReference; lastKnownFileType = folder; path = assets; sourceTree = SOURCE_ROOT; };
+		9A0BFCBDB06EE437189A089A /* mod.rs */ = {isa = PBXFileReference; lastKnownFileType = text; path = mod.rs; sourceTree = "<group>"; };
+		9B91E2A52EC03A4A36BC33B3 /* tauri_commands.rs */ = {isa = PBXFileReference; lastKnownFileType = text; path = tauri_commands.rs; sourceTree = "<group>"; };
 		9CA9DDFAA93B36BAF04DEDD6 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		9D712DB8F623AFCC3E001B6F /* session_service.rs */ = {isa = PBXFileReference; lastKnownFileType = text; path = session_service.rs; sourceTree = "<group>"; };
+		9E0C5D842FA84197E6CE905A /* mod.rs */ = {isa = PBXFileReference; lastKnownFileType = text; path = mod.rs; sourceTree = "<group>"; };
+		9EE2F0977F8297938A8537A6 /* libapp.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libapp.a; sourceTree = "<group>"; };
+		A17079D8FCDC9DC5CB9A2E49 /* mod.rs */ = {isa = PBXFileReference; lastKnownFileType = text; path = mod.rs; sourceTree = "<group>"; };
 		A1B227A745A688C7506C093F /* bindings.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = bindings.h; sourceTree = "<group>"; };
-		A4561F6A59960AD25A6B4F1F /* mod.rs */ = {isa = PBXFileReference; lastKnownFileType = text; path = mod.rs; sourceTree = "<group>"; };
+		A51F3C13329E8EEFCC421340 /* exercise.rs */ = {isa = PBXFileReference; lastKnownFileType = text; path = exercise.rs; sourceTree = "<group>"; };
 		B37FCF96B93E1AC8DD854BF1 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
-		B45715CF403166BDC6E13A47 /* mod.rs */ = {isa = PBXFileReference; lastKnownFileType = text; path = mod.rs; sourceTree = "<group>"; };
+		BDB6E96CB32EEEEB7B788A8C /* session.rs */ = {isa = PBXFileReference; lastKnownFileType = text; path = session.rs; sourceTree = "<group>"; };
 		C0FEA81134B00CD0C32EA50F /* lib.rs */ = {isa = PBXFileReference; lastKnownFileType = text; path = lib.rs; sourceTree = "<group>"; };
-		CB367526E04DE749D703FF12 /* exercise.rs */ = {isa = PBXFileReference; lastKnownFileType = text; path = exercise.rs; sourceTree = "<group>"; };
+		C4943AE0FCC3A94F51A4965A /* completedworkout.rs */ = {isa = PBXFileReference; lastKnownFileType = text; path = completedworkout.rs; sourceTree = "<group>"; };
+		C5E3B7151926B899561520C8 /* get_products_by_search.rs */ = {isa = PBXFileReference; lastKnownFileType = text; path = get_products_by_search.rs; sourceTree = "<group>"; };
 		CD6B867B230EF08F36AEE5F7 /* api.rs */ = {isa = PBXFileReference; lastKnownFileType = text; path = api.rs; sourceTree = "<group>"; };
-		E5F801BFB7BBE76114314637 /* session.rs */ = {isa = PBXFileReference; lastKnownFileType = text; path = session.rs; sourceTree = "<group>"; };
+		D5328E40299A712BAE9F638E /* workout_history_repository.rs */ = {isa = PBXFileReference; lastKnownFileType = text; path = workout_history_repository.rs; sourceTree = "<group>"; };
+		D547F1D69359AE5D0375BF87 /* session.rs */ = {isa = PBXFileReference; lastKnownFileType = text; path = session.rs; sourceTree = "<group>"; };
+		D9ECAC3D3260B76A92865362 /* completed_exercise_repository.rs */ = {isa = PBXFileReference; lastKnownFileType = text; path = completed_exercise_repository.rs; sourceTree = "<group>"; };
+		F31DA23614B1CB895FA5378A /* workout_exercise_repository.rs */ = {isa = PBXFileReference; lastKnownFileType = text; path = workout_exercise_repository.rs; sourceTree = "<group>"; };
 		F7338C8E16C75908013EBE0B /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
 		F8279499324D2ADBEAF796D4 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		F87FE4B9076FC8E192DD9FD0 /* main.rs */ = {isa = PBXFileReference; lastKnownFileType = text; path = main.rs; sourceTree = "<group>"; };
@@ -79,17 +95,30 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		04DF6BA8BB4FD1571E4C4C43 /* interface */ = {
+			isa = PBXGroup;
+			children = (
+				194448AAC71C0AF459FB5559 /* dto.rs */,
+				027764F925C33271C4E6B63F /* mod.rs */,
+				9B91E2A52EC03A4A36BC33B3 /* tauri_commands.rs */,
+			);
+			path = interface;
+			sourceTree = "<group>";
+		};
 		0A91E6469C71923A2CB5A72A /* src */ = {
 			isa = PBXGroup;
 			children = (
 				CD6B867B230EF08F36AEE5F7 /* api.rs */,
 				C0FEA81134B00CD0C32EA50F /* lib.rs */,
 				F87FE4B9076FC8E192DD9FD0 /* main.rs */,
-				DBBC943EE4C8F5C9AEB6FB89 /* endpoints */,
-				7F60670E3D8EC4E66C02CAC8 /* logic */,
-				2995629FAAE9F629FDE0DE8E /* models */,
+				986F76D5C28FA3E51A104EAA /* application */,
+				80103184EF6D996F442703E0 /* domain */,
+				4B2195801F19D2952719C43A /* infrastructures */,
+				04DF6BA8BB4FD1571E4C4C43 /* interface */,
+				FAEDDAE2198D05B0FCF2EB72 /* lars */,
+				9B5692DBDEDF4DF77313F7C9 /* repository */,
 				6D24560BEAAD146E0F2F45F5 /* resources */,
-				F28B98F41FD185605FC87197 /* services */,
+				C0FAA086694D62B203D6A9BB /* structs */,
 			);
 			name = src;
 			path = ../../src;
@@ -102,17 +131,6 @@
 				2AB5C67076EEEFBF3774D47E /* bindings */,
 			);
 			path = "fitness-app";
-			sourceTree = "<group>";
-		};
-		2995629FAAE9F629FDE0DE8E /* models */ = {
-			isa = PBXGroup;
-			children = (
-				CB367526E04DE749D703FF12 /* exercise.rs */,
-				8F113424E6217E721F7664A6 /* mod.rs */,
-				0DB7BF93CCADF2157AEEA0CA /* session.rs */,
-				626E2605CA5D0704FFCB959D /* workout.rs */,
-			);
-			path = models;
 			sourceTree = "<group>";
 		};
 		2AB5C67076EEEFBF3774D47E /* bindings */ = {
@@ -131,6 +149,15 @@
 			path = Sources;
 			sourceTree = "<group>";
 		};
+		4B2195801F19D2952719C43A /* infrastructures */ = {
+			isa = PBXGroup;
+			children = (
+				9A0BFCBDB06EE437189A089A /* mod.rs */,
+				7B2A1347D6B32F95B53013FD /* sqlite */,
+			);
+			path = infrastructures;
+			sourceTree = "<group>";
+		};
 		6D24560BEAAD146E0F2F45F5 /* resources */ = {
 			isa = PBXGroup;
 			children = (
@@ -142,18 +169,40 @@
 		74790C6C15C41C013E2D24D2 /* Externals */ = {
 			isa = PBXGroup;
 			children = (
+				8E4513285F3A35759D845D05 /* arm64 */,
 			);
 			path = Externals;
 			sourceTree = "<group>";
 		};
-		7F60670E3D8EC4E66C02CAC8 /* logic */ = {
+		7B2A1347D6B32F95B53013FD /* sqlite */ = {
 			isa = PBXGroup;
 			children = (
-				A4561F6A59960AD25A6B4F1F /* mod.rs */,
-				19A74B4655008044DD896FA7 /* session.rs */,
-				4F87332DC1DC2CE28944275C /* workout.rs */,
+				49175B95F9E01266765F760A /* builder.rs */,
+				8D4158ADB58A957923B00804 /* database.rs */,
+				9E0C5D842FA84197E6CE905A /* mod.rs */,
 			);
-			path = logic;
+			path = sqlite;
+			sourceTree = "<group>";
+		};
+		80103184EF6D996F442703E0 /* domain */ = {
+			isa = PBXGroup;
+			children = (
+				C4943AE0FCC3A94F51A4965A /* completedworkout.rs */,
+				A51F3C13329E8EEFCC421340 /* exercise.rs */,
+				82D077008CB460C73F1D311D /* mod.rs */,
+				9060D0FFB47DD8E69FFF8046 /* ports.rs */,
+				BDB6E96CB32EEEEB7B788A8C /* session.rs */,
+				516F00F1E3769D27AB83073E /* workout.rs */,
+			);
+			path = domain;
+			sourceTree = "<group>";
+		};
+		8E4513285F3A35759D845D05 /* arm64 */ = {
+			isa = PBXGroup;
+			children = (
+				DB8CB468BAB7629CFC3AD142 /* release */,
+			);
+			path = arm64;
 			sourceTree = "<group>";
 		};
 		971CE941FCBE7F0A7C724A9F /* Products */ = {
@@ -162,6 +211,29 @@
 				39749E79E5010512C0D6AF47 /* fitness-app.app */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		986F76D5C28FA3E51A104EAA /* application */ = {
+			isa = PBXGroup;
+			children = (
+				00886796FDE7D37DAF30F587 /* mod.rs */,
+				9D712DB8F623AFCC3E001B6F /* session_service.rs */,
+				74A9B68F807FB0A6E5593D7E /* workout_service.rs */,
+			);
+			path = application;
+			sourceTree = "<group>";
+		};
+		9B5692DBDEDF4DF77313F7C9 /* repository */ = {
+			isa = PBXGroup;
+			children = (
+				D9ECAC3D3260B76A92865362 /* completed_exercise_repository.rs */,
+				0C02440CB57B5E46636677F1 /* exercise_repository.rs */,
+				37BE18EE9BBBA7043A7D91A7 /* mod.rs */,
+				F31DA23614B1CB895FA5378A /* workout_exercise_repository.rs */,
+				D5328E40299A712BAE9F638E /* workout_history_repository.rs */,
+				40CCFAA609D1A703BB6976A8 /* workout_repository.rs */,
+			);
+			path = repository;
 			sourceTree = "<group>";
 		};
 		B1F5D059FFD7B3B7915AFBD7 = {
@@ -203,27 +275,34 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		DBBC943EE4C8F5C9AEB6FB89 /* endpoints */ = {
+		C0FAA086694D62B203D6A9BB /* structs */ = {
 			isa = PBXGroup;
 			children = (
-				8662B723F969D2FB60BC35E5 /* get_all_exercises.rs */,
-				75F6FEF053F3A8CBA651C855 /* get_exercise_by_id.rs */,
-				509D5B2E11ED5404D3EE1F91 /* get_exercises_by_muscle.rs */,
-				877AD8F4572CAEF7E07587E0 /* mod.rs */,
-				4E3EE93AF0D58771995CCF8C /* session.rs */,
-				3ADBAB95E6AB1DFA1A9C7D68 /* workout.rs */,
+				A17079D8FCDC9DC5CB9A2E49 /* mod.rs */,
+				D547F1D69359AE5D0375BF87 /* session.rs */,
 			);
-			path = endpoints;
+			path = structs;
 			sourceTree = "<group>";
 		};
-		F28B98F41FD185605FC87197 /* services */ = {
+		DB8CB468BAB7629CFC3AD142 /* release */ = {
 			isa = PBXGroup;
 			children = (
-				14EC9F102816AC9D06EB629C /* database.rs */,
-				B45715CF403166BDC6E13A47 /* mod.rs */,
-				E5F801BFB7BBE76114314637 /* session.rs */,
+				9EE2F0977F8297938A8537A6 /* libapp.a */,
 			);
-			path = services;
+			path = release;
+			sourceTree = "<group>";
+		};
+		FAEDDAE2198D05B0FCF2EB72 /* lars */ = {
+			isa = PBXGroup;
+			children = (
+				7823A661E38A69782B6564D7 /* add_food.rs */,
+				9170984100075B18ADD4E4C7 /* get_exercises_by_id.rs */,
+				244A1472ADA8DC4EF2E927FA /* get_food_by_date.rs */,
+				8C873565F1BA1108BCC0BD80 /* get_product_by_barcode.rs */,
+				C5E3B7151926B899561520C8 /* get_products_by_search.rs */,
+				09B9BB7823CF5159F9275A85 /* mod.rs */,
+			);
+			path = lars;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -285,6 +364,7 @@
 				598874D2E633DC765F3029AE /* Assets.xcassets in Resources */,
 				71C171D4B2DF44AF70759520 /* LaunchScreen.storyboard in Resources */,
 				FF46787BB6FEFCF9592C776E /* assets in Resources */,
+				4CAB93CD734612567F9132A5 /* libapp.a in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -2,14 +2,29 @@ import React from 'react';
 import Chart from 'react-apexcharts';
 import { ApexOptions } from 'apexcharts';
 import { useEffect, useState } from 'react';
+import {invoke} from "@tauri-apps/api/core";
 
 const getCSSVariable = (name: string) =>
     getComputedStyle(document.documentElement)
         .getPropertyValue(name)
         .trim();
 
+interface macronutrients {
+    calories: number;
+    carbs: number;
+    protein: number;
+    fats: number;
+}
+
 
 export const NutritionDonutChart: React.FC = () => {
+    const [macros, setMacros] = useState<macronutrients>({
+        calories: 0,
+        carbs: 0,
+        protein: 0,
+        fats: 0,
+    });
+
     const [themeColors, setThemeColors] = useState({
         borderColor: '',
         textColor: '',
@@ -17,6 +32,7 @@ export const NutritionDonutChart: React.FC = () => {
         greenColor: '',
         redColor: '',
         blueColor: '',
+        warningColor: '',
     });
 
     useEffect(() => {
@@ -28,6 +44,7 @@ export const NutritionDonutChart: React.FC = () => {
                 greenColor: getCSSVariable('--color-button-start'),
                 redColor: getCSSVariable('--color-button-stop'),
                 blueColor: getCSSVariable('--color-chart'),
+                warningColor: getCSSVariable('--color-warning'),
             });
         };
 
@@ -43,8 +60,27 @@ export const NutritionDonutChart: React.FC = () => {
         return () => observer.disconnect();
     }, []);
 
-    const Rawseries = [1200, 45, 30, 25];
-    const max = [2000, 60, 60, 60];
+    const Rawseries = [
+        Math.round(macros.calories),
+        Math.round(macros.carbs),
+        Math.round(macros.protein),
+        Math.round(macros.fats)
+    ];
+
+    let valuesArray: number[] = [];
+
+    const retrievedData = localStorage.getItem("nutrientGoals");
+
+    if (retrievedData) {
+        const parsedData = JSON.parse(retrievedData);
+        valuesArray = Object.values(parsedData).map(Number);
+    } else {
+        console.log("No data found in localStorage for 'profileTarget'.");
+    }
+
+
+    const max = valuesArray;
+
     const labels = ['Calories', 'Carbs', 'Proteins', 'Fats'];
     const colors = [themeColors.accentColor, themeColors.redColor, themeColors.blueColor, themeColors.greenColor];
     const units = ['kcal', 'g', 'g', 'g'];
@@ -52,6 +88,10 @@ export const NutritionDonutChart: React.FC = () => {
     const series = Rawseries.map((value, i) =>
         Math.min((value / max[i]) * 100, 100)
     );
+
+    const clampedCalories = Math.min(Rawseries[0], max[0]); // Clamp to max
+
+    const barColor = Rawseries[0] > max[0] ? themeColors.warningColor : themeColors.accentColor;
 
     const options: ApexOptions = {
         chart: {
@@ -61,7 +101,7 @@ export const NutritionDonutChart: React.FC = () => {
         colors,
         plotOptions: {
             radialBar: {
-                hollow: { size: '35%' },
+                hollow: { size: '55%' },
                 track: {
                     background: themeColors.borderColor,
                     margin: 6,
@@ -83,29 +123,116 @@ export const NutritionDonutChart: React.FC = () => {
         },
     }
 
+    const bar: ApexOptions = {
+        chart: {
+            type: 'bar',
+            toolbar: {
+                show: false,
+            },
+            sparkline: {
+                enabled: true,
+            },
+        },
+        colors: [barColor],
+        plotOptions: {
+            bar: {
+                horizontal: true,
+                borderRadiusApplication: 'around',
+                borderRadius: 10,
+                barHeight: '100%',
+                colors: {
+                    backgroundBarColors: [themeColors.borderColor],
+                    backgroundBarRadius: 10,
+                },
+            },
+        },
+        tooltip: {
+            enabled: false,
+        },
+        states: {
+            hover: {
+                filter: { type: 'none' },
+            },
+            active: {
+                filter: { type: 'none' },
+            },
+        },
+    };
+
     const legendData = labels.map((label, i) => ({
         label,
         value: Rawseries[i],
         color: colors[i],
         unit: units[i],
         max: max[i],
+        series: series[i],
     }));
+
+    useEffect(() => {
+        fetchMacros()
+    }, []);
+
+    const fetchMacros = async () => {
+        try {
+            const result = await invoke<macronutrients[]>("get_food_by_date", {
+                date: new Date(),
+            });
+            console.log(result);
+
+            const totals = result.reduce(
+                (acc, item) => ({
+                    calories: acc.calories + item.calories,
+                    carbs: acc.carbs + item.carbs,
+                    protein: acc.protein + item.protein,
+                    fats: acc.fats + item.fats,
+                }),
+                {
+                    calories: 0,
+                    carbs: 0,
+                    protein: 0,
+                    fats: 0,
+                }
+            );
+
+            setMacros(totals);
+
+            console.log("Totals:", totals);
+
+        } catch (err) {
+            console.error("Error fetching macros:", err);
+        }
+    };
+
 
     return (
         <div style={{ width: '100%', textAlign: 'center', color: 'white'}}>
-            <Chart
-                options={options}
-                series={series}
-                type="radialBar"
-                height={300}
-            />
-
             <div style={{ marginTop: 16 }}>
                 <div style={{ textAlign: 'left', marginBottom: 16 }}>
                     <span style={{ color: colors[0], fontSize: 24, fontWeight: 700, display: 'block'}}>{labels[0]}</span>
                     <div className="text-[28px] text-textcolor">
                         {Rawseries[0]}
                         <span className="text-lg text-muted">/{max[0]}{units[0]}</span>
+                        <Chart
+                            options={{
+                                ...bar,
+                                xaxis: {
+                                    categories: ['Calories'],
+                                    min: 0,
+                                    max: max[0], // Fixed max
+                                    labels: { show: false },
+                                    axisBorder: { show: false },
+                                    axisTicks: { show: false },
+                                },
+                            }}
+                            series={[
+                                {
+                                    data: [clampedCalories], // Use clamped value for the bar
+                                },
+                            ]}
+                            type="bar"
+                            height={18}
+                            width={'100%'}
+                        />
                     </div>
                 </div>
 
@@ -113,14 +240,58 @@ export const NutritionDonutChart: React.FC = () => {
                     style={{
                         display: 'grid',
                         gridTemplateColumns: 'repeat(3, minmax(0, 1fr))',
-                        gap: 20,
-                    }}>
+                        gap: 7,
+                    }}
+                >
                     {legendData.slice(1).map((item, idx) => (
-                        <div>
-                            <div key={idx} style={{ display: 'block', justifyContent: 'center', width: '100%', borderColor: item.color}} className="border-2 rounded-xl p-3">
-                                <span style={{color: item.color, display: 'block'}}>{item.label}</span>
-                                <span className="text-textcolor">{item.value}</span>
-                                <span className="text-[10px] text-muted">/{item.max}{item.unit}</span>
+                        <div
+                            key={idx}
+                            className="relative rounded-2xl h-35"
+                        >
+                            <div
+                                style={{
+                                    position: 'absolute',
+                                    inset: 0,
+                                    opacity: 100,
+                                    pointerEvents: 'none',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                }}
+                            >
+                                <Chart
+                                    options={{
+                                        ...options,
+                                        colors: [item.color],
+                                        chart: {
+                                            ...options.chart,
+                                        },
+                                    }}
+                                    series={[item.series]}
+                                    type="radialBar"
+                                    height={140}
+                                    width={140}
+                                />
+                            </div>
+
+                            <div className="relative z-10 h-full flex flex-col items-center justify-center text-center">
+                            <span
+                                style={{
+                                    color: item.color,
+                                    display: 'block',
+                                }}
+                                >
+                                    {item.label}
+                                </span>
+                                <div>
+                                    <span className="text-textcolor text-xl font-bold">
+                                        {item.value}
+                                    </span>
+                                    <span className="text-[13px] text-muted">
+                                        /{item.max}
+                                        {item.unit}
+                                    </span>
+                                </div>
                             </div>
                         </div>
                     ))}
