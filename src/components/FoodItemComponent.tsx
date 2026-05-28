@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { invoke } from "@tauri-apps/api/core";
+import NutrimentSquare from "./ui/NutrimentSquare";
 
 interface Nutriments {
   "energy-kcal_100g"?: number;
@@ -107,78 +108,29 @@ function Overlay({name,nutriments,brand,barcode, disableOverlay, updateAmount, u
   return     <div className="z-10 bg-gray-600 fixed top-0 right-0 left-0 bottom-0 w-full h-full pt-40 mt-10 " onClick={() => onClick()}> {/** this onclick adds the fooditem to recents. */}
       <div className="fixed inset-0 top-15 bottom-15 bg-background z-20 overflow-y-auto px-5 py-5 no-scrollbar">
         <h2 className="text-textcolor text-center text-2xl font-bold mb-3">{name}</h2>
-        <div className="w-full max-w-md mx-auto bg-components border border-bordercolor rounded-xl p-5">
+        
+        <section className="w-full max-w-md mx-auto bg-components border border-bordercolor rounded-xl p-5">
           <h1 className="text-textcolor text-xl font-bold mb-4">Product Details per 100g</h1>
-
           <div className="grid grid-cols-3 gap-3 ">
-
-            <div className="border-2 rounded-xl p-5  flex flex-col items-center justify-center border-accent col-span-3">
-              <div className="font-semibold block text-accent">
-                Calories
-              </div>
-              <div className="text-textcolor inline-flex items-baseline">
-                {nutriments.calories.toFixed()}
-              </div>
-            </div>
-            <div className="border-2 rounded-xl p-5  flex flex-col items-center justify-center border-[#DC143C]">
-              <div className="font-semibold block text-[#DC143C]">
-                Carbs
-              </div>
-              <div className="text-textcolor inline-flex items-baseline">
-                {nutriments.carbs.toFixed(1)}g
-              </div>
-            </div>
-            <div className="border-2 rounded-xl p-5  flex flex-col items-center justify-center border-[#4DA3FF]">
-              <div className="font-semibold block text-[#4DA3FF]">
-                Proteins
-              </div>
-              <div className="text-textcolor inline-flex items-baseline">
-                {nutriments.protein.toFixed(1)}g
-              </div>
-            </div>
-            <div className="border-2 rounded-xl p-5  flex flex-col items-center justify-center border-[#32CD32]">
-              <div className="font-semibold block text-[#32CD32]">
-                Fats
-              </div>
-              <div className="text-textcolor inline-flex items-baseline">
-                {nutriments.fat.toFixed(1)}g
-              </div>
-            </div>
-            <div className="border-2 rounded-xl p-5  flex flex-col items-center justify-center border-[#FFD700]">
-              <div className="font-semibold block text-[#FFD700]">
-                Sugar
-              </div>
-              <div className="text-textcolor inline-flex items-baseline">
-                {nutriments.sugar.toFixed(1)}g
-              </div>
-            </div>
-            <div className="border-2 rounded-xl p-5  flex flex-col items-center justify-center border-[#9153cc]">
-              <div className="font-semibold block text-[#9153cc]">
-                Fiber
-              </div>
-              <div className="text-textcolor inline-flex items-baseline">
-                {nutriments.fiber.toFixed(1)}g
-              </div>
-            </div>
-            <div className="border-2 rounded-xl p-5  flex flex-col items-center justify-center border-[#FF4500]">
-              <div className="font-semibold block text-[#FF4500]">
-                Sodium
-              </div>
-              <div className="text-textcolor inline-flex items-baseline">
-                {nutriments.sodium.toFixed(1)}g
-              </div>
-            </div>
+            <NutrimentSquare name="Calories" value={nutriments.calories.toFixed()} color="accent" size={3}/>
+            <NutrimentSquare name="Carbs" value={nutriments.carbs.toFixed(1)} color="#DC143C" />
+            <NutrimentSquare name="Proteins" value={nutriments.protein.toFixed(1)} color="#4DA3FF" />
+            <NutrimentSquare name="Fats" value={nutriments.fat.toFixed(1)} color="#32CD32" />
+            <NutrimentSquare name="Sugar" value={nutriments.sugar.toFixed(1)} color="#FFD700" />
+            <NutrimentSquare name="Fiber" value={nutriments.fiber.toFixed(1)} color="#9153cc" />
+            <NutrimentSquare name="Sodium" value={nutriments.sodium.toFixed(1)} color="#FF4500" />
           </div>
-        </div>
+        </section>
 
-        <div className="w-full max-w-md mx-auto mt-5 bg-components border border-bordercolor rounded-xl p-5">
+        <section className="w-full max-w-md mx-auto mt-5 bg-components border border-bordercolor rounded-xl p-5">
           <h2 className="text-textcolor text-lg font-bold mb-3">Additional info</h2>
           <p className="text-textcolor text-sm">
             brand: {brand} <br />
             barcode: {barcode}
           </p>
-        </div>
-        <div>
+        </section>
+        
+        <section>
           <div className="w-full max-w-md mx-auto mt-5 bg-components border border-bordercolor rounded-xl p-5">
             <h2 className="text-textcolor text-lg font-bold mb-3">
               Daily progression (g)
@@ -208,7 +160,7 @@ function Overlay({name,nutriments,brand,barcode, disableOverlay, updateAmount, u
               </button>
             </div>
           </div>
-        </div>
+        </section>
       </div>
     </div>
 }
