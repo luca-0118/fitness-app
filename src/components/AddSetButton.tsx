@@ -7,6 +7,7 @@ interface PlusknopProps {
     className?: string;
     iconSize?: number;
     disabled?: boolean;
+    
 }
 
 export default function Plusknop ({ to = "/add-exercises", onClick, className, iconSize = 49, disabled = false }: PlusknopProps) {
