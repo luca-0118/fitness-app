@@ -4,6 +4,7 @@ import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import { invoke } from "@tauri-apps/api/core";
 import Calender from "./Calendar";
+import { useNavigate } from "react-router-dom";
 
 interface DatabaseFoodItem {
     id: number;
@@ -40,6 +41,10 @@ function totalCalories(items: DatabaseFoodItem[]) {
 }
 
 function FoodComp({ item }: { item: DatabaseFoodItem }) {
+    const navigate = useNavigate();
+    const handleFoodItemClick = () => {
+        navigate("/kcal-tracker/" + item.id);
+    }
     return (
         <div className="w-full rounded-xl pl-4 flex items-stretch justify-between bg-background overflow-hidden">
             <div className="flex items-center justify-between flex-1 pr-4 py-3">
@@ -55,9 +60,9 @@ function FoodComp({ item }: { item: DatabaseFoodItem }) {
                     </div>
                 </div>
             </div>
-            {/* <button className="flex items-center px-2 bg-accent hover:bg-accent-action text-textcolor">
+            <button onClick={handleFoodItemClick} className="flex items-center px-2 bg-accent hover:bg-accent-action text-textcolor">
                 <ArrowForwardIcon sx={{ fontSize: 18 }} />
-            </button> */}
+            </button>
         </div>
     );
 }
@@ -79,7 +84,7 @@ export default function EatenTodayList() {
     const fetchFoodByDate = async () => {
         try {
             setLoading(true);
-            const result = await invoke<DatabaseFoodItem[]>("get_food_by_date", {date: date.toISOString().split("T")[0],});
+            const result = await invoke<DatabaseFoodItem[]>("get_food_by_date", { date: date.toISOString().split("T")[0], });
             setMealCategories(groupByMealTime(result));
             console.log("Fetched food items:", result);
 
@@ -184,13 +189,12 @@ export default function EatenTodayList() {
                                     <div className="text-textcolor text-2xl">{isOpen ? "−" : <ArrowDropDownIcon />}</div>
                                 </button>
                                 <div
-                                    className={`${
-                                        isOpen ? "block" : "hidden"
-                                    } bg-components-hover flex flex-col gap-1 px-3 py-2`}
+                                    className={`${isOpen ? "block" : "hidden"
+                                        } bg-components-hover flex flex-col gap-1 px-3 py-2`}
                                 >
-                                {cat.items.map((item) => (
-                                    <FoodComp key={item.id} item={item}/>
-                                ))}
+                                    {cat.items.map((item) => (
+                                        <FoodComp key={item.id} item={item} />
+                                    ))}
                                 </div>
                             </div>
                         );

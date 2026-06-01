@@ -1,0 +1,62 @@
+interface foodInput {
+    id: number;
+     barcode: string;
+     date: string;
+     name: string;
+     amount: number;
+     calories: number;
+     carbs: number;
+     fats: number;
+     protein: number;
+     mealtime: string;
+}
+
+export default class Food
+{
+    public id: number;
+    public barcode: string;
+    public date: string;
+    public name: string;
+    public amount: number;
+    public calories: number;
+    public carbs: number;
+    public fats: number;
+    public protein: number;
+    public mealtime: string;
+
+    constructor(input: foodInput) {
+        this.id = input.id;
+        this.barcode = input.barcode;
+        this.date = input.date;
+        this.name = input.name;
+        this.amount = input.amount;
+        this.calories = input.calories;
+        this.carbs = input.carbs;
+        this.fats = input.carbs;
+        this.protein = input.protein;
+        this.mealtime = input.mealtime;
+    }
+
+    static async getSingle(_foodID: number, isMock = false): Promise<Food>
+    {
+        if (isMock) {
+            return new Food({
+                "id": 1,
+                "barcode": "8718907369350",
+                "date": "2026-06-01T19:09:14.306Z",
+                "amount": 100,
+                "calories": 187,
+                "carbs": 21,
+                "fats": 6.800000000000001,
+                "protein": 9.8,
+                "name": "MockFood",
+                "mealtime": "ochtend"
+            })
+        }
+        throw new Error("non-mock not implemented");
+
+        //TODO construct backend function
+    }
+
+    
+}
