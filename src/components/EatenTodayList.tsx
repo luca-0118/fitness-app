@@ -28,7 +28,29 @@ function totalCalories(items: DatabaseFoodItem[]) {
     return items.reduce((total, item) => total + item.calories, 0);
 }
 
-function FoodComp({ item }: { item: DatabaseFoodItem }) {
+
+
+
+
+
+export default function EatenTodayList() {
+
+async function removeItem(id:number){
+    try{
+    await invoke("delete_food_by_id", {id})
+        fetchFoodByDate()
+}
+    
+
+    catch(e){
+        console.log(e)
+    }
+
+
+}
+
+
+    function FoodComp({ item }: { item: DatabaseFoodItem }) {
 
     return (
     <div className="w-full rounded-xl pl-4 flex items-stretch justify-between bg-background overflow-hidden">
@@ -44,19 +66,19 @@ function FoodComp({ item }: { item: DatabaseFoodItem }) {
 
                 <div className="text-sm text-gray-300 text-right">
                     {item.calories} kcal
+                    {item.id}
                 </div>
             </div>
         </div>
         <button
             className="flex items-center px-2 bg-accent hover:bg-accent-action text-textcolor"
         >
-            <ArrowForwardIcon sx={{ fontSize: 18 }} />
+            <button onClick={()=>removeItem(item.id)}>delete</button>
         </button>
     </div>
     );
 }
 
-export default function EatenTodayList() {
     const [open, setOpen] = useState<Record<MealCategoryKey, boolean>>(
         MEAL_CATEGORY_KEYS.reduce((acc, key) => ({ ...acc, [key]: false }), {} as Record<MealCategoryKey, boolean>)
     );
@@ -84,6 +106,11 @@ export default function EatenTodayList() {
             setLoading(false);
         }
     };
+
+
+
+    
+
 
     const handlePreviousDay = () => {
         setDate((currentDate) => {

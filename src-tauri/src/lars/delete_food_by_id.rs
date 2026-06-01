@@ -1,9 +1,12 @@
+use serde_json::Number;
+
 use crate::{Ctx};
 
 #[tauri::command]
-pub fn delete_food_by_id(ctx: tauri::State<Ctx>) -> Result<String, String>{
+pub fn delete_food_by_id(ctx: tauri::State<Ctx>, id:i64) -> Result<String, String>{
+    println!("deleting");
     let conn = ctx.db.conn.lock().map_err(|e| e.to_string())?;
-    let query = "delete from Food Where id = 1";
-    conn.execute(query, []).unwrap();
+    conn.execute("delete from Food Where id = ?", (id,)).map_err(|e|e.to_string())?;
+
     Ok("removed".to_string())
 }

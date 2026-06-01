@@ -24,7 +24,6 @@ export default function KcalTracker() {
             </div>
               <div className="col-span-2 w-90 mx-auto">
                   <AddFoodButton to="/food-list" />
-                  <button>test</button>
               </div>
           </div>
       </>
