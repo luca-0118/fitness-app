@@ -72,6 +72,8 @@ fn migrate(conn: &mut Connection, state: AppState) {
             tx.execute("DROP TABLE IF EXISTS WorkoutExercises", [])
                 .unwrap();
             tx.execute("DROP TABLE IF EXISTS Workouts", []).unwrap();
+
+            tx.execute("DROP TABLE IF EXISTS food", []).unwrap();
         }
         AppState::Stable => {}
     }

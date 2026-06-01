@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { useWorkout } from "../context/WorkoutContext";
+import { Iworkout, useWorkout } from "../context/WorkoutContext";
 import SearchBar from "../components/SearchBar";
 import bicep from "../assets/biceps.jpg";
 import tricep from "../assets/triceps.jpg";
@@ -15,8 +15,7 @@ import quads from "../assets/quads.png.jpg";
 import shoulders from "../assets/shoulders.png";
 import cardio from "../assets/cardio.png";
 import Filter from "../components/Filter";
-import SelectedExerciseModal from "../components/SelectedExercisesModal.tsx";
-import ExerciseDescriptionOverlay from "../components/ExerciseDescriptionOverlay";
+import ExerciseAndOverlayItem from "../components/listItems/ExerciseAndOverlayItem.tsx";
 import UseExerciseList, { muscleGroups } from "../Hooks/UseExerciseList.ts";
 import useExerciseSelectReducer, { ExercisesActionKind } from "../Hooks/reducers/exerciseSelectReducer.ts";
 
@@ -33,19 +32,18 @@ const muscleFilters: { gif: string; name: muscleGroups }[] = [
   { gif: hamstrings, name: "hamstrings" },
   { gif: glutes, name: "glutes" },
   { gif: calves, name: "calves" },
-  { gif: cardio, name: "cardiovascular system"}
+  { gif: cardio, name: "cardiovascular system" }
 ];
 
 export default function AddExercises() {
   const [searchText, setSearchText] = useState("");
-  const { addExercise } = useWorkout();
+  const { addExercise, selectedIds, removeExercise } = useWorkout();
   const listRef = useRef<HTMLDivElement>(null);
   const [isScrollTopVisible, setIsScrollTopVisible] = useState(false);
-  const {state,dispatch} = useExerciseSelectReducer();
 
-  const onSave = () => {
-    state.exercises.forEach(exercise => addExercise(exercise));
-  }
+  useEffect(() => {
+    console.log(selectedIds);
+  }, []);
 
   const scrollToTop = () => {
     if (listRef.current) {
@@ -67,77 +65,77 @@ export default function AddExercises() {
     }
   }, []);
 
-  const {exercises, muscleGroup,setMuscle,setQuery,LoadNextPage} = UseExerciseList()
+  // Gives us a list of exercises based on the setMuscle and the SetQuery, LoadNextPage does exactly taht.
+  const { exercises, muscleGroup, setMuscle, setQuery, LoadNextPage } = UseExerciseList()
 
   return (
-      <>
-        <div className="h-screen">
-          <div className="fixed top-16 left-0 right-0 z-30 bg-background overflow-hidden">
-            <div className="pl-4 pr-4"> 
-              <SearchBar
-                  value={searchText}
-                  onChange={(query) => {
-                    setSearchText(query);
-                    setQuery(query);
-                  }}
-                  onSearch={() => {}}
-                  placeholderText="exercise"
-              />
-            </div>
-            <div
-                className="overflow-x-scroll flex
+    <>
+      <div className="h-screen">
+        <div className="fixed top-16 left-0 right-0 z-30 bg-background overflow-hidden">
+          <div className="pl-4 pr-4">
+            <SearchBar
+              value={searchText}
+              onChange={(query) => {
+                setSearchText(query);
+                setQuery(query);
+              }}
+              onSearch={() => { }}
+              placeholderText="exercise"
+            />
+          </div>
+          <div
+            className="overflow-x-scroll flex
                   [&::-webkit-scrollbar-thumb]:bg-neutral-500
                   [&::-webkit-scrollbar]:bg-neutral-700"
-            >
-              {muscleFilters.map(({ gif, name }) => (
-                  <Filter
-                      key={name}
-                      gif={gif}
-                      isSelected={muscleGroup === name}
-                      onClick={() => {
-                        scrollToTop();
-                        setMuscle(name);
-                      }}
-                  />
-              ))}
-            </div>
-            <div className="fixed top-60 right-10 pointer-events-none z-49">
+          >
+            {muscleFilters.map(({ gif, name }) => (
+              <Filter
+                key={name}
+                gif={gif}
+                isSelected={muscleGroup === name}
+                onClick={() => {
+                  scrollToTop();
+                  setMuscle(name);
+                }}
+              />
+            ))}
+          </div>
+          <div className="fixed top-60 right-10 pointer-events-none z-49">
+            <button
+              onClick={scrollToTop}
+              className={`text-textcolor w-13 h-13 border border-bordercolor bg-components hover:bg-components-hover rounded-full transition-all duration-100 ease-in-out ${isScrollTopVisible ? "opacity-95 pointer-events-auto" : "opacity-0 pointer-events-none"}`}
+            >↑</button>
+          </div>
+          <div
+            ref={listRef}
+            className="overflow-y-auto overscroll-behavior-y-auto h-[calc(100vh-18rem)] p-4 flex flex-col gap-4"
+          >
+            {exercises.map(exercise =>
+              <ExerciseAndOverlayItem
+                key={exercise.exercise_id}
+                name={exercise.name}
+                gif={exercise.gif_url}
+                id={exercise.exercise_id}
+                selected={selectedIds.has(exercise.exercise_id)}
+                onSelect={() => addExercise({
+                  id: exercise.exercise_id,
+                  name: exercise.name,
+                  gif: exercise.gif_url
+                })}
+                onUnselect={() => removeExercise({
+                  id: exercise.exercise_id,
+                  name: exercise.name,
+                  gif: exercise.gif_url
+                })}
+              />)}
+            <div className="px-4">
               <button
-                  onClick={scrollToTop}
-                  className={`text-textcolor w-13 h-13 border border-bordercolor bg-components hover:bg-components-hover rounded-full transition-all duration-100 ease-in-out ${isScrollTopVisible ? "opacity-95 pointer-events-auto" : "opacity-0 pointer-events-none"}`}
-              >↑</button>
-            </div>
-            <div
-                ref={listRef}
-                className="overflow-y-auto overscroll-behavior-y-auto h-[calc(100vh-18rem)] p-8 flex flex-col gap-4"
-            >
-              {exercises.map(exercise =>
-                  <ExerciseDescriptionOverlay
-                      key={exercise.exercise_id}
-                      name={exercise.name}
-                      gif={exercise.gif_url}
-                      id={exercise.exercise_id}
-                      selected={false}
-                      onSelect={() => {
-                        dispatch({
-                          type: ExercisesActionKind.SELECT,
-                          payload: {
-                            id: exercise.exercise_id,
-                            gif: exercise.gif_url,
-                            name: exercise.name
-                          }
-                        })
-                      }}
-                  />)}
-              <div className="px-4">
-                <button
-                    className=" bg-accent hover:bg-accent-action active:bg-accent-action w-full rounded mb-25 text-textcolor"
-                    onClick={() => {LoadNextPage()}}>load more</button>
-              </div>
+                className=" bg-accent hover:bg-accent-action active:bg-accent-action w-full rounded mb-25 text-textcolor"
+                onClick={() => { LoadNextPage() }}>load more</button>
             </div>
           </div>
-          <SelectedExerciseModal dispatch={dispatch} state={state} saveFunc={onSave}/>
         </div>
-      </>
+      </div>
+    </>
   );
 }

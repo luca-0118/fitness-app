@@ -55,9 +55,9 @@ function FoodComp({ item }: { item: DatabaseFoodItem }) {
                     </div>
                 </div>
             </div>
-            <button className="flex items-center px-2 bg-accent hover:bg-accent-action text-textcolor">
+            {/* <button className="flex items-center px-2 bg-accent hover:bg-accent-action text-textcolor">
                 <ArrowForwardIcon sx={{ fontSize: 18 }} />
-            </button>
+            </button> */}
         </div>
     );
 }
