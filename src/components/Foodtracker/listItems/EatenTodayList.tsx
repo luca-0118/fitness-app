@@ -5,6 +5,7 @@ import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import { invoke } from "@tauri-apps/api/core";
 import Calender from "../misc/Calendar.tsx";
 import {useLocation, useNavigate} from "react-router-dom";
+import DeleteIcon from '@mui/icons-material/Delete';
 
 interface DatabaseFoodItem {
     id: number;
@@ -54,34 +55,22 @@ function totalNutrients(items: DatabaseFoodItem[], nutrient: string | null) {
     }, 0);
 }
 
-function FoodComp({ item, selectedNutrient }: { item: DatabaseFoodItem; selectedNutrient: string | null }) {
-
 export default function EatenTodayList() {
-    function FoodComp({ item }: { item: DatabaseFoodItem }) {
-
-
-
-
-    return (
-        <div
-            className={`w-full rounded-xl pl-4 pr-4 py-3 flex justify-between bg-background overflow-hidden`}
-        >
-            <div className="flex items-center justify-between">
-                <div className="text-textcolor font-medium flex text-left">
-                    {item.name}
-                </div>
-                <div className="flex items-center gap-4">
-                    <div className="text-sm text-muted text-right">
-                        {Math.round(item.amount)}g
-                    </div>
-                    <div className="text-sm text-muted text-right">
-                        {selectedNutrient === "Carbs"
-                            ? `${Math.round(item.carbs)}g`
-                            : selectedNutrient === "Proteins"
-                                ? `${Math.round(item.protein)}g`
-                                : selectedNutrient === "Fats"
-                                    ? `${Math.round(item.fats)}g`
-                                    : `${Math.round(item.calories)}kcal`} {selectedNutrient === "Carbs"
+    function FoodComp({ item, selectedNutrient }: { item: DatabaseFoodItem; selectedNutrient: string | null }) {
+        return (
+            <div className="w-full rounded-xl flex bg-background overflow-hidden">
+                <div className="flex items-center pl-3 py-3 w-[80%] overflow-hidden">
+                    <button className="text-textcolor font-medium text-left truncate max-w-[40%]" onClick={() => navigate("/product-details", { state: { id: item.id, amount: item.amount} })}>
+                        {item.name}
+                    </button>
+                    <div className="text-sm text-muted text-right ml-4 whitespace-nowrap">
+                        {Math.round(item.amount)}g | {selectedNutrient === "Carbs"
+                        ? `${Math.round(item.carbs)}g`
+                        : selectedNutrient === "Proteins"
+                            ? `${Math.round(item.protein)}g`
+                            : selectedNutrient === "Fats"
+                                ? `${Math.round(item.fats)}g`
+                                : `${Math.round(item.calories)}kcal`} {selectedNutrient === "Carbs"
                         ? `Carbs`
                         : selectedNutrient === "Proteins"
                             ? `Protein`
@@ -90,12 +79,15 @@ export default function EatenTodayList() {
                                 : `kcal`}
                     </div>
                 </div>
+                <div className="flex bg-warning h-full w-[20%] px-3 py-3 items-center justify-center">
+                    <button className="text-textcolor text-center" onClick={() => removeItem(item.id)}>
+                        <DeleteIcon />
+                    </button>
+                </div>
             </div>
-        </div>
-    );
-}
+        );
+    }
 
-export default function EatenTodayList() {
     const location = useLocation();
     const navigate = useNavigate();
     const selectedNutrient = location.state?.selectedNutrient || null;
@@ -224,7 +216,7 @@ export default function EatenTodayList() {
                                     <div>
                                         <div className="text-textcolor font-semibold">{cat.catName}</div>
                                         <div className="text-sm text-muted">
-                                            total {Math.round(totalValue)}
+                                            total: {Math.round(totalValue)}
                                             {selectedNutrient === "Calories" || !selectedNutrient ? "kcal" : "g"}
                                             {selectedNutrient === "Calories" || !selectedNutrient ? " calories" : ` ${selectedNutrient.toLowerCase()}`} | {cat.items.length} items
                                         </div>
