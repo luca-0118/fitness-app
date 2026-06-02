@@ -101,7 +101,8 @@ pub fn run() {
             lars::get_exercise_by_id,
             lars::add_food,
             lars::get_product_by_barcode,
-            lars::get_food_by_date
+            lars::get_food_by_date,
+            lars::delete_food_by_id
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

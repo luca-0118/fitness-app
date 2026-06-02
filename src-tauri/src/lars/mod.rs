@@ -12,3 +12,6 @@ pub use add_food::*;
 
 pub mod get_food_by_date;
 pub use get_food_by_date::*;
+
+pub mod delete_food_by_id;
+pub use delete_food_by_id::*;
