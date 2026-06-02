@@ -1,28 +1,28 @@
 import "./App.css";
 import { useEffect } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Header from "./components/Header";
-import BottomNavBar from "./components/BottomNavBar.tsx";
+import Header from "./components/General/ui/Header.tsx";
+import BottomNavBar from "./components/General/ui/BottomNavBar.tsx";
 import { WorkoutProvider } from "./context/WorkoutContext";
 
-import FoodList from "./pages/FoodList.tsx"
-import Home from "./pages/Home.tsx";
-import WorkoutOverview from "./pages/WorkoutOverview.tsx";
-import EditWorkout from "./pages/EditWorkout.tsx";
-import AddExercises from "./pages/AddExercises.tsx";
-import Session from "./pages/Session.tsx";
-import NewWorkout from "./pages/NewWorkout.tsx";
-import Profile from "./pages/Profile.tsx";
-import WorkoutHistory from "./pages/WorkoutHistory.tsx";
-import SessionHistory from "./pages/SessionHistory.tsx";
-import KcalTracker from "./pages/KcalTracker.tsx";
-import Exercises from "./pages/Exercises.tsx";
-import ExerciseDescription from "./pages/ExerciseDescription.tsx";
+import FoodList from "./pages/Foodtracker/FoodList.tsx"
+import Home from "./pages/General/Home.tsx";
+import WorkoutOverview from "./pages/Workout/WorkoutOverview.tsx";
+import EditWorkout from "./pages/Workout/EditWorkout.tsx";
+import AddExercises from "./pages/Workout/AddExercises.tsx";
+import Session from "./pages/Workout/Session.tsx";
+import NewWorkout from "./pages/Workout/NewWorkout.tsx";
+import Profile from "./pages/General/Profile.tsx";
+import WorkoutHistory from "./pages/Workout/WorkoutHistory.tsx";
+import SessionHistory from "./pages/Workout/SessionHistory.tsx";
+import KcalTracker from "./pages/Foodtracker/KcalTracker.tsx";
+import Exercises from "./pages/Workout/Exercises.tsx";
+import ExerciseDescription from "./pages/Workout/ExerciseDescription.tsx";
 import { Toaster } from "react-hot-toast";
-import FloatingWorkoutTimer from "./components/FloatingWorkoutTimer.tsx";
+import FloatingWorkoutTimer from "./components/Workout/timers/FloatingWorkoutTimer.tsx";
 import API from "./classes/api";
 import { SESSION_STORAGE_KEYS } from "./apis/sessionAPI";
-import ProductDetails from "./pages/ProductDetails.tsx";
+import ProductDetails from "./pages/Foodtracker/ProductDetails.tsx";
 
 function App() {
   useEffect(() => {
@@ -94,7 +94,7 @@ function App() {
               <Route path="/kcal-tracker" element={<KcalTracker />} />
               <Route path="/exercises" element={<Exercises />} />
               <Route path="/food-list" element={<FoodList />} />
-              <Route path="/exercise-description"element={<ExerciseDescription />}/>
+              <Route path="/exercise-description" element={<ExerciseDescription />}/>
               <Route path="/product-details" element={<ProductDetails />} />
             </Routes>
           </main>
