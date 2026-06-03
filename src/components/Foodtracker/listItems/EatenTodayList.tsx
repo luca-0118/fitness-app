@@ -1,11 +1,13 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import { invoke } from "@tauri-apps/api/core";
 import Calender from "../misc/Calendar.tsx";
 import {useLocation, useNavigate} from "react-router-dom";
-import DeleteIcon from '@mui/icons-material/Delete';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 interface DatabaseFoodItem {
     id: number;
@@ -58,31 +60,49 @@ function totalNutrients(items: DatabaseFoodItem[], nutrient: string | null) {
 export default function EatenTodayList() {
     function FoodComp({ item, selectedNutrient }: { item: DatabaseFoodItem; selectedNutrient: string | null }) {
         return (
-            <div className="w-full rounded-xl flex bg-background overflow-hidden">
-                <div className="flex items-center pl-3 py-3 w-[80%] overflow-hidden">
-                    <button className="text-textcolor font-medium text-left truncate max-w-[40%]" onClick={() => navigate("/product-details", { state: { id: item.id, amount: item.amount} })}>
-                        {item.name}
-                    </button>
-                    <div className="text-sm text-muted text-right ml-4 whitespace-nowrap">
-                        {Math.round(item.amount)}g | {selectedNutrient === "Carbs"
-                        ? `${Math.round(item.carbs)}g`
-                        : selectedNutrient === "Proteins"
-                            ? `${Math.round(item.protein)}g`
-                            : selectedNutrient === "Fats"
-                                ? `${Math.round(item.fats)}g`
-                                : `${Math.round(item.calories)}kcal`} {selectedNutrient === "Carbs"
-                        ? `Carbs`
-                        : selectedNutrient === "Proteins"
-                            ? `Protein`
-                            : selectedNutrient === "Fats"
-                                ? `Fats`
-                                : `kcal`}
+            <div className="w-full rounded-xl flex bg-background overflow-hidden justify-between">
+                <div className="flex items-center pl-3 w-full overflow-hidden justify-between">
+                    <div className="flex items-center overflow-hidden">
+                        <button
+                            className="text-textcolor font-medium text-left truncate max-w-[50%]"
+                            onClick={() => navigate("/product-details", {
+                                state: {
+                                    id: item.id,
+                                    name: item.name,
+                                    amount: item.amount,
+                                    calories: item.calories,
+                                    carbs: item.carbs,
+                                    protein: item.protein,
+                                    fats: item.fats,
+                                    barcode: item.barcode,
+                                    date: item.date,
+                                }
+                            })}
+                        >
+                            {item.name}
+                        </button>
+                        <div className="text-sm text-muted text-right ml-3 whitespace-nowrap">
+                            {Math.round(item.amount)}g | {selectedNutrient === "Carbs"
+                            ? `${Math.round(item.carbs)}g`
+                            : selectedNutrient === "Proteins"
+                                ? `${Math.round(item.protein)}g`
+                                : selectedNutrient === "Fats"
+                                    ? `${Math.round(item.fats)}g`
+                                    : `${Math.round(item.calories)}kcal`}
+                        </div>
                     </div>
-                </div>
-                <div className="flex bg-warning h-full w-[20%] px-3 py-3 items-center justify-center">
-                    <button className="text-textcolor text-center" onClick={() => removeItem(item.id)}>
-                        <DeleteIcon />
-                    </button>
+                    <div ref={dropdownRef} className="flex h-full px-3 py-3 items-center text-textcolor" onClick={() => setOpenDropdown((prev) => !prev)}>
+                        <MoreVertIcon />
+                        <div className={`absolute z-10 top-full right-1 mt-1 flex flex-col rounded-xl p-2 bg-components border border-bordercolor transform transition-all duration-100 ease-out origin-top-right 
+                            ${openDropdown ? "opacity-100 scale-100" : "opacity-0 scale-95 -translate-y-2 pointer-events-none"}`}>
+                            <button className="w-full hover:bg-components-hover flex items-center gap-2 px-3 py-2 rounded-xl" onClick={() => {setOpenDropdown(true); navigate("/product-detail");}}>
+                                <EditIcon className="w-5 h-5" /> Edit
+                            </button>
+                            <button className="text-textcolor" onClick={() => removeItem(item.id)}>
+                                <DeleteIcon />
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
         );
@@ -104,7 +124,7 @@ export default function EatenTodayList() {
 
 
 }
-
+    const [openDropdown, setOpenDropdown] = useState(false);
     const [open, setOpen] = useState<Record<MealCategoryKey, boolean>>(
         Object.fromEntries(
             Categories.map((cat) => [cat.key, false])
@@ -117,6 +137,23 @@ export default function EatenTodayList() {
     useEffect(() => {
         fetchFoodByDate();
     }, [date]);
+
+    const dropdownRef = useRef<HTMLDivElement | null>(null);
+
+    useEffect(() => {
+        function handleMenuClose(event: MouseEvent) {
+            if (
+                dropdownRef.current &&
+                !dropdownRef.current.contains(event.target as Node)
+            ) {
+                setOpenDropdown(true);
+                console.log(openDropdown)
+            }
+        }
+
+        document.addEventListener("pointerdown", handleMenuClose);
+        return () => document.removeEventListener("pointerdown", handleMenuClose);
+    }, []);
 
     const fetchFoodByDate = async () => {
         try {
