@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { Iworkout, useWorkout } from "../context/WorkoutContext";
+import { useWorkout } from "../context/WorkoutContext";
 import SearchBar from "../components/SearchBar";
 import bicep from "../assets/biceps.jpg";
 import tricep from "../assets/triceps.jpg";
@@ -17,7 +17,7 @@ import cardio from "../assets/cardio.png";
 import Filter from "../components/Filter";
 import ExerciseAndOverlayItem from "../components/listItems/ExerciseAndOverlayItem.tsx";
 import UseExerciseList, { muscleGroups } from "../Hooks/UseExerciseList.ts";
-import useExerciseSelectReducer, { ExercisesActionKind } from "../Hooks/reducers/exerciseSelectReducer.ts";
+
 
 const muscleFilters: { gif: string; name: muscleGroups }[] = [
   { gif: chest, name: "pectorals" },

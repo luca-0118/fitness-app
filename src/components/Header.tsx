@@ -18,6 +18,7 @@ const pageTitles: Record<string, string> = {
   "/food-page": "Food",
   "/food-page/food-list": "Food",
   "/food-page/custom-food": "Food",
+  "/food-page/custom-food/create-meal": "Food",
   "/product-details": "Product Details"
 };
 

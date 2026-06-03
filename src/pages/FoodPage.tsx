@@ -81,6 +81,7 @@ export default function FoodPage() {
     setRememberText(searchText);
     setProduct([]);
     setProductBarcode(null);
+    setSearching(true);
     void fetchSearchAPI(searchText, 1);
 
     if (searchText.length === 0) {
@@ -90,7 +91,7 @@ export default function FoodPage() {
 
   const getStatusMessage = () => {
     if (loading) return { text: "Searching..." };
-    if (!loading && error) return { text: error, css: "text-red-400  font-bold" };
+    if (!loading && error) return { text: error, css: "font-bold" };
     if (!loading && !error && product.length === 0 && !Searching && !productBarcode)
       return { text: "Search a product" };
     if (!loading && !error && product.length === 0 && Searching && !productBarcode)

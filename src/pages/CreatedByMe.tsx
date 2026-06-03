@@ -1,6 +1,6 @@
-import { useOutletContext } from "react-router-dom";
+import { useOutletContext, useNavigate, NavLink } from "react-router-dom";
 import FoodItemComponent from "../components/FoodItemComponent.tsx";
-import type { FoodPageContext, searchItem } from "./FoodPage";
+import type { FoodPageContext, searchItem } from "./FoodPage.tsx";
 
 const customFoods: searchItem[] = [
     {
@@ -50,9 +50,10 @@ const customFoods: searchItem[] = [
     },
 ];
 
-export default function CustomFood() {
+export default function CreatedByMe() {
     const { searchText } = useOutletContext<FoodPageContext>();
-
+    const navigate = useNavigate();
+    
     const filteredFood = customFoods.filter((item) =>
         item.product_name.toLowerCase().includes(searchText.toLowerCase())
     );
@@ -71,10 +72,13 @@ export default function CustomFood() {
             />
         ))
         ) : (
-        <div className="text-center text-textcolor/80 mt-10">
+        <div className="text-center text-textcolor mt-10">
             No custom foods match "{searchText}".
         </div>
         )}
+        <nav className="text-center text-textcolor mt-10">
+            <button onClick={() => navigate("/create-meal")}>AAAAAAAAAAAAAAAAAAAAAA</button>
+        </nav>
     </div>
     );
 }

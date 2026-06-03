@@ -7,7 +7,8 @@ import { WorkoutProvider } from "./context/WorkoutContext";
 
 import FoodPage from "./pages/FoodPage.tsx";
 import FoodList from "./pages/FoodList.tsx";
-import CustomFood from "./pages/CustomFood.tsx";
+import CreateMeal from "./pages/CreateMeal.tsx";
+import CreatedByMe from "./pages/CreatedByMe.tsx";
 import Home from "./pages/Home.tsx";
 import WorkoutOverview from "./pages/WorkoutOverview.tsx";
 import EditWorkout from "./pages/EditWorkout.tsx";
@@ -27,8 +28,11 @@ import { SESSION_STORAGE_KEYS } from "./apis/sessionAPI";
 import ProductDetails from "./pages/ProductDetails.tsx";
 
 function App() {
+  
   useEffect(() => {
-    let unlistenCloseRequested: (() => void) | undefined;
+    
+    let unlistenCloseRequested: (() => void
+  ) | undefined;
     let isClosing = false;
 
     const finishActiveWorkout = async () => {
@@ -97,8 +101,9 @@ function App() {
               <Route path="/exercises" element={<Exercises />} />
               <Route path="/food-page" element={<FoodPage />}>
                 <Route index element={<FoodList />} />
-                <Route path="custom-food" element={<CustomFood />} />
+                <Route path="custom-food" element={<CreatedByMe />} />
               </Route>
+              <Route path="/create-meal" element={<CreateMeal />} />
               <Route path="/exercise-description"element={<ExerciseDescription />}/>
               <Route path="/product-details" element={<ProductDetails />} />
             </Routes>
