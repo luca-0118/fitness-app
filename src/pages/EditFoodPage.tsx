@@ -62,6 +62,8 @@ export default function EditFoodPage() {
         if (resp) {
             toast.success("successfully updated product!");
             setTimeout(() => navigate(-1), 300);
+        } else {
+            toast.error("something went wrong while saving your changes.");
         }
     }
 
