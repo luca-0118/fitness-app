@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
@@ -56,6 +56,7 @@ function totalNutrients(items: DatabaseFoodItem[], nutrient: string | null) {
         }
     }, 0);
 }
+
 
 export default function EatenTodayList() {
     function FoodComp({ item, selectedNutrient }: { item: DatabaseFoodItem; selectedNutrient: string | null }) {
@@ -157,7 +158,7 @@ export default function EatenTodayList() {
     await invoke("delete_food_by_id", {id})
         fetchFoodByDate()
 }
-
+    
     catch(e){
         console.log(e)
     }
@@ -200,14 +201,33 @@ export default function EatenTodayList() {
     }, [openDropdownId]);
 
     const fetchFoodByDate = async () => {
+
         try {
             setLoading(true);
             const result = await invoke<DatabaseFoodItem[]>("get_food_by_date", {
                 date: date.toISOString().split("T")[0],
             });
             setMealCategories(groupByMealTime(result));
+            console.log("Fetched food items:", result);
+            const grouped = groupByMealTime(result);
+
+            setMealCategories(grouped);
+
+            setOpen((current) => {
+                const next = { ...current };
+
+                grouped.forEach((cat) => {
+                    if (cat.items.length === 0) {
+                        next[cat.key] = false;
+                    }
+                });
+
+                return next;
+            });
+
         } catch (err) {
             console.error("Error fetching food data:", err);
+
         } finally {
             setLoading(false);
         }
@@ -233,13 +253,16 @@ export default function EatenTodayList() {
 
     const groupByMealTime = (items: DatabaseFoodItem[]): MealCategory[] => {
         const map = createEmptyMealMap();
+
         for (const item of items) {
             if (item.mealtime in map) {
                 map[item.mealtime].push(item);
             } else {
-                console.error("DB category error:", item.mealtime);
+                console.error("DB caegory error:", item.mealtime);
+                console.log(map)
             }
         }
+
         return Categories.map((cat) => ({
             key: cat.key,
             catName: cat.catName,
