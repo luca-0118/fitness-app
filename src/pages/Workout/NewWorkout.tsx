@@ -36,7 +36,7 @@ export default function NewWorkout() {
                 name={exercise.name}
                 gif={exercise.gif}
                 index={1}
-                exerciseId={"test"}
+                exerciseId={exercise.id}
               />
             );
           })}
