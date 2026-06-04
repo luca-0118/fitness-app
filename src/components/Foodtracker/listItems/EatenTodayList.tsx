@@ -60,46 +60,88 @@ function totalNutrients(items: DatabaseFoodItem[], nutrient: string | null) {
 export default function EatenTodayList() {
     function FoodComp({ item, selectedNutrient }: { item: DatabaseFoodItem; selectedNutrient: string | null }) {
         return (
-            <div className="w-full rounded-xl flex bg-background overflow-hidden justify-between">
+            <div className="w-full rounded-xl flex bg-background justify-between relative">
                 <div className="flex items-center pl-3 w-full overflow-hidden justify-between">
-                    <div className="flex items-center overflow-hidden">
-                        <button
-                            className="text-textcolor font-medium text-left truncate max-w-[50%]"
-                            onClick={() => navigate("/product-details", {
-                                state: {
-                                    id: item.id,
-                                    name: item.name,
-                                    amount: item.amount,
-                                    calories: item.calories,
-                                    carbs: item.carbs,
-                                    protein: item.protein,
-                                    fats: item.fats,
-                                    barcode: item.barcode,
-                                    date: item.date,
-                                }
-                            })}
-                        >
-                            {item.name}
-                        </button>
-                        <div className="text-sm text-muted text-right ml-3 whitespace-nowrap">
-                            {Math.round(item.amount)}g | {selectedNutrient === "Carbs"
+                    <button
+                        className="text-textcolor font-medium text-left truncate flex-1 min-w-0"
+                        onClick={() => navigate("/product-details", {
+                            state: {
+                                id: item.id,
+                                name: item.name,
+                                amount: item.amount,
+                                calories: item.calories,
+                                carbs: item.carbs,
+                                protein: item.protein,
+                                fats: item.fats,
+                                barcode: item.barcode,
+                                date: item.date,
+                            }
+                        })}
+                    >
+                        {item.name}
+                    </button>
+                    <div className="flex flex-col items-end text-right text-sm text-muted mx-3 whitespace-nowrap">
+                        <span>{Math.round(item.amount)}g</span>
+                        <span>{selectedNutrient === "Carbs"
                             ? `${Math.round(item.carbs)}g`
                             : selectedNutrient === "Proteins"
                                 ? `${Math.round(item.protein)}g`
                                 : selectedNutrient === "Fats"
                                     ? `${Math.round(item.fats)}g`
-                                    : `${Math.round(item.calories)}kcal`}
-                        </div>
+                                    : `${Math.round(item.calories)}kcal`}</span>
                     </div>
-                    <div ref={dropdownRef} className="flex h-full px-3 py-3 items-center text-textcolor" onClick={() => setOpenDropdown((prev) => !prev)}>
-                        <MoreVertIcon />
-                        <div className={`absolute z-10 top-full right-1 mt-1 flex flex-col rounded-xl p-2 bg-components border border-bordercolor transform transition-all duration-100 ease-out origin-top-right 
-                            ${openDropdown ? "opacity-100 scale-100" : "opacity-0 scale-95 -translate-y-2 pointer-events-none"}`}>
-                            <button className="w-full hover:bg-components-hover flex items-center gap-2 px-3 py-2 rounded-xl" onClick={() => {setOpenDropdown(true); navigate("/product-detail");}}>
-                                <EditIcon className="w-5 h-5" /> Edit
+                    <div ref={(node) => { dropdownRefs.current[item.id] = node; }} className="flex h-full px-1 py-2 items-center text-textcolor">
+                        <button
+                            className="flex items-center justify-center p-2 rounded-lg hover:bg-components-hover"
+                            onClick={(e) => {
+                                e.stopPropagation();
+
+                                setOpenDropdownId(
+                                    openDropdownId === item.id ? null : item.id
+                                );
+                            }}
+                        >
+                            <MoreVertIcon />
+                        </button>
+
+                        <div
+                            className={`absolute z-10 top-full right-1 mt-1 flex flex-col rounded-xl p-2 bg-components border border-bordercolor origin-top-right
+                                ${openDropdownId === item.id ? "opacity-100 scale-100" : "opacity-0 scale-95 -translate-y-2 pointer-events-none"}`}
+                        >
+                            <button
+                                type="button"
+                                className="w-full hover:bg-components-hover flex items-center gap-2 px-3 py-2 rounded-xl"
+                                onClick={() => {
+                                    navigate("/product-details", {
+                                        state: {
+                                            id: item.id,
+                                            name: item.name,
+                                            amount: item.amount,
+                                            calories: item.calories,
+                                            carbs: item.carbs,
+                                            protein: item.protein,
+                                            fats: item.fats,
+                                            barcode: item.barcode,
+                                            date: item.date,
+                                        }
+                                    });
+                                    setOpenDropdownId(null);
+                                }}
+                            >
+                                <EditIcon fontSize="small" />
+                                Edit
                             </button>
-                            <button className="text-textcolor" onClick={() => removeItem(item.id)}>
-                                <DeleteIcon />
+
+                            <button
+                                type="button"
+                                className="w-full hover:bg-components-hover text-button-stop flex items-center gap-2 px-3 py-2 rounded-xl"
+                                onClick={() => {
+                                    removeItem(item.id);
+                                    setOpenDropdownId(null);
+                                }}
+                            >
+                                <DeleteIcon fontSize="small" />
+                                Delete
                             </button>
                         </div>
                     </div>
@@ -124,7 +166,7 @@ export default function EatenTodayList() {
 
 
 }
-    const [openDropdown, setOpenDropdown] = useState(false);
+    const [openDropdownId, setOpenDropdownId] = useState<number | null>(null);
     const [open, setOpen] = useState<Record<MealCategoryKey, boolean>>(
         Object.fromEntries(
             Categories.map((cat) => [cat.key, false])
@@ -138,22 +180,26 @@ export default function EatenTodayList() {
         fetchFoodByDate();
     }, [date]);
 
-    const dropdownRef = useRef<HTMLDivElement | null>(null);
+    const dropdownRefs = useRef<Record<number, HTMLDivElement | null>>({});
 
     useEffect(() => {
-        function handleMenuClose(event: MouseEvent) {
-            if (
-                dropdownRef.current &&
-                !dropdownRef.current.contains(event.target as Node)
-            ) {
-                setOpenDropdown(true);
-                console.log(openDropdown)
+        function handleClickOutside(event: MouseEvent) {
+            if (openDropdownId === null) {
+                return;
+            }
+
+            const activeDropdown = dropdownRefs.current[openDropdownId];
+            if (activeDropdown && !activeDropdown.contains(event.target as Node)) {
+                setOpenDropdownId(null);
             }
         }
 
-        document.addEventListener("pointerdown", handleMenuClose);
-        return () => document.removeEventListener("pointerdown", handleMenuClose);
-    }, []);
+        document.addEventListener("pointerdown", handleClickOutside);
+
+        return () => {
+            document.removeEventListener("pointerdown", handleClickOutside);
+        };
+    }, [openDropdownId]);
 
     const fetchFoodByDate = async () => {
         try {
@@ -245,10 +291,10 @@ export default function EatenTodayList() {
                         const isOpen = open[cat.key];
                         const totalValue = totalNutrients(cat.items, selectedNutrient);
                         return (
-                            <div key={cat.key} className="rounded-2xl overflow-hidden border border-accent">
+                            <div key={cat.key} className="rounded-2xl border border-accent">
                                 <button
                                     onClick={() => toggle(cat.key)}
-                                    className="w-full text-left px-4 py-3 flex items-center justify-between bg-background"
+                                    className="rounded-2xl w-full text-left px-4 py-3 flex items-center justify-between bg-background"
                                 >
                                     <div>
                                         <div className="text-textcolor font-semibold">{cat.catName}</div>
@@ -260,7 +306,7 @@ export default function EatenTodayList() {
                                     </div>
                                     <div className="text-textcolor text-2xl">{isOpen ? "−" : <ArrowDropDownIcon />}</div>
                                 </button>
-                                <div className={`${isOpen ? "block" : "hidden"} bg-components-hover flex flex-col gap-1 px-3 py-2`}>
+                                <div className={`${isOpen ? "block" : "hidden"} bg-components-hover flex flex-col gap-1 px-3 py-2 rounded-b-2xl`}>
                                     {cat.items.map((item) => (
                                         <FoodComp key={item.id} item={item} selectedNutrient={selectedNutrient} />
                                     ))}
