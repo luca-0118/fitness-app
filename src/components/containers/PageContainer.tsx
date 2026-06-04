@@ -4,5 +4,5 @@ interface PageContainerProps {
 }
 
 export default function PageContainer({ children }: PageContainerProps) {
-    return <div className="p-5 w-full h-full">{children} </div>
+    return <div className="p-5 pb-20 w-full h-full">{children} </div>
 }
