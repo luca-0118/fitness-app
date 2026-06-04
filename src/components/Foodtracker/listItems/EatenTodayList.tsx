@@ -93,9 +93,7 @@ export default function EatenTodayList() {
                     <div ref={(node) => { dropdownRefs.current[item.id] = node; }} className="flex h-full px-1 py-2 items-center text-textcolor">
                         <button
                             className="flex items-center justify-center p-2 rounded-lg hover:bg-components-hover"
-                            onClick={(e) => {
-                                e.stopPropagation();
-
+                            onClick={() => {
                                 setOpenDropdownId(
                                     openDropdownId === item.id ? null : item.id
                                 );
