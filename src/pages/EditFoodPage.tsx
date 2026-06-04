@@ -42,7 +42,7 @@ export default function EditFoodPage() {
     // Refers to a function which should implement calling the foodItem from the backend.
     useEffect(() => {
         const getFood = async () => {
-            const _food = await Food.getSingle(foodID, true);
+            const _food = await Food.getSingle(foodID, false);
             setFood(_food);
         }
         getFood();

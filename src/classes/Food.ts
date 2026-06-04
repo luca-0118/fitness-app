@@ -1,3 +1,5 @@
+import { invoke } from "@tauri-apps/api/core";
+
 interface foodInput {
     id: number;
      barcode: string;
@@ -53,6 +55,10 @@ export default class Food
                 "mealtime": "ochtend"
             })
         }
+
+        let food: Food = await invoke("get_single_food_entry",{req: String(_foodID)});
+        return food;
+
         throw new Error("non-mock not implemented");
 
         //TODO construct backend function
