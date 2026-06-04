@@ -1,6 +1,6 @@
 import { useState, useMemo } from "react";
 
-type Sex = "male" | "female";
+type gender = "male" | "female";
 type ActivityLevel = "sedentary" | "light" | "moderate" | "very" | "extreme";
 
 const activityMultipliers: Record<ActivityLevel, number> = {
@@ -12,7 +12,7 @@ const activityMultipliers: Record<ActivityLevel, number> = {
 };
 
 function calculateBMR(
-  sex: Sex,
+  sex: gender,
   weightKg: number,
   heightCm: number,
   age: number
@@ -36,7 +36,7 @@ function calculateGoals(tdee: number) {
 }
 
 export default function KcalBerekenen() {
-  const [sex, setSex] = useState<Sex>("male");
+  const [sex, setSex] = useState<gender>("male");
   const [age, setAge] = useState<number | undefined>(undefined);
   const [heightCm, setHeightCm] = useState<number | undefined>(undefined);
   const [weightKg, setWeightKg] = useState<number | undefined>(undefined);
@@ -64,7 +64,7 @@ export default function KcalBerekenen() {
           <label className="text-textcolor text-base block mb-1">Sex:</label>
           <select
             value={sex}
-            onChange={(e) => setSex(e.target.value as Sex)}
+            onChange={(e) => setSex(e.target.value as gender)}
             className="bg-components border border-bordercolor rounded-lg px-3 py-2 text-textcolor focus:outline-none focus:border-accent w-full"
           >
             <option value="male">Male</option>

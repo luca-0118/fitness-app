@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import ThemeButton from "../../components/General/buttons/ThemeButton.tsx";
 import SaveIcon from "@mui/icons-material/Save";
 import WeightLineChart from "../../components/General/charts/WeightLineChart.tsx";
-import KcalBerekenen from "../../components/KcalBerekenen.tsx";
+import KcalBerekenen from "../../components/Foodtracker/misc/KcalBerekenen.tsx";
 
 export default function Profile() {
   const [kcal, setKcal] = useState("");
