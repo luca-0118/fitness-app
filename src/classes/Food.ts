@@ -13,6 +13,16 @@ interface foodInput {
      mealtime: string;
 }
 
+interface UpdatableFoodFields {
+    date?: string;
+    amount?: number;
+    calories?: number;
+    carbs?: number;
+    fats?: number;
+    protein?: number;
+    mealtime?: string;
+}
+
 export default class Food
 {
     public id: number;
@@ -62,6 +72,16 @@ export default class Food
         throw new Error("non-mock not implemented");
 
         //TODO construct backend function
+    }
+
+    static async update(_foodID: number,{date,amount,calories,carbs,protein,fats,mealtime}:UpdatableFoodFields): Promise<boolean>
+    {
+        const updateFields = {date,amount,calories,carbs,protein,fats,mealtime};
+        
+        let response = await invoke<boolean>("update_stored_products",{foodId:String(_foodID),values: updateFields});
+        console.log("new food intake: ",{foodID:_foodID,values: updateFields});
+
+        return response;
     }
 
     

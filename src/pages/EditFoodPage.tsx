@@ -1,11 +1,14 @@
-import { useParams } from "react-router-dom"
+import { useNavigate, useParams } from "react-router-dom"
 import Food from "../classes/Food";
 import PageContainer from "../components/containers/PageContainer";
 import NutrimentSquare from "../components/ui/NutrimentSquare";
 import React, { useEffect, useState } from "react";
+import { calcIntake } from "../helpers/helpers";
+import toast from "react-hot-toast";
 
 export default function EditFoodPage() {
     //parameters given from the router-dom link.
+    const navigate = useNavigate();
     const params = useParams();
     const foodID: number = Number(params.foodId);
 
@@ -34,15 +37,39 @@ export default function EditFoodPage() {
         setAmountEaten(Number(e.currentTarget.value));
     }
 
-    const editEatenFood = () => {
+    const saveEditedProduct = async () => {
         // implement backend functionality #TODO
+
+        // recalculate intake
+        const newIntake = calcIntake(food?.amount || 0, amountEaten, {
+            calories: food?.calories || 0,
+            proteins: food?.protein || 0,
+            fats: food?.fats || 0,
+            carbs: food?.carbs || 0
+        })
+
+        //update value in backend.
+        const resp = await Food.update(foodID, {
+            mealtime: mealTime,
+            date: eatenDate,
+            amount: amountEaten,
+            calories: newIntake.calories,
+            carbs: newIntake.carbs,
+            fats: newIntake.fats,
+            protein: newIntake.proteins
+        });
+
+        if (resp) {
+            toast.success("successfully updated product!");
+            setTimeout(() => navigate(-1), 300);
+        }
     }
 
 
     // Refers to a function which should implement calling the foodItem from the backend.
     useEffect(() => {
         const getFood = async () => {
-            const _food = await Food.getSingle(foodID, false);
+            const _food = await Food.getSingle(foodID);
             setFood(_food);
         }
         getFood();
@@ -59,7 +86,7 @@ export default function EditFoodPage() {
         setAmountEaten(food.amount);
     }, [food])
 
-    // TODO proper loading skeleton
+    // #TODO proper loading skeleton
     if (!food) return <h1>loading....</h1>
 
     return <PageContainer>
@@ -95,7 +122,7 @@ export default function EditFoodPage() {
                     </div>
                 </section>
             </div>
-            <button className="w-full p-4 text-textcolor bg-accent rounded-4xl text-2xl">save changes to product</button>
+            <button className="w-full p-4 text-textcolor bg-accent rounded-4xl text-2xl" onClick={saveEditedProduct}>save changes to product</button>
         </div>
     </PageContainer>
 }
