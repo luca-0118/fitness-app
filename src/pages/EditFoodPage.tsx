@@ -84,7 +84,7 @@ export default function EditFoodPage() {
         if (!food) return;
 
         setMealTime(food.mealtime);
-        setEatenDate(food.date);
+        setEatenDate(food.date.split("T")[0]);
         setAmountEaten(food.amount);
     }, [food])
 
