@@ -96,11 +96,27 @@ export default function EatenTodayList() {
     }, [date]);
 
     const fetchFoodByDate = async () => {
+
         try {
             setLoading(true);
             const result = await invoke<DatabaseFoodItem[]>("get_food_by_date", {date: date.toISOString().split("T")[0],});
             setMealCategories(groupByMealTime(result));
             console.log("Fetched food items:", result);
+            const grouped = groupByMealTime(result);
+
+            setMealCategories(grouped);
+
+            setOpen((current) => {
+                const next = { ...current };
+
+                grouped.forEach((cat) => {
+                    if (cat.items.length === 0) {
+                        next[cat.key] = false;
+                    }
+                });
+
+                return next;
+            });
 
         } catch (err) {
             console.error("Error fetching food data:", err);
@@ -152,6 +168,9 @@ export default function EatenTodayList() {
         }));
     };
 
+
+
+
     return (
         <div className="bg-components border border-bordercolor rounded-xl p-0 col-span-2">
             <div className="flex items-center justify-between px-4 py-3 border-b border-bordercolor">
@@ -193,7 +212,7 @@ export default function EatenTodayList() {
                         return (
                             <div key={cat.key} className="rounded-2xl overflow-hidden border border-accent">
                                 <button
-                                    onClick={() => toggle(cat.key)}
+                                    onClick={() => cat.items.length > 0 ? toggle(cat.key) : null}
                                     className="w-full text-left px-4 py-3 flex items-center justify-between bg-background"
                                 >
                                     <div>
@@ -204,7 +223,7 @@ export default function EatenTodayList() {
                                 </button>
                                 <div
                                     className={`${
-                                        isOpen ? "block" : "hidden"
+                                        isOpen  ? "block" : "hidden"
                                     } bg-components-hover flex flex-col gap-1 px-3 py-2`}
                                 >
                                 {cat.items.map((item) => (
