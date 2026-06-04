@@ -6,6 +6,7 @@ mod domain;
 mod infrastructures;
 mod interface;
 pub mod lars;
+mod mvp;
 mod repository;
 
 use crate::api::{ApiError, ApiErrorResponse};
@@ -101,7 +102,8 @@ pub fn run() {
             lars::get_exercise_by_id,
             lars::add_food,
             lars::get_product_by_barcode,
-            lars::get_food_by_date
+            lars::get_food_by_date,
+            mvp::get_single_food_entry
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
