@@ -1,16 +1,22 @@
-import { useState, useEffect } from "react";
+import {useState, useEffect, useRef} from "react";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import { invoke } from "@tauri-apps/api/core";
 import Calender from "../misc/Calendar.tsx";
-import { useNavigate } from "react-router-dom";
+import {useLocation, useNavigate} from "react-router-dom";
+import MoreVertIcon from '@mui/icons-material/MoreVert';
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 interface DatabaseFoodItem {
     id: number;
     name: string;
     amount: number;
     calories: number;
+    carbs: number;
+    protein: number;
+    fats: number;
     barcode: string;
     date: string;
     mealtime: MealCategoryKey;
@@ -36,53 +42,120 @@ const createEmptyMealMap = () => {
     ) as Record<MealCategoryKey, DatabaseFoodItem[]>;
 };
 
-function totalCalories(items: DatabaseFoodItem[]) {
-    return items.reduce((total, item) => total + item.calories, 0);
+function totalNutrients(items: DatabaseFoodItem[], nutrient: string | null) {
+    return items.reduce((total, item) => {
+        switch (nutrient) {
+            case "Carbs":
+                return total + item.carbs;
+            case "Proteins":
+                return total + item.protein;
+            case "Fats":
+                return total + item.fats;
+            default:
+                return total + item.calories;
+        }
+    }, 0);
 }
 
 
 export default function EatenTodayList() {
-    function FoodComp({ item }: { item: DatabaseFoodItem }) {
-        const navigate = useNavigate();
+    function FoodComp({ item, selectedNutrient }: { item: DatabaseFoodItem; selectedNutrient: string | null }) {
+
         const handleFoodItemClick = () => {
             navigate("/kcal-tracker/" + item.id);
         }
+        
         return (
-            <div className="w-full rounded-xl pl-4 flex items-stretch justify-between bg-background overflow-hidden">
-                <div className="flex items-center justify-between flex-1 pr-4 py-3">
-                    <div className="text-textcolor font-medium flex items-center">
+            <div className="w-full rounded-xl flex bg-background justify-between relative">
+                <div className="flex items-center pl-3 w-full overflow-hidden justify-between">
+                    <button
+                        className="text-textcolor font-medium text-left truncate flex-1 min-w-0"
+                        onClick={() => navigate("/product-details", {
+                            state: {
+                                id: item.id,
+                                name: item.name,
+                                amount: item.amount,
+                                calories: item.calories,
+                                carbs: item.carbs,
+                                protein: item.protein,
+                                fats: item.fats,
+                                barcode: item.barcode,
+                                date: item.date,
+                            }
+                        })}
+                    >
                         {item.name}
+                    </button>
+                    <div className="flex flex-col items-end text-right text-sm text-muted mx-3 whitespace-nowrap">
+                        <span>{Math.round(item.amount)}g</span>
+                        <span>{selectedNutrient === "Carbs"
+                            ? `${Math.round(item.carbs)}g`
+                            : selectedNutrient === "Proteins"
+                                ? `${Math.round(item.protein)}g`
+                                : selectedNutrient === "Fats"
+                                    ? `${Math.round(item.fats)}g`
+                                    : `${Math.round(item.calories)}kcal`}</span>
                     </div>
-                    <div className="flex items-center gap-4">
-                        <div className="text-sm text-muted text-right">
-                            {Math.round(item.amount)}g
-                        </div>
-                        <div className="text-sm text-muted text-right">
-                            {Math.round(item.calories)} kcal
+                    <div ref={(node) => { dropdownRefs.current[item.id] = node; }} className="flex h-full px-1 py-2 items-center text-textcolor">
+                        <button
+                            className="flex items-center justify-center p-2 rounded-lg hover:bg-components-hover"
+                            onClick={() => {
+                                setOpenDropdownId(
+                                    openDropdownId === item.id ? null : item.id
+                                );
+                            }}
+                        >
+                            <MoreVertIcon />
+                        </button>
+
+                        <div
+                            className={`absolute z-10 top-full right-1 mt-1 flex flex-col rounded-xl p-2 bg-components border border-bordercolor origin-top-right
+                                ${openDropdownId === item.id ? "opacity-100 scale-100" : "opacity-0 scale-95 -translate-y-2 pointer-events-none"}`}
+                        >
+                            <button
+                                type="button"
+                                className="w-full hover:bg-components-hover flex items-center gap-2 px-3 py-2 rounded-xl"
+                                onClick={handleFoodItemClick}
+                            >
+                                <EditIcon fontSize="small" />
+                                Edit
+                            </button>
+
+                            <button
+                                type="button"
+                                className="w-full hover:bg-components-hover text-button-stop flex items-center gap-2 px-3 py-2 rounded-xl"
+                                onClick={() => {
+                                    removeItem(item.id);
+                                    setOpenDropdownId(null);
+                                }}
+                            >
+                                <DeleteIcon fontSize="small" />
+                                Delete
+                            </button>
                         </div>
                     </div>
-                    <button onClick={() => removeItem(item.id)}>delete</button>
                 </div>
-                <button onClick={handleFoodItemClick} className="flex items-center px-2 bg-accent hover:bg-accent-action text-textcolor">
-                    <ArrowForwardIcon sx={{ fontSize: 18 }} />
-                </button>
             </div>
         );
     }
 
-    async function removeItem(id: number) {
-        try {
-            await invoke("delete_food_by_id", { id })
-            fetchFoodByDate()
-        }
+    const location = useLocation();
+    const navigate = useNavigate();
+    const selectedNutrient = location.state?.selectedNutrient || null;
 
-        catch (e) {
-            console.log(e)
-        }
-
-
+    async function removeItem(id:number){
+    try{
+    await invoke("delete_food_by_id", {id})
+        fetchFoodByDate()
+}
+    
+    catch(e){
+        console.log(e)
     }
 
+
+}
+    const [openDropdownId, setOpenDropdownId] = useState<number | null>(null);
     const [open, setOpen] = useState<Record<MealCategoryKey, boolean>>(
         Object.fromEntries(
             Categories.map((cat) => [cat.key, false])
@@ -96,11 +169,34 @@ export default function EatenTodayList() {
         fetchFoodByDate();
     }, [date]);
 
+    const dropdownRefs = useRef<Record<number, HTMLDivElement | null>>({});
+
+    useEffect(() => {
+        function handleClickOutside(event: MouseEvent) {
+            if (openDropdownId === null) {
+                return;
+            }
+
+            const activeDropdown = dropdownRefs.current[openDropdownId];
+            if (activeDropdown && !activeDropdown.contains(event.target as Node)) {
+                setOpenDropdownId(null);
+            }
+        }
+
+        document.addEventListener("pointerdown", handleClickOutside);
+
+        return () => {
+            document.removeEventListener("pointerdown", handleClickOutside);
+        };
+    }, [openDropdownId]);
+
     const fetchFoodByDate = async () => {
 
         try {
             setLoading(true);
-            const result = await invoke<DatabaseFoodItem[]>("get_food_by_date", { date: date.toISOString().split("T")[0], });
+            const result = await invoke<DatabaseFoodItem[]>("get_food_by_date", {
+                date: date.toISOString().split("T")[0],
+            });
             setMealCategories(groupByMealTime(result));
             console.log("Fetched food items:", result);
             const grouped = groupByMealTime(result);
@@ -133,6 +229,7 @@ export default function EatenTodayList() {
             newDate.setDate(newDate.getDate() - 1);
             return newDate;
         });
+        navigate("/kcal-tracker"); // Reset when changing day
     };
 
     const handleNextDay = () => {
@@ -141,6 +238,7 @@ export default function EatenTodayList() {
             newDate.setDate(newDate.getDate() + 1);
             return newDate;
         });
+        navigate("/kcal-tracker"); // Reset when changing day
     };
 
     const groupByMealTime = (items: DatabaseFoodItem[]): MealCategory[] => {
@@ -169,9 +267,6 @@ export default function EatenTodayList() {
         }));
     };
 
-
-
-
     return (
         <div className="bg-components border border-bordercolor rounded-xl p-0 col-span-2">
             <div className="flex items-center justify-between px-4 py-3 border-b border-bordercolor">
@@ -183,12 +278,8 @@ export default function EatenTodayList() {
                 </button>
                 <div className="flex-1 relative flex items-center justify-center">
                     <div className="text-center">
-                        <h2 className="font-bold text-lg text-textcolor">
-                            Eaten on day
-                        </h2>
-                        <div className="text-sm text-muted">
-                            {date.toDateString()}
-                        </div>
+                        <h2 className="font-bold text-lg text-textcolor">Eaten on day</h2>
+                        <div className="text-sm text-muted">{date.toDateString()}</div>
                     </div>
                     <div className="absolute right-10 text-textcolor">
                         <Calender onDateChange={setDate} />
@@ -209,25 +300,26 @@ export default function EatenTodayList() {
                 ) : (
                     mealCategories.map((cat) => {
                         const isOpen = open[cat.key];
-                        const totalKcal = totalCalories(cat.items);
+                        const totalValue = totalNutrients(cat.items, selectedNutrient);
                         return (
-                            <div key={cat.key} className="rounded-2xl overflow-hidden border border-accent">
+                            <div key={cat.key} className="rounded-2xl border border-accent">
                                 <button
-                                    onClick={() => cat.items.length > 0 ? toggle(cat.key) : null}
-                                    className="w-full text-left px-4 py-3 flex items-center justify-between bg-background"
+                                    onClick={() => toggle(cat.key)}
+                                    className="rounded-2xl w-full text-left px-4 py-3 flex items-center justify-between bg-background"
                                 >
                                     <div>
                                         <div className="text-textcolor font-semibold">{cat.catName}</div>
-                                        <div className="text-sm text-muted">{cat.items.length} items | total {Math.round(totalKcal)} kcal</div>
+                                        <div className="text-sm text-muted">
+                                            total: {Math.round(totalValue)}
+                                            {selectedNutrient === "Calories" || !selectedNutrient ? "kcal" : "g"}
+                                            {selectedNutrient === "Calories" || !selectedNutrient ? " calories" : ` ${selectedNutrient.toLowerCase()}`} | {cat.items.length} items
+                                        </div>
                                     </div>
                                     <div className="text-textcolor text-2xl">{isOpen ? "−" : <ArrowDropDownIcon />}</div>
                                 </button>
-                                <div
-                                    className={`${isOpen ? "block" : "hidden"
-                                        } bg-components-hover flex flex-col gap-1 px-3 py-2`}
-                                >
+                                <div className={`${isOpen ? "block" : "hidden"} bg-components-hover flex flex-col gap-1 px-3 py-2 rounded-b-2xl`}>
                                     {cat.items.map((item) => (
-                                        <FoodComp key={item.id} item={item} />
+                                        <FoodComp key={item.id} item={item} selectedNutrient={selectedNutrient} />
                                     ))}
                                 </div>
                             </div>
