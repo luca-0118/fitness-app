@@ -65,7 +65,7 @@ export default function Profile() {
                 inputMode="numeric"
                 value={kcal}
                 onChange={(e) => { const v = e.target.value; if (/^\d*\.?\d*$/.test(v)) setKcal(v); }}
-                disabled={isCompleted}
+                disabled={isSaved}
                 className="w-full bg-components border border-bordercolor rounded-lg px-3 py-2 text-textcolor focus:outline-none focus:border-accent disabled:opacity-50 disabled:cursor-not-allowed"
               />
               <label className="text-textcolor text-base">weight (kg):</label>
@@ -74,7 +74,7 @@ export default function Profile() {
                 inputMode="decimal"
                 value={targetWeight}
                 onChange={(e) => { const v = e.target.value; if (/^\d*\.?\d*$/.test(v)) setTargetWeight(v); }}
-                disabled={isCompleted}
+                disabled={isSaved}
                 className="w-full bg-components border border-bordercolor rounded-lg px-3 py-2 text-textcolor focus:outline-none focus:border-accent disabled:opacity-50 disabled:cursor-not-allowed"
               />
               <label className="text-textcolor text-base">Carbs (g):</label>
@@ -83,7 +83,7 @@ export default function Profile() {
                 inputMode="decimal"
                 value={carbs}
                 onChange={(e) => { const v = e.target.value; if (/^\d*\.?\d*$/.test(v)) setCarbs(v); }}
-                disabled={isCompleted}
+                disabled={isSaved}
                 className="w-full bg-components border border-bordercolor rounded-lg px-3 py-2 text-textcolor focus:outline-none focus:border-accent disabled:opacity-50 disabled:cursor-not-allowed"
               />
               <label className="text-textcolor text-base">Proteins (g):</label>
@@ -92,7 +92,7 @@ export default function Profile() {
                 inputMode="decimal"
                 value={protein}
                 onChange={(e) => { const v = e.target.value; if (/^\d*\.?\d*$/.test(v)) setProtein(v); }}
-                disabled={isCompleted}
+                disabled={isSaved}
                 className="w-full bg-components border border-bordercolor rounded-lg px-3 py-2 text-textcolor focus:outline-none focus:border-accent disabled:opacity-50 disabled:cursor-not-allowed"
               />
               <label className="text-textcolor text-base">Fats (g):</label>
@@ -101,7 +101,7 @@ export default function Profile() {
                 inputMode="decimal"
                 value={fats}
                 onChange={(e) => { const v = e.target.value; if (/^\d*\.?\d*$/.test(v)) setFats(v); }}
-                disabled={isCompleted}
+                disabled={isSaved}
                 className="w-full bg-components border border-bordercolor rounded-lg px-3 py-2 text-textcolor focus:outline-none focus:border-accent disabled:opacity-50 disabled:cursor-not-allowed"
               />
               <div className="flex justify-end">
