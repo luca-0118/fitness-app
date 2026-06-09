@@ -115,7 +115,7 @@ export default function StopWatch({ onTimerChange }: StopWatchProps) {
                     <h3 className="text-lg font-semibold mb-2 text-textcolor">Laps</h3>
                     <ul className="space-y-1">
                         {laps.map((lap, index) => (
-                            <li key={index} className="text-base bg-components p-2 rounded">
+                            <li key={index} className="text-base text-textcolor bg-components p-2 rounded">
                                 {`Lap ${index + 1}: ${formatTime(lap)}`}
                             </li>
                         ))}

@@ -267,6 +267,9 @@ export default function EatenTodayList() {
         }));
     };
 
+
+
+
     return (
         <div className="bg-components border border-bordercolor rounded-xl p-0 col-span-2">
             <div className="flex items-center justify-between px-4 py-3 border-b border-bordercolor">
@@ -304,8 +307,8 @@ export default function EatenTodayList() {
                         return (
                             <div key={cat.key} className="rounded-2xl border border-accent">
                                 <button
-                                    onClick={() => toggle(cat.key)}
-                                    className="rounded-2xl w-full text-left px-4 py-3 flex items-center justify-between bg-background"
+                                    onClick={() => cat.items.length > 0 ? toggle(cat.key) : null}
+                                    className="w-full text-left px-4 py-3 flex items-center justify-between bg-background"
                                 >
                                     <div>
                                         <div className="text-textcolor font-semibold">{cat.catName}</div>
@@ -317,10 +320,14 @@ export default function EatenTodayList() {
                                     </div>
                                     <div className="text-textcolor text-2xl">{isOpen ? "−" : <ArrowDropDownIcon />}</div>
                                 </button>
-                                <div className={`${isOpen ? "block" : "hidden"} bg-components-hover flex flex-col gap-1 px-3 py-2 rounded-b-2xl`}>
-                                    {cat.items.map((item) => (
-                                        <FoodComp key={item.id} item={item} selectedNutrient={selectedNutrient} />
-                                    ))}
+                                <div
+                                    className={`${
+                                        isOpen  ? "block" : "hidden"
+                                    } bg-components-hover flex flex-col gap-1 px-3 py-2`}
+                                >
+                                {cat.items.map((item) => (
+                                    <FoodComp key={item.id} item={item}/>
+                                ))}
                                 </div>
                             </div>
                         );
