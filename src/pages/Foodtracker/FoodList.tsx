@@ -38,32 +38,55 @@ export default function FoodList() {
   const [error, setError] = useState<any>("");
   const [Searching, setSearching] = useState(false);
   const [barcode, setBarcode] = useState(0)
+
+  const fetchWithRetry = async (
+  product: string,
+  page: number,
+  retries = 10
+): Promise<searchReturn> => {
+  let lastError;
+
+  for (let attempt = 1; attempt <= retries; attempt++) {
+    try {
+      return await invoke<searchReturn>("get_products", {
+        product,
+        page,
+      });
+    } catch (err) {
+      lastError = err;
+
+      console.log(`Attempt ${attempt}/${retries} failed`);
+
+      if (attempt < retries) {
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+      }
+    }
+  }
+
+  throw lastError;
+};
   
   const fetchSearchAPI = async (product: string, page: number) => {
-    if (!product.trim()) {
-      setProduct([]);
-      setError(null);
-      return;
-    }
-    setLoading(true);
+  if (!product.trim()) {
+    setProduct([]);
     setError(null);
+    return;
+  }
 
-    try {
-      const result = await invoke<searchReturn>("get_products", {
-        product: product,
-        page: page,
-      });
-      setProduct(result.products ?? []);
+  setLoading(true);
+  setError(null);
 
-    } catch (err) {
-      console.error("Error:", err);
-
-      setError("db error");
-      setProduct([]);
-    } finally {
-      setLoading(false);
-    }
-  };
+  try {
+    const result = await fetchWithRetry(product, page, 10);
+    setProduct(result.products ?? []);
+  } catch (err) {
+    console.error(err);
+    setError("db error");
+    setProduct([]);
+  } finally {
+    setLoading(false);
+  }
+};
 
   const handleSearch = () => {
     setRememberText(searchText);
