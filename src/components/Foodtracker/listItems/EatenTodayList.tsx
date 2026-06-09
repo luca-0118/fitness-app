@@ -60,6 +60,11 @@ function totalNutrients(items: DatabaseFoodItem[], nutrient: string | null) {
 
 export default function EatenTodayList() {
     function FoodComp({ item, selectedNutrient }: { item: DatabaseFoodItem; selectedNutrient: string | null }) {
+
+        const handleFoodItemClick = () => {
+            navigate("/kcal-tracker/" + item.id);
+        }
+
         return (
             <div className="w-full rounded-xl flex bg-background justify-between relative">
                 <div className="flex items-center pl-3 w-full overflow-hidden justify-between">
@@ -110,22 +115,7 @@ export default function EatenTodayList() {
                             <button
                                 type="button"
                                 className="w-full hover:bg-components-hover flex items-center gap-2 px-3 py-2 rounded-xl"
-                                onClick={() => {
-                                    navigate("/product-details", {
-                                        state: {
-                                            id: item.id,
-                                            name: item.name,
-                                            amount: item.amount,
-                                            calories: item.calories,
-                                            carbs: item.carbs,
-                                            protein: item.protein,
-                                            fats: item.fats,
-                                            barcode: item.barcode,
-                                            date: item.date,
-                                        }
-                                    });
-                                    setOpenDropdownId(null);
-                                }}
+                                onClick={handleFoodItemClick}
                             >
                                 <EditIcon fontSize="small" />
                                 Edit
