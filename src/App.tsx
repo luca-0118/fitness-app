@@ -23,6 +23,7 @@ import FloatingWorkoutTimer from "./components/Workout/timers/FloatingWorkoutTim
 import API from "./classes/api";
 import { SESSION_STORAGE_KEYS } from "./apis/sessionAPI";
 import ProductDetails from "./pages/Foodtracker/ProductDetails.tsx";
+import EditFoodPage from "./pages/EditFoodPage.tsx";
 
 function App() {
   useEffect(() => {
@@ -91,10 +92,13 @@ function App() {
               <Route path="/profile" element={<Profile />} />
               <Route path="/history" element={<WorkoutHistory />} />
               <Route path="/session-history" element={<SessionHistory />} />
-              <Route path="/kcal-tracker" element={<KcalTracker />} />
+              <Route path="/kcal-tracker">
+                <Route index element={<KcalTracker />} />
+                <Route path=":foodId" element={<EditFoodPage />} />
+              </Route>
               <Route path="/exercises" element={<Exercises />} />
               <Route path="/food-list" element={<FoodList />} />
-              <Route path="/exercise-description" element={<ExerciseDescription />}/>
+              <Route path="/exercise-description" element={<ExerciseDescription />} />
               <Route path="/product-details" element={<ProductDetails />} />
             </Routes>
           </main>
