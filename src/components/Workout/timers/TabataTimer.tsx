@@ -139,7 +139,7 @@ export default function TabataTimer({ onTimerChange }: TabataTimerProps) {
                         <select
                             value={restSeconds}
                             onChange={(e) => setRestSeconds(Number(e.target.value))}
-                            className="px-3 py-2 border-2 border-bordercolor rounded-lg bg-components-color text-textcolor cursor-pointer"
+                            className="px-3 py-2 border-2 border-bordercolor rounded-lg bg-components text-textcolor cursor-pointer"
                         >
                             {Array.from({ length: 60 }, (_, i) => i + 1).map((v) => (
                                 <option key={v} value={v}>{v}s</option>
