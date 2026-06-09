@@ -17,18 +17,12 @@ export default function ProductDetails() {
             { label: "Carbs", value: Math.round(product.carbs), unit: "g", color: "#DC143C" },
             { label: "Proteins", value: Math.round(product.protein), unit: "g", color: "#4DA3FF" },
             { label: "Fats", value: Math.round(product.fats), unit: "g", color: "#32CD32" },
-            { label: "Sugar", value: 0, unit: "g", color: "#FFD700" }, // Placeholder
-            { label: "Fiber", value: 0, unit: "g", color: "#9153cc" }, // Placeholder
-            { label: "Sodium", value: 0, unit: "mg", color: "#FF4500" }, // Placeholder
         ]
         : [
             { label: "Calories", value: 0, unit: "kcal", color: "#F67631" },
             { label: "Carbs", value: 0, unit: "g", color: "#DC143C" },
             { label: "Proteins", value: 0, unit: "g", color: "#4DA3FF" },
             { label: "Fats", value: 0, unit: "g", color: "#32CD32" },
-            { label: "Sugar", value: 0, unit: "g", color: "#FFD700" },
-            { label: "Fiber", value: 0, unit: "g", color: "#9153cc" },
-            { label: "Sodium", value: 0, unit: "mg", color: "#FF4500" },
         ];
 
     const caloriesMetric = metrics.find((item) => item.label === "Calories");
