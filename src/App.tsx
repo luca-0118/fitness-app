@@ -24,6 +24,7 @@ import API from "./classes/api";
 import { SESSION_STORAGE_KEYS } from "./apis/sessionAPI";
 import ProductDetails from "./pages/Foodtracker/ProductDetails.tsx";
 import EditFoodPage from "./pages/EditFoodPage.tsx";
+import DetailedHistoryPage from "./pages/Workout/DetailedHistoryPage.tsx";
 
 function App() {
   useEffect(() => {
@@ -91,7 +92,10 @@ function App() {
               <Route path="/new-workout" element={<NewWorkout />} />
               <Route path="/profile" element={<Profile />} />
               <Route path="/history" element={<WorkoutHistory />} />
-              <Route path="/session-history" element={<SessionHistory />} />
+              <Route path="/session-history">
+                <Route index  element={<WorkoutHistory />} />
+                <Route path=":workoutId" element={<DetailedHistoryPage/>}/>
+              </Route>
               <Route path="/kcal-tracker">
                 <Route index element={<KcalTracker />} />
                 <Route path=":foodId" element={<EditFoodPage />} />
