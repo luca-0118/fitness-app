@@ -8,14 +8,162 @@ export default function DetailedHistoryPage() {
         navigate(-1);
     }
 
+    // Test static data which will be replaced by backend functionality.
     const testMap = [
-        { name: "hi" },
-        { name: "hi" },
-        { name: "hi" },
-        { name: "hi" },
-        { name: "hi" },
-        { name: "hi" },
-        { name: "hi" },
+        {
+            name: "hi",
+            img: "https://placecats.com/64/64",
+            sets: [
+                {
+                    reps: 10,
+                    weight: 110
+                },
+                {
+                    reps: 10,
+                    weight: 110
+                },
+                {
+                    reps: 10,
+                    weight: 110
+                },
+                {
+                    reps: 10,
+                    weight: 110
+                }
+            ]
+        },
+        {
+            name: "hi",
+            img: "https://placecats.com/64/64",
+            sets: [
+                {
+                    reps: 10,
+                    weight: 110
+                },
+                {
+                    reps: 10,
+                    weight: 110
+                },
+                {
+                    reps: 10,
+                    weight: 110
+                },
+                {
+                    reps: 10,
+                    weight: 110
+                }
+            ]
+        },
+        {
+            name: "hi",
+            img: "https://placecats.com/64/64",
+            sets: [
+                {
+                    reps: 10,
+                    weight: 110
+                },
+                {
+                    reps: 10,
+                    weight: 110
+                },
+                {
+                    reps: 10,
+                    weight: 110
+                },
+                {
+                    reps: 10,
+                    weight: 110
+                }
+            ]
+        },
+        {
+            name: "hi",
+            img: "https://placecats.com/64/64",
+            sets: [
+                {
+                    reps: 10,
+                    weight: 110
+                },
+                {
+                    reps: 10,
+                    weight: 110
+                },
+                {
+                    reps: 10,
+                    weight: 110
+                },
+                {
+                    reps: 10,
+                    weight: 110
+                }
+            ]
+        },
+        {
+            name: "hi",
+            img: "https://placecats.com/64/64",
+            sets: [
+                {
+                    reps: 10,
+                    weight: 110
+                },
+                {
+                    reps: 10,
+                    weight: 110
+                },
+                {
+                    reps: 10,
+                    weight: 110
+                },
+                {
+                    reps: 10,
+                    weight: 110
+                }
+            ]
+        },
+        {
+            name: "hi",
+            img: "https://placecats.com/64/64",
+            sets: [
+                {
+                    reps: 10,
+                    weight: 110
+                },
+                {
+                    reps: 10,
+                    weight: 110
+                },
+                {
+                    reps: 10,
+                    weight: 110
+                },
+                {
+                    reps: 10,
+                    weight: 110
+                }
+            ]
+        },
+        {
+            name: "hi",
+            img: "https://placecats.com/64/64",
+            sets: [
+                {
+                    reps: 10,
+                    weight: 110
+                },
+                {
+                    reps: 10,
+                    weight: 110
+                },
+                {
+                    reps: 10,
+                    weight: 110
+                },
+                {
+                    reps: 10,
+                    weight: 110
+                }
+            ]
+        },
     ];
 
     return (<>
@@ -35,8 +183,9 @@ export default function DetailedHistoryPage() {
                 </span>
             </section>
             <section id='completed-exercises' className='p-4 flex flex-col gap-4 w-full'>
-                {testMap.map(_completed => (<CompletedExercise />))}
-
+                {/* Loops through all completed exercises to create new components for each of them */}
+                {/* Completed passes on all the data of an completed exercise */}
+                {testMap.map(_completed => (<CompletedExercise exerciseInfo={_completed} />))}
             </section>
 
         </div>
@@ -44,11 +193,28 @@ export default function DetailedHistoryPage() {
 }
 
 
-function CompletedExercise() {
+
+
+
+///// ######################### /////
+/////   Completed Exercise      /////
+/////   Component               /////
+///// ########################  /////
+/**
+ * This component is used by the detailed history page to display all the completed exercises of this session.
+ * It requires a CompletedExercise Object to properly fill the data.
+ */
+
+
+interface CompletedExerciseProps {
+    exerciseInfo: { name: string, img: string, sets: { reps: number, weight: number }[] }
+
+}
+function CompletedExercise({ exerciseInfo }: CompletedExerciseProps) {
     return <article className='bg-components w-full min-h-20 h-fit rounded p-2'>
         <div id="exerciseInfo" className='flex flex-row items-center bg-white/5 rounded'>
             <img src="https://placecats.com/64/64" alt="" />
-            <h2 className='text-3xl mx-auto text-accent'>ExerciseName</h2>
+            <h2 className='text-3xl mx-auto text-accent'>{exerciseInfo.name}</h2>
         </div>
         <table className='w-full text-textcolor font-normal text-end h-fit'>
             <thead>
@@ -59,22 +225,12 @@ function CompletedExercise() {
                 </tr>
             </thead>
             <tbody className='text-textcolor/75'>
-                <tr>
-                    <td>1</td>
-                    <td>12</td>
-                    <td>100kg</td>
-                </tr>
-                <tr>
-                    <td>1</td>
-                    <td>12</td>
-                    <td>100kg</td>
-                </tr>
-                <tr>
-                    <td>1</td>
-                    <td>12</td>
-                    <td>100kg</td>
-                </tr>
-
+                {/* Loops through each found from exerciseInfo, and loads the data in the table */}
+                {exerciseInfo.sets.map((exercise, idx) => (<tr>
+                    <td>{idx}</td>
+                    <td>{exercise.reps}</td>
+                    <td>{exercise.weight}kg</td>
+                </tr>))}
             </tbody>
         </table>
     </article>
