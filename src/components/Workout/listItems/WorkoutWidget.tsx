@@ -7,6 +7,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import { useSortable } from "@dnd-kit/react/sortable";
 import { useWorkout } from "../../../context/WorkoutContext.tsx";
 import API from "../../../classes/api.ts";
+import toast from "react-hot-toast";
 
 interface WorkoutWidgetProps {
     id: string;
@@ -44,6 +45,20 @@ export default function WorkoutWidget({ id, index, name, reloadWorkouts }: Worko
         navigate("/exercises");
     };
 
+    async function handleDelete(){
+        try{
+        await API.workouts.remove(id);
+        toast.success("removed succesfully")
+        }
+catch (err: unknown) {
+    if (err instanceof Error) {
+        toast.error(err.message);
+    } else {
+        toast.error("Something went wrong");
+    }
+}
+    }
+
     return (
         <li
             ref={setElement}
@@ -65,9 +80,10 @@ export default function WorkoutWidget({ id, index, name, reloadWorkouts }: Worko
                     <button className="w-full hover:bg-components-hover flex items-center gap-2 px-3 py-2 rounded-xl" onClick={() => {setOpen(false); navigate("/edit-workout");}}>
                         <EditIcon className="w-5 h-5" /> Edit
                     </button>
-                    <button className="w-full hover:bg-components-hover text-button-stop flex items-center gap-2 px-3 py-2 rounded-xl" onClick={() => {setOpen(false);
-                        API.workouts.remove(id);
-                        reloadWorkouts();
+                    <button className="w-full hover:bg-components-hover text-button-stop flex items-center gap-2 px-3 py-2 rounded-xl" onClick={async () => {setOpen(false);
+                        await handleDelete();
+                        await reloadWorkouts();
+
                     } /*TODO add delete functionality*/ }>
                         <DeleteIcon className="w-5 h-5" /> Delete
                     </button>
