@@ -167,7 +167,7 @@ export default function FoodList() {
           ))}
         </div>
       ) : (
-        <div className="">
+        <div className="mb-20">
           {(() => {
             const status = getStatusMessage();
             return status ? (
