@@ -23,6 +23,28 @@ impl WorkoutHistoryRepo for WorkoutHistoryRepository {
         Ok(true)
     }
 
+    fn get_by_id(&self) -> Result<CompletedWorkout,Error> {
+        self.db.use_conn(|tx| {
+            let mut stmt = tx.prepare("SELECT w.Name,wh.sessionId,wh.started_at,wh.completed_at FROM workoutHistory wh
+             INNER JOIN Workouts w ON wh.workoutId = w.Uuid; where sessionId = ?1")?;
+
+            let completed_workout = stmt.query_map([],|row| {
+                Ok(CompletedWorkout{
+                    workout_name: row.get(0)?,
+                    session_uuid: row.get(1)?,
+                    start_date: row.get(2)?,
+                    end_date: row.get(3)?,
+                })
+            })?;
+
+            /// I am mapping a "list" of completed workouts to a single one
+            /// but if there's a case where I have two of the same ID, something went wrong.
+            let workout_history: Result<CompletedWorkout, Error> = workout_history.collect();
+
+            Ok(workout_history?)        
+        })
+    }
+
     fn get_history(&self) -> Result<CompletedWorkouts, Error> {
         self.db.use_conn(|tx| {
             let mut stmt = tx.prepare(

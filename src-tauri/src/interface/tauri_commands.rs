@@ -157,3 +157,12 @@ pub fn remove_workout(
         data: "Workout removed".to_string(),
     })
 }
+
+
+#[tauri::command]
+pub fn get_detailed_session_history(
+    ctx: State<Ctx>,
+    req: String, //The completed session id.
+) -> Result<ApiResponse,ApiErrorResponse> {
+    let response ctx.service.session.history_detailed(req)?;
+}

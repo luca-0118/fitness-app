@@ -126,6 +126,14 @@ impl SessionService {
         }
     }
 
+
+    pub fn workout_history_detailed(&self,history_id:String) -> Result<DetailedWorkout,ApiErrorResponse> {
+        let history = self.workout_history.get_by_id(history_id)?;
+
+        
+
+    }
+
     pub fn workout_history(&self) -> Result<CompletedWorkouts, ApiErrorResponse> {
         let workout_history = self
             .workout_history
