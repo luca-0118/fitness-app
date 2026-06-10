@@ -1,12 +1,13 @@
 import "./App.css";
-import { useEffect } from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Header from "./components/General/ui/Header.tsx";
 import BottomNavBar from "./components/General/ui/BottomNavBar.tsx";
 import { WorkoutProvider } from "./context/WorkoutContext";
 
 import FoodList from "./pages/Foodtracker/FoodList.tsx"
 import Home from "./pages/General/Home.tsx";
+import FirstTimeUserSetup from "./pages/General/FirstTimeUserSetup.tsx";
 import WorkoutOverview from "./pages/Workout/WorkoutOverview.tsx";
 import EditWorkout from "./pages/Workout/EditWorkout.tsx";
 import AddExercises from "./pages/Workout/AddExercises.tsx";
@@ -26,6 +27,13 @@ import ProductDetails from "./pages/Foodtracker/ProductDetails.tsx";
 import EditFoodPage from "./pages/EditFoodPage.tsx";
 
 function App() {
+  const [isFirstTimeUser, setIsFirstTimeUser] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    const hasCompletedFirstTimeSetup = localStorage.getItem('firstTimeUserCompleted');
+    setIsFirstTimeUser(!hasCompletedFirstTimeSetup);
+  }, []);
+
   useEffect(() => {
     let unlistenCloseRequested: (() => void) | undefined;
     let isClosing = false;
@@ -78,11 +86,18 @@ function App() {
   return (
     <WorkoutProvider>
       <BrowserRouter>
-        <div className="h-dvh flex flex-col overflow-hidden">
-          <Header />
-          <main className="flex-1 overflow-y-auto no-scrollbar bg-background">
-            <Toaster position="top-center" reverseOrder={false} />
-            <Routes>
+        {isFirstTimeUser === null ? (
+          <div className="h-dvh flex items-center justify-center bg-background">
+            <div className="text-textcolor text-2xl">Loading...</div>
+          </div>
+        ) : isFirstTimeUser ? (
+          <FirstTimeUserSetup />
+        ) : (
+          <div className="h-dvh flex flex-col overflow-hidden">
+            <Header />
+            <main className="flex-1 overflow-y-auto no-scrollbar bg-background">
+              <Toaster position="top-center" reverseOrder={false} />
+              <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/workouts" element={<WorkoutOverview />} />
               <Route path="/edit-workout" element={<EditWorkout />} />
@@ -101,10 +116,11 @@ function App() {
               <Route path="/exercise-description" element={<ExerciseDescription />} />
               <Route path="/product-details" element={<ProductDetails />} />
             </Routes>
-          </main>
-          <FloatingWorkoutTimer />
-          <BottomNavBar />
-        </div>
+            </main>
+            <FloatingWorkoutTimer />
+            <BottomNavBar />
+          </div>
+        )}
       </BrowserRouter>
     </WorkoutProvider>
   );
