@@ -1,6 +1,6 @@
-import FoodItemComponent from "../components/FoodItemComponent.tsx";
+import FoodItemComponent from "../../components/Foodtracker/listItems/FoodItemComponent.tsx";
 import { useOutletContext } from "react-router-dom";
-import type { FoodPageContext } from "./FoodPage";
+import type { FoodPageContext } from "./FoodPage.tsx";
 
 
 export interface Nutriments {

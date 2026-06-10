@@ -4,11 +4,10 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Header from "./components/General/ui/Header.tsx";
 import BottomNavBar from "./components/General/ui/BottomNavBar.tsx";
 import { WorkoutProvider } from "./context/WorkoutContext";
-
+import FoodPage from "./pages/Foodtracker/FoodPage.tsx";
 import FoodList from "./pages/Foodtracker/FoodList.tsx"
 import Home from "./pages/General/Home.tsx";
-import CreateMeal from "./pages/CreateMeal.tsx";
-import CreatedByMe from "./pages/CreatedByMe.tsx";
+import CreateMeal from "./pages/Foodtracker/CreateMeal.tsx";
 import WorkoutOverview from "./pages/Workout/WorkoutOverview.tsx";
 import EditWorkout from "./pages/Workout/EditWorkout.tsx";
 import AddExercises from "./pages/Workout/AddExercises.tsx";

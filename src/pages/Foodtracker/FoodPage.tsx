@@ -1,7 +1,7 @@
 import { Dispatch, SetStateAction, useState } from "react";
 import { NavLink, Outlet } from "react-router-dom";
-import SearchBar from "../components/SearchBar.tsx";
-import BarcodeScanner from "../components/barcodeScanner.tsx";
+import SearchBar from "../../components/General/misc/SearchBar.tsx";
+import BarcodeScanner from "../../components/Foodtracker/misc/barcodeScanner.tsx";
 import { invoke } from "@tauri-apps/api/core";
 
 export interface Nutriments {
@@ -53,23 +53,48 @@ export default function FoodPage() {
   const [Searching, setSearching] = useState(false);
   const [barcode, setBarcode] = useState(0);
 
-  const fetchSearchAPI = async (product: string, page: number) => {
+  const fetchWithRetry = async (
+    product: string,
+    page: number,
+    retries = 10
+  ): Promise<searchReturn> => {
+    let lastError;
+
+    for (let attempt = 1; attempt <= retries; attempt++) {
+      try {
+        return await invoke<searchReturn>("get_products", {
+          product,
+          page,
+        });
+      } catch (err) {
+        lastError = err;
+
+        console.log(`Attempt ${attempt}/${retries} failed`);
+
+        if (attempt < retries) {
+          await new Promise((resolve) => setTimeout(resolve, 1000));
+        }
+      }
+    }
+
+    throw lastError;
+  };
+    
+    const fetchSearchAPI = async (product: string, page: number) => {
     if (!product.trim()) {
       setProduct([]);
       setError(null);
       return;
     }
+
     setLoading(true);
     setError(null);
 
     try {
-      const result = await invoke<searchReturn>("get_products", {
-        product: product,
-        page: page,
-      });
+      const result = await fetchWithRetry(product, page, 10);
       setProduct(result.products ?? []);
     } catch (err) {
-      console.error("Error:", err);
+      console.error(err);
       setError("db error");
       setProduct([]);
     } finally {
