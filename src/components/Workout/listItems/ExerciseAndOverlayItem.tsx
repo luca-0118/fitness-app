@@ -1,4 +1,3 @@
-import AddIcon from "@mui/icons-material/Add";
 import { invoke } from "@tauri-apps/api/core";
 import { ReactElement, useState } from "react";
 import ExerciseSelectionButton from "../buttons/ExerciseSelectionButton.tsx";
@@ -62,12 +61,6 @@ export default function ExerciseAndOverlayItem({
     getExerciseById();
   }
 
-  function handleAddClick() {
-    setToggle(false);
-    onSelect();
-  }
-
-
   //Handles save click, adds to list and sets checkmark for a second.
   const handleClick = (event: React.MouseEvent) => {
     event.stopPropagation();
@@ -119,7 +112,6 @@ export default function ExerciseAndOverlayItem({
         secondaryMuscles={secondaryMuscles}
         equipments={equipments}
         instructions={instructions}
-        handleAddClick={handleAddClick}
         disableOverlay={() => { setToggle(false) }}
       />
     </div>
@@ -135,10 +127,9 @@ interface OverlayProps {
   secondaryMuscles: string[];
   equipments: string[];
   instructions: string[];
-  handleAddClick: () => void;
   disableOverlay: () => void;
 }
-function Overlay({ active, name, gif, targetMuscle, secondaryMuscles, equipments, instructions, handleAddClick, disableOverlay }: OverlayProps): ReactElement {
+function Overlay({ active, name, gif, targetMuscle, secondaryMuscles, equipments, instructions, disableOverlay }: OverlayProps): ReactElement {
 
   if (!active) return <></>;
 
@@ -178,7 +169,7 @@ function Overlay({ active, name, gif, targetMuscle, secondaryMuscles, equipments
         <div className="bg-accent w-fit px-6 py-1 rounded-xl mx-2 my-2">
           {equipments}
         </div>
-
+        
         <h2 className="text-textcolor text-2xl mt-5 border-b-2 border-bordercolor">
           Instructions
         </h2>
@@ -194,17 +185,10 @@ function Overlay({ active, name, gif, targetMuscle, secondaryMuscles, equipments
 
         <div className="w-full flex justify-center items-center gap-4 pt-4">
           <button
-            className="flex items-center justify-center h-12 px-6 rounded-full text-textcolor bg-accent hover:bg-accent-action"
+            className="flex items-center justify-center h-12 px-10 rounded-full text-textcolor bg-accent hover:bg-accent-action"
             onClick={disableOverlay}
           >
             Close
-          </button>
-
-          <button
-            onClick={handleAddClick}
-            className="flex items-center justify-center h-12 w-12 rounded-full bg-accent hover:bg-accent-action text-textcolor"
-          >
-            <AddIcon sx={{ fontSize: 40 }} />
           </button>
         </div>
       </div>
