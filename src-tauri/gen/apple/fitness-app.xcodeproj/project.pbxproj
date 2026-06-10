@@ -36,6 +36,7 @@
 		3224E9AF9E57CB1EDA049D5F /* workoutbase.db */ = {isa = PBXFileReference; lastKnownFileType = file; path = workoutbase.db; sourceTree = "<group>"; };
 		37BE18EE9BBBA7043A7D91A7 /* mod.rs */ = {isa = PBXFileReference; lastKnownFileType = text; path = mod.rs; sourceTree = "<group>"; };
 		39749E79E5010512C0D6AF47 /* fitness-app.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "fitness-app.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		39D176BC582FCDC47FBF3EDD /* libapp.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libapp.a; sourceTree = "<group>"; };
 		40CCFAA609D1A703BB6976A8 /* workout_repository.rs */ = {isa = PBXFileReference; lastKnownFileType = text; path = workout_repository.rs; sourceTree = "<group>"; };
 		49175B95F9E01266765F760A /* builder.rs */ = {isa = PBXFileReference; lastKnownFileType = text; path = builder.rs; sourceTree = "<group>"; };
 		4D65A061E1C3CBA7D3DA5E9C /* libapp.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libapp.a; sourceTree = "<group>"; };
@@ -70,6 +71,7 @@
 		D5328E40299A712BAE9F638E /* workout_history_repository.rs */ = {isa = PBXFileReference; lastKnownFileType = text; path = workout_history_repository.rs; sourceTree = "<group>"; };
 		D547F1D69359AE5D0375BF87 /* session.rs */ = {isa = PBXFileReference; lastKnownFileType = text; path = session.rs; sourceTree = "<group>"; };
 		D9ECAC3D3260B76A92865362 /* completed_exercise_repository.rs */ = {isa = PBXFileReference; lastKnownFileType = text; path = completed_exercise_repository.rs; sourceTree = "<group>"; };
+		EAF29DBDDB78D08904D9899F /* delete_food_by_id.rs */ = {isa = PBXFileReference; lastKnownFileType = text; path = delete_food_by_id.rs; sourceTree = "<group>"; };
 		F31DA23614B1CB895FA5378A /* workout_exercise_repository.rs */ = {isa = PBXFileReference; lastKnownFileType = text; path = workout_exercise_repository.rs; sourceTree = "<group>"; };
 		F7338C8E16C75908013EBE0B /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
 		F8279499324D2ADBEAF796D4 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
@@ -200,9 +202,18 @@
 		8E4513285F3A35759D845D05 /* arm64 */ = {
 			isa = PBXGroup;
 			children = (
+				93247A00CE7CCD31E5332AF2 /* debug */,
 				DB8CB468BAB7629CFC3AD142 /* release */,
 			);
 			path = arm64;
+			sourceTree = "<group>";
+		};
+		93247A00CE7CCD31E5332AF2 /* debug */ = {
+			isa = PBXGroup;
+			children = (
+				39D176BC582FCDC47FBF3EDD /* libapp.a */,
+			);
+			path = debug;
 			sourceTree = "<group>";
 		};
 		971CE941FCBE7F0A7C724A9F /* Products */ = {
@@ -296,6 +307,7 @@
 			isa = PBXGroup;
 			children = (
 				7823A661E38A69782B6564D7 /* add_food.rs */,
+				EAF29DBDDB78D08904D9899F /* delete_food_by_id.rs */,
 				9170984100075B18ADD4E4C7 /* get_exercises_by_id.rs */,
 				244A1472ADA8DC4EF2E927FA /* get_food_by_date.rs */,
 				8C873565F1BA1108BCC0BD80 /* get_product_by_barcode.rs */,
