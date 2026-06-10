@@ -1,4 +1,4 @@
-import { useOutletContext, useNavigate, NavLink } from "react-router-dom";
+import { useOutletContext, useNavigate } from "react-router-dom";
 import FoodItemComponent from "../components/FoodItemComponent.tsx";
 import type { FoodPageContext, searchItem } from "./FoodPage.tsx";
 
@@ -77,7 +77,7 @@ export default function CreatedByMe() {
         </div>
         )}
         <nav className="text-center text-textcolor mt-10">
-            <button onClick={() => navigate("/create-meal")}>AAAAAAAAAAAAAAAAAAAAAA</button>
+            <button onClick={() => navigate("/create-meal")}>Create meal</button>
         </nav>
     </div>
     );

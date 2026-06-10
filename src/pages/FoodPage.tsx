@@ -134,10 +134,10 @@ export default function FoodPage() {
         </div>
       </div>
       <div className="">
-        <nav className="flex justify-center gap-10 text-textcolor border-2">
+        {/* <nav className="flex justify-center gap-10 text-textcolor border-2">
           <NavLink to="/food-page">All products</NavLink>
           <NavLink to="custom-food">Created by me</NavLink>
-        </nav>
+        </nav> */}
       </div>
       <div className="mt-4">
         <Outlet

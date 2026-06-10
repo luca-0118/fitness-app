@@ -101,9 +101,9 @@ function App() {
               <Route path="/exercises" element={<Exercises />} />
               <Route path="/food-page" element={<FoodPage />}>
                 <Route index element={<FoodList />} />
-                <Route path="custom-food" element={<CreatedByMe />} />
+                {/* <Route path="custom-food" element={<CreatedByMe />} /> */}
               </Route>
-              <Route path="/create-meal" element={<CreateMeal />} />
+              {/* <Route path="/create-meal" element={<CreateMeal />} /> */}
               <Route path="/exercise-description"element={<ExerciseDescription />}/>
               <Route path="/product-details" element={<ProductDetails />} />
             </Routes>

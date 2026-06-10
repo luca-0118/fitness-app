@@ -1,7 +1,7 @@
 export default function CreateMeal() {
     return(
         <div className="text-textcolor">
-        I'M GOING TO EAT BIG
+            Als je dit ziet, dan heb ik (mukdembu) iets verkeerds gedaan
         </div>
     )
 }
