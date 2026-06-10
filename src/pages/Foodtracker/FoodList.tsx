@@ -1,4 +1,5 @@
 import FoodItemComponent from "../../components/Foodtracker/listItems/FoodItemComponent.tsx";
+import FoodItemSkeleton from "../../components/Foodtracker/listItems/FoodItemSkeleton.tsx";
 import SearchBar from "../../components/General/misc/SearchBar.tsx";
 import { invoke } from "@tauri-apps/api/core";
 import { useState } from "react";
@@ -101,7 +102,7 @@ export default function FoodList() {
   };
 
   const getStatusMessage = () => {
-    if (loading) return { text: "Searching..." };
+    if (loading) return null;
     if (!loading && error) return { text: error, css: "text-red-400  font-bold" };
     if (!loading && !error && product.length === 0 && !Searching && !productBarcode)
       return { text: "Search a product" };
@@ -168,36 +169,46 @@ export default function FoodList() {
         </div>
       ) : (
         <div className="">
-          {(() => {
-            const status = getStatusMessage();
-            return status ? (
-              <div className={`${status.css} text-center text-textcolor my-6`}>
-                {status.text}
-              </div>
-            ) : null;
-          })()}
+          {loading ? (
+            <>
+              {[...Array(5)].map((_, index) => (
+                <FoodItemSkeleton key={index} />
+              ))}
+            </>
+          ) : (
+            <>
+              {(() => {
+                const status = getStatusMessage();
+                return status ? (
+                  <div className={`${status.css} text-center text-textcolor my-6`}>
+                    {status.text}
+                  </div>
+                ) : null;
+              })()}
 
-          {product.map((item) => (
-            item.nutriments ?
-            <FoodItemComponent
-              key={item.id ?? item.code}
-              name={item.product_name}
-              nutriments={item.nutriments}
-              barcode={item.code}
-              brand={item.brands}
-              onClick={() => {
-                if (!recents.includes(item)) {
-                  setRecents([...recents, item]);
-                }
-              }}
-            />
-            : null
-            ))}
-            
-            {productBarcode ? 
-            <FoodItemComponent key={1} name={productBarcode.product_name} nutriments={productBarcode.nutriments} barcode={barcode.toString()} brand={productBarcode.brands_tags[0]} onClick={()=> null}/>
-          : null  
-          }
+              {product.map((item) => (
+                item.nutriments ?
+                <FoodItemComponent
+                  key={item.id ?? item.code}
+                  name={item.product_name}
+                  nutriments={item.nutriments}
+                  barcode={item.code}
+                  brand={item.brands}
+                  onClick={() => {
+                    if (!recents.includes(item)) {
+                      setRecents([...recents, item]);
+                    }
+                  }}
+                />
+                : null
+                ))}
+                
+                {productBarcode ? 
+                <FoodItemComponent key={1} name={productBarcode.product_name} nutriments={productBarcode.nutriments} barcode={barcode.toString()} brand={productBarcode.brands_tags[0]} onClick={()=> null}/>
+              : null  
+              }
+            </>
+          )}
         </div>
 
         
