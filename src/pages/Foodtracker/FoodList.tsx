@@ -168,7 +168,7 @@ export default function FoodList() {
           ))}
         </div>
       ) : (
-        <div className="">
+        <div className="mb-20">
           {loading ? (
             <>
               {[...Array(5)].map((_, index) => (
