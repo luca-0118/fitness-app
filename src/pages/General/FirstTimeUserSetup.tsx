@@ -1,14 +1,16 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import KcalBerekenen from "../../components/Foodtracker/misc/KcalBerekenen.tsx";
 import SaveIcon from "@mui/icons-material/Save";
 
-export default function FirstTimeUserSetup() {
+interface FirstTimeUserSetupProps {
+  onComplete: () => void;
+}
+
+export default function FirstTimeUserSetup({ onComplete }: FirstTimeUserSetupProps) {
   const [kcal, setKcal] = useState("");
   const [carbs, setCarbs] = useState("");
   const [protein, setProtein] = useState("");
   const [fats, setFats] = useState("");
-  const navigate = useNavigate();
 
   const handleSave = () => {
     if (!kcal) {
@@ -16,16 +18,39 @@ export default function FirstTimeUserSetup() {
       return;
     }
 
-    console.log("Saving nutrition goals:", { kcal, carbs, fats, protein });
-    localStorage.setItem('nutrientGoals', JSON.stringify({ kcal, carbs, fats, protein }));
+    // Calculate macros if not filled in
+    // Using 50% carbs, 25% protein, 25% fat ratio
+    let finalCarbs = carbs;
+    let finalProtein = protein;
+    let finalFats = fats;
+
+    const kcalValue = Number(kcal);
+
+    if (!finalCarbs) {
+      // 1g carbs = 4 kcal
+      finalCarbs = String(Math.round((kcalValue * 0.5) / 4));
+    }
+
+    if (!finalProtein) {
+      // 1g protein = 4 kcal
+      finalProtein = String(Math.round((kcalValue * 0.25) / 4));
+    }
+
+    if (!finalFats) {
+      // 1g fat = 9 kcal
+      finalFats = String(Math.round((kcalValue * 0.25) / 9));
+    }
+
+    console.log("Saving nutrition goals:", { kcal, carbs: finalCarbs, fats: finalFats, protein: finalProtein });
+    localStorage.setItem('nutrientGoals', JSON.stringify({ kcal, carbs: finalCarbs, fats: finalFats, protein: finalProtein }));
     localStorage.setItem('firstTimeUserCompleted', 'true');
-    console.log("Setup completed. Navigating to home...");
-    navigate('/');
+    console.log("Setup completed. Going to main page...");
+    onComplete();
   };
 
   const handleSkip = () => {
     localStorage.setItem('firstTimeUserCompleted', 'true');
-    navigate('/');
+    onComplete();
   };
 
   return (

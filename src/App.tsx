@@ -31,7 +31,8 @@ function App() {
 
   useEffect(() => {
     const hasCompletedFirstTimeSetup = localStorage.getItem('firstTimeUserCompleted');
-    setIsFirstTimeUser(!hasCompletedFirstTimeSetup);
+    // TODO: Remove the "|| true" after testing
+    setIsFirstTimeUser(!hasCompletedFirstTimeSetup || true);
   }, []);
 
   useEffect(() => {
@@ -91,7 +92,7 @@ function App() {
             <div className="text-textcolor text-2xl">Loading...</div>
           </div>
         ) : isFirstTimeUser ? (
-          <FirstTimeUserSetup />
+          <FirstTimeUserSetup onComplete={() => setIsFirstTimeUser(false)} />
         ) : (
           <div className="h-dvh flex flex-col overflow-hidden">
             <Header />
