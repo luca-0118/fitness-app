@@ -33,7 +33,7 @@ interface FoodItemProps {
 
 /**
  * Transforms nutrients from the database values into an object that is more easily usable.
- * @param nutriments 
+ * @param nutriments
  */
 function parseNutriments(nutriments: Nutriments): ParsedNutriments {
   const calories = nutriments["energy-kcal_100g"] ?? 0;
@@ -87,7 +87,7 @@ export default function FoodItemComponent({ name, nutriments, barcode, brand, on
     addProduct={handleAddFoodClick}
     onClick={onClick} // adds item to recents.
   />
-  if (!overlay) return <Item handleClick={toggleOverlay} name={name} />
+  if (!overlay) return <Item handleClick={toggleOverlay} name={name} brand={brand} />
 }
 
 
@@ -169,8 +169,9 @@ function Overlay({ name, nutriments, brand, barcode, disableOverlay, updateAmoun
 interface ItemProps {
   handleClick: () => void;
   name: string;
+  brand: string;
 }
-function Item({ handleClick, name }: ItemProps) {
+function Item({ handleClick, name, brand }: ItemProps) {
   return <div
     className="bg-components border-bordercolor border rounded-xl px-2 mb-3 flex w-[90%] items-center mx-auto hover:bg-components-hover active:bg-components-hover cursor-pointer"
     onClick={() => handleClick()}
@@ -179,6 +180,11 @@ function Item({ handleClick, name }: ItemProps) {
       <div className="flex-1 text-xl text-textcolor text-left cursor-pointer mb-auto">
         {name}
       </div>
+      {brand && (
+        <div className="text-xs text-muted text-left">
+          {brand}
+        </div>
+      )}
     </div>
   </div>
 }

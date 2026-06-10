@@ -2,7 +2,8 @@ import React from 'react';
 import Chart from 'react-apexcharts';
 import { ApexOptions } from 'apexcharts';
 import { useEffect, useState } from 'react';
-import {invoke} from "@tauri-apps/api/core";
+import { invoke } from "@tauri-apps/api/core";
+import { useNavigate } from "react-router-dom";
 
 const getCSSVariable = (name: string) =>
     getComputedStyle(document.documentElement)
@@ -16,8 +17,8 @@ interface macronutrients {
     fats: number;
 }
 
-
 export const NutritionDonutChart: React.FC = () => {
+    const navigate = useNavigate();
     const [macros, setMacros] = useState<macronutrients>({
         calories: 0,
         carbs: 0,
@@ -51,7 +52,6 @@ export const NutritionDonutChart: React.FC = () => {
         updateTheme();
 
         const observer = new MutationObserver(updateTheme);
-
         observer.observe(document.documentElement, {
             attributes: true,
             attributeFilter: ['data-theme'],
@@ -68,19 +68,14 @@ export const NutritionDonutChart: React.FC = () => {
     ];
 
     let valuesArray: number[] = [];
-
     const retrievedData = localStorage.getItem("nutrientGoals");
 
     if (retrievedData) {
         const parsedData = JSON.parse(retrievedData);
         valuesArray = Object.values(parsedData).map(Number);
-    } else {
-        console.log("No data found in localStorage for 'profileTarget'.");
     }
 
-
     const max = valuesArray;
-
     const labels = ['Calories', 'Carbs', 'Proteins', 'Fats'];
     const colors = [themeColors.accentColor, themeColors.redColor, themeColors.blueColor, themeColors.greenColor];
     const units = ['kcal', 'g', 'g', 'g'];
@@ -89,8 +84,7 @@ export const NutritionDonutChart: React.FC = () => {
         Math.min((value / max[i]) * 100, 100)
     );
 
-    const clampedCalories = Math.min(Rawseries[0], max[0]); // Clamp to max
-
+    const clampedCalories = Math.min(Rawseries[0], max[0]);
     const barColor = Rawseries[0] > max[0] ? themeColors.warningColor : themeColors.accentColor;
 
     const options: ApexOptions = {
@@ -114,24 +108,16 @@ export const NutritionDonutChart: React.FC = () => {
         },
         stroke: { lineCap: 'round' },
         states: {
-            hover: {
-                filter: { type: 'none' },
-            },
-            active: {
-                filter: { type: 'none' },
-            },
+            hover: { filter: { type: 'none' } },
+            active: { filter: { type: 'none' } },
         },
-    }
+    };
 
     const bar: ApexOptions = {
         chart: {
             type: 'bar',
-            toolbar: {
-                show: false,
-            },
-            sparkline: {
-                enabled: true,
-            },
+            toolbar: { show: false },
+            sparkline: { enabled: true },
         },
         colors: [barColor],
         plotOptions: {
@@ -146,16 +132,10 @@ export const NutritionDonutChart: React.FC = () => {
                 },
             },
         },
-        tooltip: {
-            enabled: false,
-        },
+        tooltip: { enabled: false },
         states: {
-            hover: {
-                filter: { type: 'none' },
-            },
-            active: {
-                filter: { type: 'none' },
-            },
+            hover: { filter: { type: 'none' } },
+            active: { filter: { type: 'none' } },
         },
     };
 
@@ -169,7 +149,7 @@ export const NutritionDonutChart: React.FC = () => {
     }));
 
     useEffect(() => {
-        fetchMacros()
+        fetchMacros();
     }, []);
 
     const fetchMacros = async () => {
@@ -177,8 +157,6 @@ export const NutritionDonutChart: React.FC = () => {
             const result = await invoke<macronutrients[]>("get_food_by_date", {
                 date: new Date(),
             });
-            console.log(result);
-
             const totals = result.reduce(
                 (acc, item) => ({
                     calories: acc.calories + item.calories,
@@ -186,29 +164,24 @@ export const NutritionDonutChart: React.FC = () => {
                     protein: acc.protein + item.protein,
                     fats: acc.fats + item.fats,
                 }),
-                {
-                    calories: 0,
-                    carbs: 0,
-                    protein: 0,
-                    fats: 0,
-                }
+                { calories: 0, carbs: 0, protein: 0, fats: 0 }
             );
-
             setMacros(totals);
-
-            console.log("Totals:", totals);
-
         } catch (err) {
             console.error("Error fetching macros:", err);
         }
     };
 
-
     return (
-        <div style={{ width: '100%', textAlign: 'center', color: 'white'}}>
+        <div style={{ width: '100%', textAlign: 'center', color: 'white' }}>
             <div style={{ marginTop: 16 }}>
-                <div style={{ textAlign: 'left', marginBottom: 16 }}>
-                    <span style={{ color: colors[0], fontSize: 24, fontWeight: 700, display: 'block'}}>{labels[0]}</span>
+                <button
+                    style={{ textAlign: 'left', marginBottom: 16 }}
+                    onClick={() => {
+                        navigate("/kcal-tracker", { state: { selectedNutrient: labels[0] } });
+                    }}
+                >
+                    <span style={{ color: colors[0], fontSize: 24, fontWeight: 700, display: 'block' }}>{labels[0]}</span>
                     <div className="text-[28px] text-textcolor">
                         {Rawseries[0]}
                         <span className="text-lg text-muted">/{max[0]}{units[0]}</span>
@@ -218,35 +191,28 @@ export const NutritionDonutChart: React.FC = () => {
                                 xaxis: {
                                     categories: ['Calories'],
                                     min: 0,
-                                    max: max[0], // Fixed max
+                                    max: max[0],
                                     labels: { show: false },
                                     axisBorder: { show: false },
                                     axisTicks: { show: false },
                                 },
                             }}
-                            series={[
-                                {
-                                    data: [clampedCalories], // Use clamped value for the bar
-                                },
-                            ]}
+                            series={[{ data: [clampedCalories] }]}
                             type="bar"
                             height={18}
                             width={'100%'}
                         />
                     </div>
-                </div>
+                </button>
 
-                <div
-                    style={{
-                        display: 'grid',
-                        gridTemplateColumns: 'repeat(3, minmax(0, 1fr))',
-                        gap: 7,
-                    }}
-                >
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, minmax(0, 1fr))', gap: 7 }}>
                     {legendData.slice(1).map((item, idx) => (
-                        <div
+                        <button
                             key={idx}
                             className="relative rounded-2xl h-35"
+                            onClick={() => {
+                                navigate("/kcal-tracker", { state: { selectedNutrient: item.label } });
+                            }}
                         >
                             <div
                                 style={{
@@ -260,40 +226,21 @@ export const NutritionDonutChart: React.FC = () => {
                                 }}
                             >
                                 <Chart
-                                    options={{
-                                        ...options,
-                                        colors: [item.color],
-                                        chart: {
-                                            ...options.chart,
-                                        },
-                                    }}
+                                    options={{ ...options, colors: [item.color] }}
                                     series={[item.series]}
                                     type="radialBar"
                                     height={140}
                                     width={140}
                                 />
                             </div>
-
                             <div className="relative z-10 h-full flex flex-col items-center justify-center text-center">
-                            <span
-                                style={{
-                                    color: item.color,
-                                    display: 'block',
-                                }}
-                                >
-                                    {item.label}
-                                </span>
+                                <span style={{ color: item.color, display: 'block' }}>{item.label}</span>
                                 <div>
-                                    <span className="text-textcolor text-xl font-bold">
-                                        {item.value}
-                                    </span>
-                                    <span className="text-[13px] text-muted">
-                                        /{item.max}
-                                        {item.unit}
-                                    </span>
+                                    <span className="text-textcolor text-xl font-bold">{item.value}</span>
+                                    <span className="text-[13px] text-muted">/{item.max}{item.unit}</span>
                                 </div>
                             </div>
-                        </div>
+                        </button>
                     ))}
                 </div>
             </div>

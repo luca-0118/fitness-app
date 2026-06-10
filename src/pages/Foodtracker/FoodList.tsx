@@ -1,4 +1,5 @@
 import FoodItemComponent from "../../components/Foodtracker/listItems/FoodItemComponent.tsx";
+import FoodItemSkeleton from "../../components/Foodtracker/listItems/FoodItemSkeleton.tsx";
 import SearchBar from "../../components/General/misc/SearchBar.tsx";
 import { invoke } from "@tauri-apps/api/core";
 import { useState } from "react";
@@ -38,32 +39,55 @@ export default function FoodList() {
   const [error, setError] = useState<any>("");
   const [Searching, setSearching] = useState(false);
   const [barcode, setBarcode] = useState(0)
+
+  const fetchWithRetry = async (
+  product: string,
+  page: number,
+  retries = 10
+): Promise<searchReturn> => {
+  let lastError;
+
+  for (let attempt = 1; attempt <= retries; attempt++) {
+    try {
+      return await invoke<searchReturn>("get_products", {
+        product,
+        page,
+      });
+    } catch (err) {
+      lastError = err;
+
+      console.log(`Attempt ${attempt}/${retries} failed`);
+
+      if (attempt < retries) {
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+      }
+    }
+  }
+
+  throw lastError;
+};
   
   const fetchSearchAPI = async (product: string, page: number) => {
-    if (!product.trim()) {
-      setProduct([]);
-      setError(null);
-      return;
-    }
-    setLoading(true);
+  if (!product.trim()) {
+    setProduct([]);
     setError(null);
+    return;
+  }
 
-    try {
-      const result = await invoke<searchReturn>("get_products", {
-        product: product,
-        page: page,
-      });
-      setProduct(result.products ?? []);
+  setLoading(true);
+  setError(null);
 
-    } catch (err) {
-      console.error("Error:", err);
-
-      setError("db error");
-      setProduct([]);
-    } finally {
-      setLoading(false);
-    }
-  };
+  try {
+    const result = await fetchWithRetry(product, page, 10);
+    setProduct(result.products ?? []);
+  } catch (err) {
+    console.error(err);
+    setError("db error");
+    setProduct([]);
+  } finally {
+    setLoading(false);
+  }
+};
 
   const handleSearch = () => {
     setRememberText(searchText);
@@ -78,7 +102,7 @@ export default function FoodList() {
   };
 
   const getStatusMessage = () => {
-    if (loading) return { text: "Searching..." };
+    if (loading) return null;
     if (!loading && error) return { text: error, css: "text-red-400  font-bold" };
     if (!loading && !error && product.length === 0 && !Searching && !productBarcode)
       return { text: "Search a product" };
@@ -144,37 +168,47 @@ export default function FoodList() {
           ))}
         </div>
       ) : (
-        <div className="">
-          {(() => {
-            const status = getStatusMessage();
-            return status ? (
-              <div className={`${status.css} text-center text-textcolor my-6`}>
-                {status.text}
-              </div>
-            ) : null;
-          })()}
+        <div className="mb-20">
+          {loading ? (
+            <>
+              {[...Array(5)].map((_, index) => (
+                <FoodItemSkeleton key={index} />
+              ))}
+            </>
+          ) : (
+            <>
+              {(() => {
+                const status = getStatusMessage();
+                return status ? (
+                  <div className={`${status.css} text-center text-textcolor my-6`}>
+                    {status.text}
+                  </div>
+                ) : null;
+              })()}
 
-          {product.map((item) => (
-            item.nutriments ?
-            <FoodItemComponent
-              key={item.id ?? item.code}
-              name={item.product_name}
-              nutriments={item.nutriments}
-              barcode={item.code}
-              brand={item.brands}
-              onClick={() => {
-                if (!recents.includes(item)) {
-                  setRecents([...recents, item]);
-                }
-              }}
-            />
-            : null
-            ))}
-            
-            {productBarcode ? 
-            <FoodItemComponent key={1} name={productBarcode.product_name} nutriments={productBarcode.nutriments} barcode={barcode.toString()} brand={productBarcode.brands_tags[0]} onClick={()=> null}/>
-          : null  
-          }
+              {product.map((item) => (
+                item.nutriments ?
+                <FoodItemComponent
+                  key={item.id ?? item.code}
+                  name={item.product_name}
+                  nutriments={item.nutriments}
+                  barcode={item.code}
+                  brand={item.brands}
+                  onClick={() => {
+                    if (!recents.includes(item)) {
+                      setRecents([...recents, item]);
+                    }
+                  }}
+                />
+                : null
+                ))}
+                
+                {productBarcode ? 
+                <FoodItemComponent key={1} name={productBarcode.product_name} nutriments={productBarcode.nutriments} barcode={barcode.toString()} brand={productBarcode.brands_tags[0]} onClick={()=> null}/>
+              : null  
+              }
+            </>
+          )}
         </div>
 
         

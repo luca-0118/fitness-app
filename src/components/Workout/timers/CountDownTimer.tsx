@@ -43,6 +43,14 @@ export default function CountDownTimer({ onTimerChange }: CountDownTimerProps) {
         };
     }, [isActive, timeLeftMs]);
 
+    useEffect(() => {
+        if (timeLeftMs === 0 && hasStarted) {
+            setIsActive(false);
+            setHasStarted(false);
+            setTimeLeftMs(inputtimeMs);
+        }
+    }, [timeLeftMs, hasStarted, inputtimeMs]);
+
     const handleStart= () => {
         setTimeLeftMs(inputtimeMs);
         setIsActive(true);
