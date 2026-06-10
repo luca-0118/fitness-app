@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import ThemeButton from "../../components/General/buttons/ThemeButton.tsx";
 import SaveIcon from "@mui/icons-material/Save";
-import WeightLineChart from "../../components/General/charts/WeightLineChart.tsx";
+//import WeightLineChart from "../../components/General/charts/WeightLineChart.tsx";
 import KcalBerekenen from "../../components/Foodtracker/misc/KcalBerekenen.tsx";
 
 export default function Profile() {
@@ -9,7 +9,6 @@ export default function Profile() {
   const [carbs, setCarbs] = useState("");
   const [protein, setProtein] = useState("");
   const [fats, setFats] = useState("");
-  const [isCompleted] = useState(false);
   const [targetWeight, setTargetWeight] = useState("");
   const [isSaved, setIsSaved] = useState(false);
 
@@ -124,12 +123,12 @@ export default function Profile() {
             </div>
           </div>
         </div>
-        <div className="bg-components border border-bordercolor rounded-xl p-6 col-span-2 items-center w-[90%] mx-auto">
+        {/*<div className="bg-components border border-bordercolor rounded-xl p-6 col-span-2 items-center w-[90%] mx-auto">
           <h2 className="border-b-2 border-bordercolor w-full text-center mb-4 font-bold text-lg text-textcolor">
             Weight
           </h2>
           <WeightLineChart />
-        </div>
+        </div>*/}
       </div>
     </div>
   );

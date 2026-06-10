@@ -64,7 +64,7 @@ export default function EatenTodayList() {
         const handleFoodItemClick = () => {
             navigate("/kcal-tracker/" + item.id);
         }
-        
+
         return (
             <div className="w-full rounded-xl flex bg-background justify-between relative">
                 <div className="flex items-center pl-3 w-full overflow-hidden justify-between">
@@ -308,7 +308,8 @@ export default function EatenTodayList() {
                             <div key={cat.key} className="rounded-2xl border border-accent">
                                 <button
                                     onClick={() => cat.items.length > 0 ? toggle(cat.key) : null}
-                                    className="w-full text-left px-4 py-3 flex items-center justify-between bg-background"
+                                    className={`${
+                                        isOpen  ? "rounded-t-2xl" : "rounded-2xl"} w-full text-left px-4 py-3 flex items-center justify-between bg-background`}
                                 >
                                     <div>
                                         <div className="text-textcolor font-semibold">{cat.catName}</div>
@@ -323,10 +324,10 @@ export default function EatenTodayList() {
                                 <div
                                     className={`${
                                         isOpen  ? "block" : "hidden"
-                                    } bg-components-hover flex flex-col gap-1 px-3 py-2`}
+                                    } rounded-b-2xl bg-components-hover flex flex-col gap-1 px-3 py-2`}
                                 >
                                 {cat.items.map((item) => (
-                                    <FoodComp key={item.id} item={item}/>
+                                    <FoodComp key={item.id} item={item} selectedNutrient={selectedNutrient} />
                                 ))}
                                 </div>
                             </div>

@@ -33,7 +33,7 @@ interface FoodItemProps {
 
 /**
  * Transforms nutrients from the database values into an object that is more easily usable.
- * @param nutriments 
+ * @param nutriments
  */
 function parseNutriments(nutriments: Nutriments): ParsedNutriments {
   const calories = nutriments["energy-kcal_100g"] ?? 0;
