@@ -1,6 +1,7 @@
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { useNavigate, useParams } from 'react-router-dom';
 import useCompletedSession, { Exercise } from '../../Hooks/UseCompletedSession';
+import DbDate from '../../classes/DbDate';
 
 export default function DetailedHistoryPage() {
     const navigate = useNavigate();
@@ -17,16 +18,24 @@ export default function DetailedHistoryPage() {
 
     if (!completedSession) return <h1>Loading....</h1>
 
+    const startDate = new DbDate(completedSession.start_time);
+    const endDate = new DbDate(completedSession.end_time);
+    const timeDifference = DbDate.TimeDifference(startDate, endDate);
+
+    console.log(startDate, endDate);
+
+
 
     return (<>
         <div className="absolute top-0 left-0 w-dvw h-dvh bg-background z-100 felx flex-col overflow-auto no-scrollbar">
             <section id="workout-date" className="sticky top-0 bg-components w-full min-h-20 flex flex-col items-center text-xl text-accent py-3 overflow-auto">
                 <h1 className="text-3xl font-bold">{completedSession.workout_name}</h1>
-                <p>31-12-1999</p>
+                <p>{startDate.toDMY()}</p>
                 <div className="flex flex-row gap-1">
-                    <p>08:30</p>
+                    <p>{startDate.toHS()}</p>
                     <p>-</p>
-                    <p>09:30</p>
+                    <p>{endDate.toHS()}</p>
+                    <p className='text-accent/50'>({timeDifference.hours}h {timeDifference.minutes}m {timeDifference.seconds}s)</p>
                 </div>
 
 

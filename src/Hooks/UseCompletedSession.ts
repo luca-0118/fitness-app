@@ -1,5 +1,5 @@
 import { invoke } from "@tauri-apps/api/core"
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 interface WorkoutSessionResponse {
   ok: boolean;
@@ -47,8 +47,10 @@ export default function useCompletedSession(sessionId:string) {
         } 
     }
 
+    useEffect(() => {
+      fetchSession();
 
-    fetchSession();
+    },[sessionId]);
 
     return completedSession;
 }
