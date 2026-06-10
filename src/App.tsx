@@ -14,7 +14,6 @@ import Session from "./pages/Workout/Session.tsx";
 import NewWorkout from "./pages/Workout/NewWorkout.tsx";
 import Profile from "./pages/General/Profile.tsx";
 import WorkoutHistory from "./pages/Workout/WorkoutHistory.tsx";
-import SessionHistory from "./pages/Workout/SessionHistory.tsx";
 import KcalTracker from "./pages/Foodtracker/KcalTracker.tsx";
 import Exercises from "./pages/Workout/Exercises.tsx";
 import ExerciseDescription from "./pages/Workout/ExerciseDescription.tsx";
@@ -93,8 +92,8 @@ function App() {
               <Route path="/profile" element={<Profile />} />
               <Route path="/history" element={<WorkoutHistory />} />
               <Route path="/session-history">
-                <Route index  element={<WorkoutHistory />} />
-                <Route path=":workoutId" element={<DetailedHistoryPage/>}/>
+                <Route index element={<WorkoutHistory />} />
+                <Route path=":workoutId" element={<DetailedHistoryPage />} />
               </Route>
               <Route path="/kcal-tracker">
                 <Route index element={<KcalTracker />} />

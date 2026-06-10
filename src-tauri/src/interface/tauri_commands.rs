@@ -1,5 +1,6 @@
 use crate::api::{ApiError, ApiErrorResponse, ApiResponse};
 use crate::application::workout_service::{CreateWorkoutRequest, WorkoutListParams};
+use crate::domain::DetailedWorkout;
 use crate::interface::dto::{
     CreateWorkoutDTO, ExerciseListDTO, ExerciseRecordDTO, SessionDTO, UpdateSessionSetReq,
     WorkoutDTO, WorkoutHistoryDTO, WorkoutsDTO,
@@ -158,11 +159,15 @@ pub fn remove_workout(
     })
 }
 
-
 #[tauri::command]
 pub fn get_detailed_session_history(
     ctx: State<Ctx>,
     req: String, //The completed session id.
-) -> Result<ApiResponse,ApiErrorResponse> {
-    let response ctx.service.session.history_detailed(req)?;
+) -> Result<ApiResponse<DetailedWorkout>, ApiErrorResponse> {
+    let response = ctx.service.session()?.workout_history_detailed(req)?;
+
+    Ok(ApiResponse {
+        ok: true,
+        data: response,
+    })
 }

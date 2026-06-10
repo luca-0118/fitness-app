@@ -1,8 +1,8 @@
 use crate::api::{ApiError, ApiErrorResponse};
 use crate::domain::{
     AddExerciseParams, AddTimedSetParams, AddWeighedSetParams, CompletedExerciseRepo,
-    CompletedWorkouts, SaveSessionParams, Session, SessionExercise, Set, WorkoutExerciseRepo,
-    WorkoutHistoryRepo,
+    CompletedWorkouts, DetailedWorkout, SaveSessionParams, Session, SessionExercise, Set,
+    WorkoutExerciseRepo, WorkoutHistoryRepo,
 };
 use crate::repository::completed_exercise_repository::CompletedExerciseRepository;
 use crate::repository::workout_exercise_repository::WorkoutExerciseRepository;
@@ -126,12 +126,14 @@ impl SessionService {
         }
     }
 
-
-    pub fn workout_history_detailed(&self,history_id:String) -> Result<DetailedWorkout,ApiErrorResponse> {
-        let history = self.workout_history.get_by_id(history_id)?;
-
-        
-
+    pub fn workout_history_detailed(
+        &self,
+        history_id: String,
+    ) -> Result<DetailedWorkout, ApiErrorResponse> {
+        self.workout_history.get_by_id(&history_id).map_err(|e| {
+            println!("could not get history, error: {:?}", e);
+            return ApiError::DatabaseError.into();
+        })
     }
 
     pub fn workout_history(&self) -> Result<CompletedWorkouts, ApiErrorResponse> {

@@ -1,175 +1,27 @@
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
+import useCompletedSession, { Exercise } from '../../Hooks/UseCompletedSession';
 
 export default function DetailedHistoryPage() {
     const navigate = useNavigate();
+    const params = useParams();
+    const sessionId = params.workoutId;
 
     const handleArrowClick = () => {
         navigate(-1);
     }
 
+    const completedSession = useCompletedSession(sessionId ?? "");
+
     // Test static data which will be replaced by backend functionality.
-    const testMap = [
-        {
-            name: "hi",
-            img: "https://placecats.com/64/64",
-            sets: [
-                {
-                    reps: 10,
-                    weight: 110
-                },
-                {
-                    reps: 10,
-                    weight: 110
-                },
-                {
-                    reps: 10,
-                    weight: 110
-                },
-                {
-                    reps: 10,
-                    weight: 110
-                }
-            ]
-        },
-        {
-            name: "hi",
-            img: "https://placecats.com/64/64",
-            sets: [
-                {
-                    reps: 10,
-                    weight: 110
-                },
-                {
-                    reps: 10,
-                    weight: 110
-                },
-                {
-                    reps: 10,
-                    weight: 110
-                },
-                {
-                    reps: 10,
-                    weight: 110
-                }
-            ]
-        },
-        {
-            name: "hi",
-            img: "https://placecats.com/64/64",
-            sets: [
-                {
-                    reps: 10,
-                    weight: 110
-                },
-                {
-                    reps: 10,
-                    weight: 110
-                },
-                {
-                    reps: 10,
-                    weight: 110
-                },
-                {
-                    reps: 10,
-                    weight: 110
-                }
-            ]
-        },
-        {
-            name: "hi",
-            img: "https://placecats.com/64/64",
-            sets: [
-                {
-                    reps: 10,
-                    weight: 110
-                },
-                {
-                    reps: 10,
-                    weight: 110
-                },
-                {
-                    reps: 10,
-                    weight: 110
-                },
-                {
-                    reps: 10,
-                    weight: 110
-                }
-            ]
-        },
-        {
-            name: "hi",
-            img: "https://placecats.com/64/64",
-            sets: [
-                {
-                    reps: 10,
-                    weight: 110
-                },
-                {
-                    reps: 10,
-                    weight: 110
-                },
-                {
-                    reps: 10,
-                    weight: 110
-                },
-                {
-                    reps: 10,
-                    weight: 110
-                }
-            ]
-        },
-        {
-            name: "hi",
-            img: "https://placecats.com/64/64",
-            sets: [
-                {
-                    reps: 10,
-                    weight: 110
-                },
-                {
-                    reps: 10,
-                    weight: 110
-                },
-                {
-                    reps: 10,
-                    weight: 110
-                },
-                {
-                    reps: 10,
-                    weight: 110
-                }
-            ]
-        },
-        {
-            name: "hi",
-            img: "https://placecats.com/64/64",
-            sets: [
-                {
-                    reps: 10,
-                    weight: 110
-                },
-                {
-                    reps: 10,
-                    weight: 110
-                },
-                {
-                    reps: 10,
-                    weight: 110
-                },
-                {
-                    reps: 10,
-                    weight: 110
-                }
-            ]
-        },
-    ];
+
+    if (!completedSession) return <h1>Loading....</h1>
+
 
     return (<>
         <div className="absolute top-0 left-0 w-dvw h-dvh bg-background z-100 felx flex-col overflow-auto no-scrollbar">
             <section id="workout-date" className="sticky top-0 bg-components w-full min-h-20 flex flex-col items-center text-xl text-accent py-3 overflow-auto">
-                <h1 className="text-3xl font-bold">WorkoutName</h1>
+                <h1 className="text-3xl font-bold">{completedSession.workout_name}</h1>
                 <p>31-12-1999</p>
                 <div className="flex flex-row gap-1">
                     <p>08:30</p>
@@ -185,7 +37,7 @@ export default function DetailedHistoryPage() {
             <section id='completed-exercises' className='p-4 flex flex-col gap-4 w-full'>
                 {/* Loops through all completed exercises to create new components for each of them */}
                 {/* Completed passes on all the data of an completed exercise */}
-                {testMap.map(_completed => (<CompletedExercise exerciseInfo={_completed} />))}
+                {completedSession.exercises.map(_completed => (<CompletedExercise exerciseInfo={_completed} />))}
             </section>
 
         </div>
@@ -207,13 +59,13 @@ export default function DetailedHistoryPage() {
 
 
 interface CompletedExerciseProps {
-    exerciseInfo: { name: string, img: string, sets: { reps: number, weight: number }[] }
+    exerciseInfo: Exercise
 
 }
 function CompletedExercise({ exerciseInfo }: CompletedExerciseProps) {
     return <article className='bg-components w-full min-h-20 h-fit rounded p-2'>
-        <div id="exerciseInfo" className='flex flex-row items-center bg-white/5 rounded'>
-            <img src="https://placecats.com/64/64" alt="" />
+        <div id="exerciseInfo" className='flex flex-row gap-2 items-center bg-white/5 rounded'>
+            <img src={exerciseInfo.gif_url ?? "https://placecats.com/64/64"} alt="" className='w-16 h-16 rounded-l' />
             <h2 className='text-3xl mx-auto text-accent'>{exerciseInfo.name}</h2>
         </div>
         <table className='w-full text-textcolor font-normal text-end h-fit'>
@@ -227,7 +79,7 @@ function CompletedExercise({ exerciseInfo }: CompletedExerciseProps) {
             <tbody className='text-textcolor/75'>
                 {/* Loops through each found from exerciseInfo, and loads the data in the table */}
                 {exerciseInfo.sets.map((exercise, idx) => (<tr>
-                    <td>{idx}</td>
+                    <td>{idx + 1}</td>
                     <td>{exercise.reps}</td>
                     <td>{exercise.weight}kg</td>
                 </tr>))}
