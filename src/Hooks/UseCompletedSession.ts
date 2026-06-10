@@ -47,8 +47,15 @@ export default function useCompletedSession(sessionId:string) {
         } 
     }
 
+
+    const randomTest = async () => {
+      const resp = await invoke("create_predictive_graph",{exerciseId: "trmte8s"});
+    }
+
+
     useEffect(() => {
       fetchSession();
+      randomTest();
 
     },[sessionId]);
 
