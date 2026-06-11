@@ -10,6 +10,7 @@ use crate::repository::workout_history_repository::WorkoutHistoryRepository;
 use serde::{Deserialize, Serialize};
 use tauri::webview::cookie::time::UtcDateTime;
 use uuid::Uuid;
+use chrono::Utc;
 
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(tag = "type")]
@@ -250,7 +251,7 @@ impl SessionService {
             session_uuid: session_uuid.clone(),
             workout_uuid: workout_details.uuid,
             workout_name: workout_details.name,
-            start_time: UtcDateTime::now().to_string(),
+            start_time: Utc::now().to_rfc3339(),
             end_time: String::new(),
             exercises: session_exercises,
         };
