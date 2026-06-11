@@ -18,8 +18,7 @@ export default function FirstTimeUserSetup({ onComplete }: FirstTimeUserSetupPro
       return;
     }
 
-    // Calculate macros if not filled in
-    // Using 50% carbs, 25% protein, 25% fat ratio
+
     let finalCarbs = carbs;
     let finalProtein = protein;
     let finalFats = fats;
@@ -27,17 +26,14 @@ export default function FirstTimeUserSetup({ onComplete }: FirstTimeUserSetupPro
     const kcalValue = Number(kcal);
 
     if (!finalCarbs) {
-      // 1g carbs = 4 kcal
       finalCarbs = String(Math.round((kcalValue * 0.5) / 4));
     }
 
     if (!finalProtein) {
-      // 1g protein = 4 kcal
       finalProtein = String(Math.round((kcalValue * 0.25) / 4));
     }
 
     if (!finalFats) {
-      // 1g fat = 9 kcal
       finalFats = String(Math.round((kcalValue * 0.25) / 9));
     }
 
@@ -57,9 +53,9 @@ export default function FirstTimeUserSetup({ onComplete }: FirstTimeUserSetupPro
     <div className="w-full h-full bg-background overflow-y-auto no-scrollbar pt-[env(safe-area-inset-top)] pb-[env(safe-area-inset-bottom)]">
       <div className="py-8 w-[90%] mx-auto flex flex-col gap-6 max-w-3xl">
         <div className="text-center">
-          <h1 className="text-4xl font-bold text-textcolor mb-2">Welcome to Fitness App!</h1>
+          <h1 className="text-4xl font-bold text-textcolor mb-2">Welcome to T team Fitness App!</h1>
           <p className="text-textcolor text-lg">
-            Let's set up your nutrition targets. Calculate your TDEE (Total Daily Energy Expenditure) by filling in your details below.
+            Let's set up your nutrition targets. Calculate your target calories by filling in your details below.
           </p>
         </div>
 

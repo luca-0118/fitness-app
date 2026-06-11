@@ -31,8 +31,7 @@ function App() {
 
   useEffect(() => {
     const hasCompletedFirstTimeSetup = localStorage.getItem('firstTimeUserCompleted');
-    // TODO: Remove the "|| true" after testing
-    setIsFirstTimeUser(!hasCompletedFirstTimeSetup || true);
+    setIsFirstTimeUser(!hasCompletedFirstTimeSetup);
   }, []);
 
   useEffect(() => {
