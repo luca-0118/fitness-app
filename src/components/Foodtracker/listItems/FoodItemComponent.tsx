@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { invoke } from "@tauri-apps/api/core";
 import NutrimentSquare from "../../ui/NutrimentSquare";
+import toast from "react-hot-toast";
 
 interface Nutriments {
   "energy-kcal_100g"?: number;
@@ -71,8 +72,12 @@ export default function FoodItemComponent({ name, nutriments, barcode, brand, on
 
 
   function handleAddFoodClick() {
-    addFoodToDatabase(barcode, new Date().toISOString(), name, amount, Number(parsedNutriments.calories.toFixed()) / 100 * amount, Number(parsedNutriments.carbs.toFixed(1)) / 100 * amount, Number(parsedNutriments.fat.toFixed(1)) / 100 * amount, Number(parsedNutriments.protein.toFixed(1)) / 100 * amount, mealtime)
-    setOverlay(false)
+    if(amount > 0){addFoodToDatabase(barcode, new Date().toISOString(), name, amount, Number(parsedNutriments.calories.toFixed()) / 100 * amount, Number(parsedNutriments.carbs.toFixed(1)) / 100 * amount, Number(parsedNutriments.fat.toFixed(1)) / 100 * amount, Number(parsedNutriments.protein.toFixed(1)) / 100 * amount, mealtime)
+    setOverlay(false)}
+    else{
+      toast.error("Amount can not be empty")
+      }
+
   }
 
 
