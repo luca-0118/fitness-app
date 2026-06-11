@@ -155,15 +155,13 @@ function Overlay({ name, nutriments, brand, barcode, disableOverlay, updateAmoun
             <option value="avond">dinner</option>
           </select>
         </div>
-        <div className="w-full max-w-md mx-auto mt-5">
-          <div className=" flex">
+        <div className="w-full max-w-md mx-auto mt-5 flex gap-2">
             <button onClick={() => disableOverlay()} className="cursor-pointer mx-auto sticky bottom-2 h-16 justify-center items-center font-bold w-[90%] rounded-full text-textcolor bg-components hover:bg-components-hover active:bg-components-hover flex z-30">
               Cancel
             </button>
             <button className="cursor-pointer mx-auto sticky bottom-2 h-16 justify-center items-center font-bold w-[90%] rounded-full text-textcolor bg-accent hover:bg-accent-action active:bg-accent-action flex z-30" onClick={() => addProduct()}>
               Add product
             </button>
-          </div>
         </div>
       </section>
     </div>
