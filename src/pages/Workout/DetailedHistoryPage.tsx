@@ -3,6 +3,10 @@ import { useNavigate, useParams } from 'react-router-dom';
 import useCompletedSession, { Exercise } from '../../Hooks/UseCompletedSession';
 import DbDate from '../../classes/DbDate';
 
+import { ResponsiveContainer, Legend, Line, LineChart, XAxis, YAxis, Tooltip } from 'recharts';
+import usePredictNextWorkout from '../../Hooks/UsePredictNextWorkout';
+import { useState } from 'react';
+
 export default function DetailedHistoryPage() {
     const navigate = useNavigate();
     const params = useParams();
@@ -72,7 +76,20 @@ interface CompletedExerciseProps {
 
 }
 function CompletedExercise({ exerciseInfo }: CompletedExerciseProps) {
-    return <article className='bg-components w-full min-h-20 h-fit rounded p-2'>
+    const plotPoints = usePredictNextWorkout(exerciseInfo.exercise_id);
+    // if (plotPoints.length > 0) {
+    //     console.log(plotPoints);
+    // }
+
+    const [flipped, setFlipped] = useState<boolean>(false);
+    const toggleFlip = () => {
+        setFlipped(prev => !prev);
+    }
+
+    if (flipped && plotPoints.length > 0)
+        return <PredictiveExerciseGraph e1rmList={plotPoints} onclick={toggleFlip} />
+
+    return <article className='bg-components w-full min-h-20 h-fit rounded p-2' onClick={toggleFlip}>
         <div id="exerciseInfo" className='flex flex-row gap-2 items-center bg-white/5 rounded'>
             <img src={exerciseInfo.gif_url ?? "https://placecats.com/64/64"} alt="" className='w-16 h-16 rounded-l' />
             <h2 className='text-3xl mx-auto text-accent'>{exerciseInfo.name}</h2>
@@ -95,4 +112,61 @@ function CompletedExercise({ exerciseInfo }: CompletedExerciseProps) {
             </tbody>
         </table>
     </article>
+}
+
+
+
+
+
+interface GraphPoint {
+    session: number,
+    e1rm: number,
+    predicted?: number
+
+}
+
+interface PredictiveExerciseGraphProps {
+    e1rmList: number[];
+    onclick: () => void;
+}
+
+function PredictiveExerciseGraph({ e1rmList, onclick }: PredictiveExerciseGraphProps) {
+    const lastActualIdx = e1rmList.length - 2;
+
+    const graphPoints = e1rmList
+        .filter(value => value > 0)
+        .map((value, idx, arr) => {
+            const isLast = idx === arr.length - 1;
+            return {
+                session: idx,
+                e1rm: isLast ? undefined : value,
+                predicted: isLast ? value : undefined,
+            } as GraphPoint;
+        });
+
+    // Bridge: last actual point gets predicted = its own e1rm value
+    graphPoints[lastActualIdx].predicted = e1rmList[lastActualIdx];
+
+    console.log(graphPoints);
+
+    const values = graphPoints
+        .flatMap(p => [p.e1rm, p.predicted])
+        .filter((v): v is number => v !== undefined);
+    const minValue = Math.floor(Math.min(...values) * 0.95); // 5% padding below
+
+    return <>
+        <article className='bg-components w-full min-h-20 h-fit rounded p-2' onClick={onclick}>
+            <h2 className='text-center text-textcolor text-xl font-bold'>Recently completed sessions</h2>
+            <ResponsiveContainer width={"100%"} height={150}>
+                <LineChart data={graphPoints}>
+                    <XAxis dataKey="session" />
+                    <YAxis domain={[minValue, 'auto']} />
+                    <Tooltip />
+                    <Legend />
+                    <Line type="monotone" dataKey="e1rm" stroke="#8884d8" isAnimationActive={false} />
+                    <Line type="monotone" dataKey="predicted" stroke="#82ca9d" strokeDasharray="5 5" dot={{ r: 5 }} isAnimationActive={false} />
+                </LineChart>
+            </ResponsiveContainer>
+        </article>
+    </>
 }
