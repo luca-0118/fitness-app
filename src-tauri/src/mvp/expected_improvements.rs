@@ -89,7 +89,11 @@ fn group_exercise_sets(
 fn get_highest_volumes(grouped_sets: &HashMap<String, Vec<CompletedExercise>>) -> Vec<f64> {
     let mut e1rm_points: Vec<f64> = Vec::new();
 
-    for exercise_key in grouped_sets.keys() {
+    //sorts the keys into alphabetical order.
+    let mut keys: Vec<&String> = grouped_sets.keys().collect();
+    keys.sort();
+
+    for exercise_key in keys {
         let set_list = grouped_sets.get(exercise_key).expect("could not find sets");
 
         let mut highest_val: f64 = 0.0;
