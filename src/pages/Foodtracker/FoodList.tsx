@@ -1,9 +1,8 @@
 import FoodItemComponent from "../../components/Foodtracker/listItems/FoodItemComponent.tsx";
 import FoodItemSkeleton from "../../components/Foodtracker/listItems/FoodItemSkeleton.tsx";
-import SearchBar from "../../components/General/misc/SearchBar.tsx";
-import { invoke } from "@tauri-apps/api/core";
-import { useState } from "react";
-import BarcodeScanner from "../../components/Foodtracker/misc/barcodeScanner.tsx";
+import { useOutletContext } from "react-router-dom";
+import type { FoodPageContext } from "./FoodPage.tsx";
+
 
 export interface Nutriments {
   "energy-kcal_100g"?: number;
@@ -21,134 +20,21 @@ export interface searchItem {
   code: string;
   brands: string;
 }
-interface searchReturn {
-  page: string;
-  page_count: number;
-  page_size: number;
-  products: searchItem[];
-  product: searchItem[];
-  skip: number;
-}
 export default function FoodList() {
-  const [product, setProduct] = useState<searchItem[]>([]);
-  const [productBarcode, setProductBarcode] = useState<any>()
-  const [searchText, setSearchText] = useState("");
-  const [rememberText, setRememberText] = useState("");
-  const [recents, setRecents] = useState<searchItem[]>([])
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<any>("");
-  const [Searching, setSearching] = useState(false);
-  const [barcode, setBarcode] = useState(0)
-
-  const fetchWithRetry = async (
-  product: string,
-  page: number,
-  retries = 10
-): Promise<searchReturn> => {
-  let lastError;
-
-  for (let attempt = 1; attempt <= retries; attempt++) {
-    try {
-      return await invoke<searchReturn>("get_products", {
-        product,
-        page,
-      });
-    } catch (err) {
-      lastError = err;
-
-      console.log(`Attempt ${attempt}/${retries} failed`);
-
-      if (attempt < retries) {
-        await new Promise((resolve) => setTimeout(resolve, 1000));
-      }
-    }
-  }
-
-  throw lastError;
-};
-  
-  const fetchSearchAPI = async (product: string, page: number) => {
-  if (!product.trim()) {
-    setProduct([]);
-    setError(null);
-    return;
-  }
-
-  setLoading(true);
-  setError(null);
-
-  try {
-    const result = await fetchWithRetry(product, page, 10);
-    setProduct(result.products ?? []);
-  } catch (err) {
-    console.error(err);
-    setError("db error");
-    setProduct([]);
-  } finally {
-    setLoading(false);
-  }
-};
-
-  const handleSearch = () => {
-    setRememberText(searchText);
-    setProduct([]);
-    setProductBarcode(null)
-    void fetchSearchAPI(searchText, 1);
-
-    if (searchText.length === 0) {
-      setSearching(false)
-    }
-
-  };
-
-  const getStatusMessage = () => {
-    if (loading) return null;
-    if (!loading && error) return { text: error, css: "text-red-400  font-bold" };
-    if (!loading && !error && product.length === 0 && !Searching && !productBarcode)
-      return { text: "Search a product" };
-    if (!loading && !error && product.length === 0 && Searching && !productBarcode )
-      return { text: `No products found for "${rememberText}".` };
-    return null;
-  };
-
-  function handleProductFromChild(data: any){
-    setProductBarcode(data)
-    setProduct([])
-  }
-  function handleErrorFromChild(data: any){
-    setError(data)
-  }
-  function handleLoadingFromChild(data: any){
-    setLoading(data)
-  }
-  function handleSetBarcode(data: any){
-    setBarcode(data)
-  }
+  const {
+    product,
+    productBarcode,
+    recents,
+    setRecents,
+    loading,
+    error,
+    Searching,
+    barcode,
+    getStatusMessage,
+  } = useOutletContext<FoodPageContext>();
 
   return (
     <>
-      <div className="z-3 bg-background overflow-hidden">
-        <div className="mr-4 ml-4 flex pt-2 pb-1">
-          <SearchBar
-            value={searchText}
-            onChange={setSearchText}
-            onSearch={handleSearch}
-            placeholderText="food"
-          />
-          <div className="h-11 w-13">
-            <BarcodeScanner
-                onProductScan={handleProductFromChild}
-                onError={handleErrorFromChild}
-                onLoading={handleLoadingFromChild}
-                searching={Searching}
-                setSearching={setSearching}
-                setBarcode={handleSetBarcode}
-            />
-          </div>
-        </div>
-      </div>
-
-
       {!loading && !Searching && !error && recents.length > 0 && !productBarcode ? (
         <div className="">
           <div className="text-textcolor text-center my-4 font-semibold">Recent searches</div>
@@ -210,8 +96,6 @@ export default function FoodList() {
             </>
           )}
         </div>
-
-        
       )}
     </>
   );

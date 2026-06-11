@@ -4,9 +4,10 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Header from "./components/General/ui/Header.tsx";
 import BottomNavBar from "./components/General/ui/BottomNavBar.tsx";
 import { WorkoutProvider } from "./context/WorkoutContext";
-
+import FoodPage from "./pages/Foodtracker/FoodPage.tsx";
 import FoodList from "./pages/Foodtracker/FoodList.tsx"
 import Home from "./pages/General/Home.tsx";
+// import CreateMeal from "./pages/Foodtracker/CreateMeal.tsx";
 import WorkoutOverview from "./pages/Workout/WorkoutOverview.tsx";
 import EditWorkout from "./pages/Workout/EditWorkout.tsx";
 import AddExercises from "./pages/Workout/AddExercises.tsx";
@@ -26,8 +27,11 @@ import EditFoodPage from "./pages/EditFoodPage.tsx";
 import DetailedHistoryPage from "./pages/Workout/DetailedHistoryPage.tsx";
 
 function App() {
+  
   useEffect(() => {
-    let unlistenCloseRequested: (() => void) | undefined;
+    
+    let unlistenCloseRequested: (() => void
+  ) | undefined;
     let isClosing = false;
 
     const finishActiveWorkout = async () => {
@@ -100,8 +104,12 @@ function App() {
                 <Route path=":foodId" element={<EditFoodPage />} />
               </Route>
               <Route path="/exercises" element={<Exercises />} />
-              <Route path="/food-list" element={<FoodList />} />
-              <Route path="/exercise-description" element={<ExerciseDescription />} />
+              <Route path="/food-page" element={<FoodPage />}>
+                <Route index element={<FoodList />} />
+                {/* <Route path="custom-food" element={<CreatedByMe />} /> */}
+              </Route>
+              {/* <Route path="/create-meal" element={<CreateMeal />} /> */}
+              <Route path="/exercise-description" element={<ExerciseDescription />}/>
               <Route path="/product-details" element={<ProductDetails />} />
             </Routes>
           </main>

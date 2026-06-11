@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { invoke } from "@tauri-apps/api/core";
 import NutrimentSquare from "../../ui/NutrimentSquare";
+import toast from "react-hot-toast";
 
 interface Nutriments {
   "energy-kcal_100g"?: number;
@@ -51,7 +52,7 @@ function parseNutriments(nutriments: Nutriments): ParsedNutriments {
 export default function FoodItemComponent({ name, nutriments, barcode, brand, onClick }: FoodItemProps) {
   const [overlay, setOverlay] = useState<Boolean>(false);
   const [amount, setAmount] = useState<number>(0)
-  const [mealtime, setMealtime] = useState<String>("ochtend")
+  const [mealtime, setMealtime] = useState<String>("breakfast")
 
   function toggleOverlay() {
     setOverlay(!overlay);
@@ -71,8 +72,12 @@ export default function FoodItemComponent({ name, nutriments, barcode, brand, on
 
 
   function handleAddFoodClick() {
-    addFoodToDatabase(barcode, new Date().toISOString(), name, amount, Number(parsedNutriments.calories.toFixed()) / 100 * amount, Number(parsedNutriments.carbs.toFixed(1)) / 100 * amount, Number(parsedNutriments.fat.toFixed(1)) / 100 * amount, Number(parsedNutriments.protein.toFixed(1)) / 100 * amount, mealtime)
-    setOverlay(false)
+    if(amount > 0){addFoodToDatabase(barcode, new Date().toISOString(), name, amount, Number(parsedNutriments.calories.toFixed()) / 100 * amount, Number(parsedNutriments.carbs.toFixed(1)) / 100 * amount, Number(parsedNutriments.fat.toFixed(1)) / 100 * amount, Number(parsedNutriments.protein.toFixed(1)) / 100 * amount, mealtime)
+    setOverlay(false)}
+    else{
+      toast.error("Amount can not be empty")
+      }
+
   }
 
 
@@ -145,20 +150,19 @@ function Overlay({ name, nutriments, brand, barcode, disableOverlay, updateAmoun
             defaultValue="ochtent"
             className="bg-components text-textcolor border border-bordercolor rounded-xl p-2 w-32 focus:outline-none focus:ring-2 focus:ring-accent ml-3"
           >
-            <option value="ochtent">breakfast</option>
-            <option value="middag">lunch</option>
-            <option value="avond">dinner</option>
+            <option value="breakfast">Breakfast</option>
+            <option value="lunch">Lunch</option>
+            <option value="dinner">Dinner</option>
+            <option value="snacks">Snack</option>
           </select>
         </div>
-        <div className="w-full max-w-md mx-auto mt-5">
-          <div className=" flex">
+        <div className="w-full max-w-md mx-auto mt-5 flex gap-2">
             <button onClick={() => disableOverlay()} className="cursor-pointer mx-auto sticky bottom-2 h-16 justify-center items-center font-bold w-[90%] rounded-full text-textcolor bg-components hover:bg-components-hover active:bg-components-hover flex z-30">
               Cancel
             </button>
             <button className="cursor-pointer mx-auto sticky bottom-2 h-16 justify-center items-center font-bold w-[90%] rounded-full text-textcolor bg-accent hover:bg-accent-action active:bg-accent-action flex z-30" onClick={() => addProduct()}>
               Add product
             </button>
-          </div>
         </div>
       </section>
     </div>

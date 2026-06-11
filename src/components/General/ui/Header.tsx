@@ -16,8 +16,18 @@ const pageTitles: Record<string, string> = {
   "/kcal-tracker": "Calorie Tracker",
   "/exercises": "Exercises",
   "/exercise-description": "Exercise Description",
-  "/food-list": "Food list",
-  "/product-details": "Product Details"
+  "/food-page": "Food",
+  "/food-page/food-list": "Food",
+  "/food-page/custom-food": "Food",
+  "/food-page/custom-food/create-meal": "Food",
+  "/product-details": "Product Details",
+};
+
+const getPageTitle = (pathname: string): string => {
+  if (pathname.startsWith("/kcal-tracker/")) {
+    return "Edit Food";
+  }
+  return pageTitles[pathname] || "Page";
 };
 
 const routesWithSave = [
@@ -30,8 +40,7 @@ const routesWithSave = [
 export default function Header() {
   const location = useLocation();
   const navigate = useNavigate();
-// Get the title for the current path, or default to "Page" if not found
-  const title = pageTitles[location.pathname] || "Page";
+  const title = getPageTitle(location.pathname);
 
   const showSave = routesWithSave.includes(location.pathname);
   const showBack = location.pathname !== "/";
