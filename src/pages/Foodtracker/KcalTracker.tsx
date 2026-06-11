@@ -16,7 +16,7 @@ export default function KcalTracker() {
     no-scrollbar
     "
             >
-                <div className="grid grid-cols-2 gap-4 py-4 w-[80%] mx-auto">
+                <div className="grid grid-cols-2 gap-4 py-4 w-[90%] mx-auto">
 
                     <EatenTodayList />
                 </div>

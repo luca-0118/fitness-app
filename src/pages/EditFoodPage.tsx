@@ -110,6 +110,7 @@ export default function EditFoodPage() {
                                 <option value="ochtend">ochtend</option>
                                 <option value="middag">middag</option>
                                 <option value="avond">avond</option>
+                                <option value="snacks">snack</option>
                             </select>
                         </div>
                     </div>

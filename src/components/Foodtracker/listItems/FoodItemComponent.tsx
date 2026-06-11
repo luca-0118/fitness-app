@@ -148,6 +148,7 @@ function Overlay({ name, nutriments, brand, barcode, disableOverlay, updateAmoun
             <option value="ochtent">breakfast</option>
             <option value="middag">lunch</option>
             <option value="avond">dinner</option>
+            <option value="snacks">snack</option>
           </select>
         </div>
         <div className="w-full max-w-md mx-auto mt-5 flex gap-2">
