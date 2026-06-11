@@ -1,5 +1,5 @@
 import { Dispatch, SetStateAction, useState } from "react";
-import { NavLink, Outlet } from "react-router-dom";
+import { Outlet } from "react-router-dom";
 import SearchBar from "../../components/General/misc/SearchBar.tsx";
 import BarcodeScanner from "../../components/Foodtracker/misc/barcodeScanner.tsx";
 import { invoke } from "@tauri-apps/api/core";
