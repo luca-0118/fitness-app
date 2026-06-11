@@ -18,7 +18,8 @@ export default function EditFoodPage() {
     //editable field.
     const [mealTime, setMealTime] = useState<string>("breakfast");
     const [eatenDate, setEatenDate] = useState<string>("");
-    const [amountEaten, setAmountEaten] = useState<number>(0);
+    const [amountEaten, setAmountEaten] = useState<number | string>(0);
+
     // const [inputType, setInputType] = useState<string>(""); // we don't use this I think.
 
 
@@ -34,29 +35,29 @@ export default function EditFoodPage() {
     }
 
     const updateAmountEaten = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setAmountEaten(Number(e.currentTarget.value));
-    }
+        const value = e.currentTarget.value;
+        setAmountEaten(value === "" ? "" : Number(value));
+    };
 
     const saveEditedProduct = async () => {
-        // implement backend functionality #TODO
+        const amount = typeof amountEaten === "string" ? Number(amountEaten) : amountEaten;
 
-        // recalculate intake
-        const newIntake = calcIntake(food?.amount || 0, amountEaten, {
+        const newIntake = calcIntake(food?.amount || 0, amount, {
             calories: food?.calories || 0,
             proteins: food?.protein || 0,
             fats: food?.fats || 0,
-            carbs: food?.carbs || 0
-        })
+            carbs: food?.carbs || 0,
+        });
 
         //update value in backend.
         const resp = await Food.update(foodID, {
             mealtime: mealTime,
             date: eatenDate,
-            amount: amountEaten,
+            amount: amount, // Now guaranteed to be a number
             calories: newIntake.calories,
             carbs: newIntake.carbs,
             fats: newIntake.fats,
-            protein: newIntake.proteins
+            protein: newIntake.proteins,
         });
 
         if (resp) {
@@ -65,7 +66,7 @@ export default function EditFoodPage() {
         } else {
             toast.error("something went wrong while saving your changes.");
         }
-    }
+    };
 
 
     // Refers to a function which should implement calling the foodItem from the backend.
@@ -85,8 +86,9 @@ export default function EditFoodPage() {
 
         setMealTime(food.mealtime);
         setEatenDate(food.date.split("T")[0]);
-        setAmountEaten(food.amount);
-    }, [food])
+        setAmountEaten(food.amount); // food.amount is a number
+    }, [food]);
+
 
     // #TODO proper loading skeleton
     if (!food) return <h1>loading....</h1>
@@ -94,7 +96,7 @@ export default function EditFoodPage() {
     return <PageContainer>
         <div className="flex flex-col justify-between w-full h-full">
             <div>
-                <h1 className="text-textcolor text-3xl pb-4">{food.name}</h1>
+                <h1 className="text-textcolor text-xl font-bold pb-4">{food.name}</h1>
                 <section className="grid grid-cols-3 gap-3" id="macro-overview">
                     <NutrimentSquare name="Calories" value={food.calories.toFixed()} color="accent" size={3} />
                     <NutrimentSquare name="Carbs" value={food.carbs.toFixed(1)} color="#DC143C" />
@@ -105,8 +107,8 @@ export default function EditFoodPage() {
                     <div id="eaten-on">
                         <p>Eaten on</p>
                         <div className="inputs w-full flex justify-between gap-4">
-                            <input defaultValue={eatenDate} onChange={updateEatenDate} className="bg-[#333737] rounded-xl px-2 py-1 border border-[#414141]" type="date" name="eaten-on-date" id="eaten-on-date" />
-                            <select value={mealTime} onChange={updateMealTime} name="eaten-on-mealtime" id="eaten-on-mealtime" className="bg-[#333737] rounded-xl px-2 py-1 border border-[#414141] w-full">
+                            <input defaultValue={eatenDate} onChange={updateEatenDate} className="bg-components rounded-xl px-2 py-1 border border-bordercolor" type="date" name="eaten-on-date" id="eaten-on-date" />
+                            <select value={mealTime} onChange={updateMealTime} name="eaten-on-mealtime" id="eaten-on-mealtime" className="bg-components rounded-xl px-2 py-1 border border-bordercolor w-full">
                                 <option value="breakfast">Breakfast</option>
                                 <option value="lunch">Lunch</option>
                                 <option value="dinner">Dinner</option>
@@ -114,18 +116,18 @@ export default function EditFoodPage() {
                             </select>
                         </div>
                     </div>
-                    <div id="amount-eaten">
+                    <div id="amount-eaten" className="text-textcolor">
                         <p>Amount eaten</p>
                         <div className="inputs w-full flex justify-between gap-4">
-                            <input value={amountEaten} onChange={updateAmountEaten} className="bg-[#333737] rounded-xl px-2 py-1 border border-[#414141] w-25" type="number" name="eaten-on-date" id="eaten-on-date" />
-                            <select name="eaten-on-mealtime" id="eaten-on-mealtime" className="bg-[#333737] rounded-xl px-2 py-1 border border-[#414141] w-full">
+                            <input value={amountEaten} onChange={updateAmountEaten} className="bg-components rounded-xl px-2 py-1 border border-bordercolor w-25" type="numeric" name="eaten-on-date" id="eaten-on-date"/>
+                            <select name="eaten-on-mealtime" id="eaten-on-mealtime" className="bg-components rounded-xl px-2 py-1 border border-bordercolor w-full">
                                 <option value="gram">gram</option>
                             </select>
                         </div>
                     </div>
                 </section>
             </div>
-            <button className="w-full p-4 text-textcolor bg-accent rounded-4xl text-2xl" onClick={saveEditedProduct}>save changes to product</button>
+            <button className="w-full p-4 text-textcolor bg-accent rounded-full font-bold" onClick={saveEditedProduct}>save changes to product</button>
         </div>
     </PageContainer>
 }
