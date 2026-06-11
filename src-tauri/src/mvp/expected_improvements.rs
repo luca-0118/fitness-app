@@ -3,6 +3,7 @@ use std::{collections::HashMap, hash::Hash};
 use tauri::State;
 
 use crate::{
+    api::{ApiErrorResponse, ApiResponse},
     mvp::{DataPoint, LinearRegression},
     Ctx,
 };
@@ -16,7 +17,10 @@ struct CompletedExercise {
 }
 
 #[tauri::command]
-pub fn create_predictive_graph(ctx: State<Ctx>, exercise_id: String) {
+pub fn create_predictive_graph(
+    ctx: State<Ctx>,
+    exercise_id: String,
+) -> Result<ApiResponse<Vec<f64>>, ApiErrorResponse> {
     let mut exercise_sets =
         get_exercise_sets(&ctx, &exercise_id).expect("failed to get exercise sets");
     // println!("printing current data: {:?}", exercise_sets);
@@ -25,17 +29,25 @@ pub fn create_predictive_graph(ctx: State<Ctx>, exercise_id: String) {
 
     println!("printing currently sorted sets: {:?}", &grouped_sets);
 
-    let _e1rms = get_highest_volumes(&grouped_sets);
+    let mut _e1rms = get_highest_volumes(&grouped_sets);
 
     println!("list of e1rms for exercise {:?}: {:?}", exercise_id, _e1rms);
 
-    let next_value = plot_regression(_e1rms);
+    let next_value = predict_next_e1rm(&_e1rms);
 
-    println!("the next possible e1RM will be {:?}", next_value);
+    println!("the next possible e1RM will be {:?}", &next_value);
     println!("");
+
+    _e1rms.push(next_value);
+
+    Ok(ApiResponse {
+        ok: true,
+        data: _e1rms,
+    })
 }
 
-// Get all sets done of an exercise
+/// uses the exerciseId in order to find all the sets that have been done
+/// returns a list of completed exercises
 fn get_exercise_sets(
     ctx: &Ctx,
     compl_exerc_id: &str,
@@ -63,7 +75,7 @@ fn get_exercise_sets(
     })
 }
 
-// Group all exercises to sets
+/// creates a hasmap of the vector which groups sets of the same session together.
 fn group_exercise_sets(
     sets: &mut Vec<CompletedExercise>,
 ) -> HashMap<String, Vec<CompletedExercise>> {
@@ -85,7 +97,7 @@ fn group_exercise_sets(
     return map;
 }
 
-// Get the highest e1RM
+/// Find the highest set e1RM of each session and puts them in an array
 fn get_highest_volumes(grouped_sets: &HashMap<String, Vec<CompletedExercise>>) -> Vec<f64> {
     let mut e1rm_points: Vec<f64> = Vec::new();
 
@@ -115,16 +127,16 @@ fn get_highest_volumes(grouped_sets: &HashMap<String, Vec<CompletedExercise>>) -
     e1rm_points
 }
 
-// Plot in regression
-fn plot_regression(data_points: Vec<f64>) -> f64 {
-    let mut nr = 0.0;
+/// plots all the data points into a linear regression algorithm and predicts the next workout e1RM
+fn predict_next_e1rm(data_points: &Vec<f64>) -> f64 {
+    let mut nr = 1.0;
     let mut mapped_points: Vec<DataPoint> = Vec::new();
 
     for point in data_points {
         mapped_points.push(DataPoint {
             x: nr,
-            y: point,
-            weight: 1.0,
+            y: point.clone(),
+            weight: 1.0, // This could later be implemented in order to make older sets counts less.
         });
 
         nr += 1.0;
@@ -133,15 +145,17 @@ fn plot_regression(data_points: Vec<f64>) -> f64 {
     let lin_reg = LinearRegression::fit(&mapped_points);
 
     // Estimate next highest value
-    nr += 1.0;
-
+    // We don't have to extra nr increment here
+    // because this has already been done in the loop
     let next = lin_reg.predict(nr);
 
-    next
+    return next;
 }
 
+// ##### Helper functions ##### //
+
 fn calc_e1rm(exercise: &CompletedExercise) -> f64 {
-    round_decimals(exercise.weight * (1_f64 + (30_f64 / exercise.reps)))
+    round_decimals(exercise.weight * (1_f64 + (exercise.reps / 30_f64)))
 }
 
 fn round_decimals(number: f64) -> f64 {
