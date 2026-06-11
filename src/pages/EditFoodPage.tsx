@@ -16,7 +16,7 @@ export default function EditFoodPage() {
     const [food, setFood] = useState<Food | null>(null);
 
     //editable field.
-    const [mealTime, setMealTime] = useState<string>("ochtend");
+    const [mealTime, setMealTime] = useState<string>("breakfast");
     const [eatenDate, setEatenDate] = useState<string>("");
     const [amountEaten, setAmountEaten] = useState<number>(0);
     // const [inputType, setInputType] = useState<string>(""); // we don't use this I think.
@@ -107,10 +107,10 @@ export default function EditFoodPage() {
                         <div className="inputs w-full flex justify-between gap-4">
                             <input defaultValue={eatenDate} onChange={updateEatenDate} className="bg-[#333737] rounded-xl px-2 py-1 border border-[#414141]" type="date" name="eaten-on-date" id="eaten-on-date" />
                             <select value={mealTime} onChange={updateMealTime} name="eaten-on-mealtime" id="eaten-on-mealtime" className="bg-[#333737] rounded-xl px-2 py-1 border border-[#414141] w-full">
-                                <option value="ochtend">ochtend</option>
-                                <option value="middag">middag</option>
-                                <option value="avond">avond</option>
-                                <option value="snacks">snack</option>
+                                <option value="breakfast">Breakfast</option>
+                                <option value="lunch">Lunch</option>
+                                <option value="dinner">Dinner</option>
+                                <option value="snacks">Snack</option>
                             </select>
                         </div>
                     </div>

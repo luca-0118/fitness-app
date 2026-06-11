@@ -52,7 +52,7 @@ function parseNutriments(nutriments: Nutriments): ParsedNutriments {
 export default function FoodItemComponent({ name, nutriments, barcode, brand, onClick }: FoodItemProps) {
   const [overlay, setOverlay] = useState<Boolean>(false);
   const [amount, setAmount] = useState<number>(0)
-  const [mealtime, setMealtime] = useState<String>("ochtend")
+  const [mealtime, setMealtime] = useState<String>("breakfast")
 
   function toggleOverlay() {
     setOverlay(!overlay);
@@ -150,10 +150,10 @@ function Overlay({ name, nutriments, brand, barcode, disableOverlay, updateAmoun
             defaultValue="ochtent"
             className="bg-components text-textcolor border border-bordercolor rounded-xl p-2 w-32 focus:outline-none focus:ring-2 focus:ring-accent ml-3"
           >
-            <option value="ochtent">breakfast</option>
-            <option value="middag">lunch</option>
-            <option value="avond">dinner</option>
-            <option value="snacks">snack</option>
+            <option value="breakfast">Breakfast</option>
+            <option value="lunch">Lunch</option>
+            <option value="dinner">Dinner</option>
+            <option value="snacks">Snack</option>
           </select>
         </div>
         <div className="w-full max-w-md mx-auto mt-5 flex gap-2">
