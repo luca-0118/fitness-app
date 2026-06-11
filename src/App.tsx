@@ -7,7 +7,7 @@ import { WorkoutProvider } from "./context/WorkoutContext";
 import FoodPage from "./pages/Foodtracker/FoodPage.tsx";
 import FoodList from "./pages/Foodtracker/FoodList.tsx"
 import Home from "./pages/General/Home.tsx";
-import CreateMeal from "./pages/Foodtracker/CreateMeal.tsx";
+// import CreateMeal from "./pages/Foodtracker/CreateMeal.tsx";
 import WorkoutOverview from "./pages/Workout/WorkoutOverview.tsx";
 import EditWorkout from "./pages/Workout/EditWorkout.tsx";
 import AddExercises from "./pages/Workout/AddExercises.tsx";
@@ -106,7 +106,7 @@ function App() {
                 {/* <Route path="custom-food" element={<CreatedByMe />} /> */}
               </Route>
               {/* <Route path="/create-meal" element={<CreateMeal />} /> */}
-              <Route path="/exercise-description"element={<ExerciseDescription />}/>
+              <Route path="/exercise-description" element={<ExerciseDescription />}/>
               <Route path="/product-details" element={<ProductDetails />} />
             </Routes>
           </main>
