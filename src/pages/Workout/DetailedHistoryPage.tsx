@@ -87,7 +87,7 @@ function CompletedExercise({ exerciseInfo }: CompletedExerciseProps) {
     }
 
     if (flipped && plotPoints.length > 0)
-        return <PredictiveExerciseGraph e1rmList={plotPoints} onclick={toggleFlip} />
+        return <PredictiveExerciseGraph e1rmList={plotPoints} onclick={toggleFlip} exerciseName={exerciseInfo.name} />
 
     return <article className='bg-components w-full min-h-20 h-fit rounded p-2' onClick={toggleFlip}>
         <div id="exerciseInfo" className='flex flex-row gap-2 items-center bg-white/5 rounded'>
@@ -118,6 +118,16 @@ function CompletedExercise({ exerciseInfo }: CompletedExerciseProps) {
 
 
 
+
+///// ######################### /////
+/////   Predictive Exercise     /////
+/////   Component               /////
+///// ########################  /////
+/**
+ * All the interfaces and Component to predict the graph, it also contains some logic to properly graph the points.
+ */
+
+
 interface GraphPoint {
     session: number,
     e1rm: number,
@@ -128,9 +138,10 @@ interface GraphPoint {
 interface PredictiveExerciseGraphProps {
     e1rmList: number[];
     onclick: () => void;
+    exerciseName: string;
 }
 
-function PredictiveExerciseGraph({ e1rmList, onclick }: PredictiveExerciseGraphProps) {
+function PredictiveExerciseGraph({ e1rmList, onclick, exerciseName }: PredictiveExerciseGraphProps) {
     const lastActualIdx = e1rmList.length - 2;
 
     const graphPoints = e1rmList
@@ -154,9 +165,14 @@ function PredictiveExerciseGraph({ e1rmList, onclick }: PredictiveExerciseGraphP
         .filter((v): v is number => v !== undefined);
     const minValue = Math.floor(Math.min(...values) * 0.95); // 5% padding below
 
+    const weightForReps = (e1rm: number, reps: number) => {
+        return e1rm / (1 + reps / 30);
+    }
+
     return <>
         <article className='bg-components w-full min-h-20 h-fit rounded p-2' onClick={onclick}>
-            <h2 className='text-center text-textcolor text-xl font-bold'>Recently completed sessions</h2>
+            <h2 className='text-center text-accent text-2xl font-bold'>{exerciseName}</h2>
+            <p className='text-center text-textcolor text-xl'>Recently completed sessions</p>
             <ResponsiveContainer width={"100%"} height={150}>
                 <LineChart data={graphPoints}>
                     <XAxis dataKey="session" />
@@ -167,6 +183,8 @@ function PredictiveExerciseGraph({ e1rmList, onclick }: PredictiveExerciseGraphP
                     <Line type="monotone" dataKey="predicted" stroke="#82ca9d" strokeDasharray="5 5" dot={{ r: 5 }} isAnimationActive={false} />
                 </LineChart>
             </ResponsiveContainer>
+            <p className='text-center text-textcolor'>According to your data, your highest set in your next session should hit <b>{e1rmList[e1rmList.length - 1]} e1RM</b></p>
+            <p className='text-center text-textcolor'>This is the same as <b>{weightForReps(e1rmList[e1rmList.length - 1], 10)}kg</b> for <b>10 reps</b></p>
         </article>
     </>
 }
