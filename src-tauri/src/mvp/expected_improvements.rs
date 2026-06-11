@@ -33,7 +33,7 @@ pub fn create_predictive_graph(
 
     println!("list of e1rms for exercise {:?}: {:?}", exercise_id, _e1rms);
 
-    let next_value = predict_next_e1rm(&_e1rms);
+    let next_value = round_decimals(predict_next_e1rm(&_e1rms));
 
     println!("the next possible e1RM will be {:?}", &next_value);
     println!("");
@@ -123,6 +123,8 @@ fn get_highest_volumes(grouped_sets: &HashMap<String, Vec<CompletedExercise>>) -
         // pushes the highest e1rm from a set done in a session.
         e1rm_points.push(highest_val);
     }
+
+    e1rm_points.reverse();
 
     e1rm_points
 }
