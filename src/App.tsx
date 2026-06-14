@@ -1,6 +1,6 @@
 import "./App.css";
 import { useEffect } from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Outlet } from "react-router-dom";
 import Header from "./components/General/ui/Header.tsx";
 import BottomNavBar from "./components/General/ui/BottomNavBar.tsx";
 import { WorkoutProvider } from "./context/WorkoutContext";
@@ -25,13 +25,14 @@ import API from "./classes/api";
 import { SESSION_STORAGE_KEYS } from "./apis/sessionAPI";
 import ProductDetails from "./pages/Foodtracker/ProductDetails.tsx";
 import EditFoodPage from "./pages/EditFoodPage.tsx";
+import EditWorkoutProvider from "./context/EditWorkoutContext.tsx";
 
 function App() {
-  
+
   useEffect(() => {
-    
+
     let unlistenCloseRequested: (() => void
-  ) | undefined;
+    ) | undefined;
     let isClosing = false;
 
     const finishActiveWorkout = async () => {
@@ -88,8 +89,17 @@ function App() {
             <Toaster position="top-center" reverseOrder={false} />
             <Routes>
               <Route path="/" element={<Home />} />
-              <Route path="/workouts" element={<WorkoutOverview />} />
-              <Route path="/edit-workout" element={<EditWorkout />} />
+
+              <Route path="/workouts" >
+                <Route index element={<WorkoutOverview />} />
+                {/* I wrapped the outlet, which loads the routes below, into the provider. */}
+                {/* This way we can use the edit workout only within the edit routes. */}
+                <Route element={<EditWorkoutProvider><Outlet /></EditWorkoutProvider>}>
+                  <Route path=":workoutId/edit" element={<EditWorkout />} />
+                  <Route path=":workoutId/edit/exercises" element={<AddExercises />} />
+                </Route>
+              </Route>
+
               <Route path="/add-exercises" element={<AddExercises />} />
               <Route path="/session" element={<Session />} />
               <Route path="/new-workout" element={<NewWorkout />} />
@@ -106,7 +116,7 @@ function App() {
                 {/* <Route path="custom-food" element={<CreatedByMe />} /> */}
               </Route>
               {/* <Route path="/create-meal" element={<CreateMeal />} /> */}
-              <Route path="/exercise-description" element={<ExerciseDescription />}/>
+              <Route path="/exercise-description" element={<ExerciseDescription />} />
               <Route path="/product-details" element={<ProductDetails />} />
             </Routes>
           </main>

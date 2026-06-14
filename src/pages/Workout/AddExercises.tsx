@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { useWorkout } from "../../context/WorkoutContext.tsx";
+import { Iworkout, useWorkout } from "../../context/WorkoutContext.tsx";
 
 import SearchBar from "../../components/General/misc/SearchBar.tsx";
 
@@ -23,6 +23,8 @@ import ExerciseAndOverlayItem from "../../components/Workout/listItems/ExerciseA
 import UseExerciseList, {
   muscleGroups,
 } from "../../Hooks/UseExerciseList.ts";
+import { useLocation } from "react-router-dom";
+import { useEditWorkout } from "../../context/EditWorkoutContext.tsx";
 
 const muscleFilters: { gif: string; name: muscleGroups }[] = [
   { gif: chest, name: "pectorals" },
@@ -42,6 +44,9 @@ const muscleFilters: { gif: string; name: muscleGroups }[] = [
 
 export default function AddExercises() {
   const [searchText, setSearchText] = useState("");
+  const location = useLocation();
+
+  const isEditPage: boolean = location.pathname.search("edit") !== 0;
 
   const {
     setDraftExercises,
@@ -51,7 +56,7 @@ export default function AddExercises() {
   const listRef = useRef<HTMLDivElement>(null);
 
   const [isScrollTopVisible, setIsScrollTopVisible] =
-      useState(false);
+    useState(false);
 
   const {
     exercises: apiExercises,
@@ -62,6 +67,8 @@ export default function AddExercises() {
   } = UseExerciseList();
 
   const { beginExerciseEdit } = useWorkout();
+
+  const editContext = useEditWorkout();
 
   useEffect(() => {
     beginExerciseEdit();
@@ -80,115 +87,149 @@ export default function AddExercises() {
     const handleScroll = () => {
       if (listElement) {
         setIsScrollTopVisible(
-            listElement.scrollTop > 0
+          listElement.scrollTop > 0
         );
       }
     };
 
     if (listElement) {
       listElement.addEventListener(
-          "scroll",
-          handleScroll
+        "scroll",
+        handleScroll
       );
 
       return () =>
-          listElement.removeEventListener(
-              "scroll",
-              handleScroll
-          );
+        listElement.removeEventListener(
+          "scroll",
+          handleScroll
+        );
     }
   }, []);
 
+
+
+
+
+  // ########### Editing/ create workout specific ########### //
+
+  const canEditWorkout: boolean = isEditPage && editContext !== null;
+
+  const addExerciseToDraft = (exercise: ExerciseDTO) => {
+    if (canEditWorkout && editContext.workout) {
+      console.log("[EDIT] added exercise");
+      editContext.updateExercises([...editContext.workout.exercises, exercise]);
+    }
+
+    setDraftExercises(prev => [
+      ...prev,
+      {
+        id: exercise.exercise_id,
+        name: exercise.name,
+        gif: exercise.gif_url,
+      },
+    ])
+  }
+
+  const removeExerciseFromDraft = (exercise: ExerciseDTO) => {
+    if (canEditWorkout && editContext.workout) {
+      console.log("[EDIT] removed exercise");
+      editContext.updateExercises(editContext.workout.exercises.filter(ex => ex.exercise_id !== exercise.exercise_id));
+    }
+
+    setDraftExercises(prev =>
+      prev.filter(ex => ex.id !== exercise.exercise_id)
+    )
+  }
+
+  // Double checks if the edit option has the exercises. It's required in order to enable/disable the selected button.
+  const editHasExercise = (exercise_id: string) => {
+    if (!canEditWorkout && editContext.workout) return false;
+
+    const check = editContext.workout?.exercises.find(ex => ex.exercise_id === exercise_id);
+
+    return check !== undefined;
+  }
+
+
+  // ########### Editing/ create workout specific ########### //
+
+
   return (
-      <>
-        {/* Pass saveExercises to your header/save button */}
-        {/* <SaveButton onSave={saveExercises} /> */}
+    <>
+      {/* Pass saveExercises to your header/save button */}
+      {/* <SaveButton onSave={saveExercises} /> */}
 
-        <div className="h-screen">
-          <div className="fixed top-16 left-0 right-0 z-30 bg-background overflow-hidden">
-            <div className="pl-4 pr-4">
-              <SearchBar
-                  value={searchText}
-                  onChange={query => {
-                    setSearchText(query);
-                    setQuery(query);
-                  }}
-                  onSearch={() => {}}
-                  placeholderText="exercise"
-              />
-            </div>
+      <div className="h-screen">
+        <div className="fixed top-16 left-0 right-0 z-30 bg-background overflow-hidden">
+          <div className="pl-4 pr-4">
+            <SearchBar
+              value={searchText}
+              onChange={query => {
+                setSearchText(query);
+                setQuery(query);
+              }}
+              onSearch={() => { }}
+              placeholderText="exercise"
+            />
+          </div>
 
-            <div
-                className="overflow-x-scroll flex
+          <div
+            className="overflow-x-scroll flex
             [&::-webkit-scrollbar-thumb]:bg-neutral-500
             [&::-webkit-scrollbar]:bg-neutral-700"
-            >
-              {muscleFilters.map(({ gif, name }) => (
-                  <WorkoutFilter
-                      key={name}
-                      gif={gif}
-                      isSelected={muscleGroup === name}
-                      onClick={() => {
-                        scrollToTop();
-                        setMuscle(name);
-                      }}
-                  />
-              ))}
-            </div>
+          >
+            {muscleFilters.map(({ gif, name }) => (
+              <WorkoutFilter
+                key={name}
+                gif={gif}
+                isSelected={muscleGroup === name}
+                onClick={() => {
+                  scrollToTop();
+                  setMuscle(name);
+                }}
+              />
+            ))}
+          </div>
 
-            <div className="fixed top-60 right-10 pointer-events-none z-49">
+          <div className="fixed top-60 right-10 pointer-events-none z-49">
+            <button
+              onClick={scrollToTop}
+              className={`text-textcolor w-13 h-13 border border-bordercolor bg-components hover:bg-components-hover rounded-full transition-all duration-100 ease-in-out ${isScrollTopVisible
+                ? "opacity-95 pointer-events-auto"
+                : "opacity-0 pointer-events-none"
+                }`}
+            >
+              ↑
+            </button>
+          </div>
+
+          <div
+            ref={listRef}
+            className="overflow-y-auto overscroll-behavior-y-auto h-[calc(100vh-18rem)] p-4 flex flex-col gap-4"
+          >
+            {apiExercises.map(exercise => (
+              <ExerciseAndOverlayItem
+                key={exercise.exercise_id}
+                name={exercise.name}
+                gif={exercise.gif_url}
+                id={exercise.exercise_id}
+                selected={draftSelectedIds.has(exercise.exercise_id) || editHasExercise(exercise.exercise_id)}
+                onSelect={() => { addExerciseToDraft(exercise) }}
+                onUnselect={() => { removeExerciseFromDraft(exercise) }}
+              />
+            ))}
+
+            <div className="px-4">
               <button
-                  onClick={scrollToTop}
-                  className={`text-textcolor w-13 h-13 border border-bordercolor bg-components hover:bg-components-hover rounded-full transition-all duration-100 ease-in-out ${
-                      isScrollTopVisible
-                          ? "opacity-95 pointer-events-auto"
-                          : "opacity-0 pointer-events-none"
-                  }`}
+                className="bg-accent hover:bg-accent-action active:bg-accent-action w-full rounded mb-25 text-textcolor"
+                onClick={LoadNextPage}
               >
-                ↑
+                load more
               </button>
-            </div>
-
-            <div
-                ref={listRef}
-                className="overflow-y-auto overscroll-behavior-y-auto h-[calc(100vh-18rem)] p-4 flex flex-col gap-4"
-            >
-              {apiExercises.map(exercise => (
-                  <ExerciseAndOverlayItem
-                      key={exercise.exercise_id}
-                      name={exercise.name}
-                      gif={exercise.gif_url}
-                      id={exercise.exercise_id}
-                      selected={draftSelectedIds.has(exercise.exercise_id)}
-                      onSelect={() =>
-                          setDraftExercises(prev => [
-                            ...prev,
-                            {
-                              id: exercise.exercise_id,
-                              name: exercise.name,
-                              gif: exercise.gif_url,
-                            },
-                          ])
-                      }
-                      onUnselect={() =>
-                          setDraftExercises(prev =>
-                              prev.filter(ex => ex.id !== exercise.exercise_id)
-                          )
-                      }
-                  />
-              ))}
-
-              <div className="px-4">
-                <button
-                    className="bg-accent hover:bg-accent-action active:bg-accent-action w-full rounded mb-25 text-textcolor"
-                    onClick={LoadNextPage}
-                >
-                  load more
-                </button>
-              </div>
             </div>
           </div>
         </div>
-      </>
+      </div>
+    </>
   );
 }
