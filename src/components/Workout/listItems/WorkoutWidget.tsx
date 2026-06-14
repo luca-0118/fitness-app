@@ -45,18 +45,18 @@ export default function WorkoutWidget({ id, index, name, reloadWorkouts }: Worko
         navigate("/exercises");
     };
 
-    async function handleDelete(){
-        try{
-        await API.workouts.remove(id);
-        toast.success("removed succesfully")
+    async function handleDelete() {
+        try {
+            await API.workouts.remove(id);
+            toast.success("removed succesfully")
         }
-catch (err: unknown) {
-    if (err instanceof Error) {
-        toast.error(err.message);
-    } else {
-        toast.error("Something went wrong");
-    }
-}
+        catch (err: unknown) {
+            if (err instanceof Error) {
+                toast.error(err.message);
+            } else {
+                toast.error("Something went wrong");
+            }
+        }
     }
 
     return (
@@ -66,7 +66,7 @@ catch (err: unknown) {
             data-shadow={isDragging || undefined}
         >
             <button ref={handleRef} className="cursor-grab">
-                <DragIndicatorIcon sx={{ fontSize: 40}} className="text-accent" />
+                <DragIndicatorIcon sx={{ fontSize: 40 }} className="text-accent" />
             </button>
 
             <button className="text-left cursor-pointer w-full h-full py-4" onClick={() => handleNavigation()}>
@@ -77,14 +77,15 @@ catch (err: unknown) {
                 <MoreVertIcon sx={{ fontSize: 40 }} />
                 <div className={`absolute z-10 top-full right-1 mt-1 flex flex-col rounded-xl p-2 bg-components border border-bordercolor transform transition-all duration-100 ease-out origin-top-right 
                 ${open ? "opacity-100 scale-100" : "opacity-0 scale-95 -translate-y-2 pointer-events-none"}`}>
-                    <button className="w-full hover:bg-components-hover flex items-center gap-2 px-3 py-2 rounded-xl" onClick={() => {setOpen(false); navigate("/edit-workout");}}>
+                    <button className="w-full hover:bg-components-hover flex items-center gap-2 px-3 py-2 rounded-xl" onClick={() => { setOpen(false); navigate(`${id}/edit`); }}>
                         <EditIcon className="w-5 h-5" /> Edit
                     </button>
-                    <button className="w-full hover:bg-components-hover text-button-stop flex items-center gap-2 px-3 py-2 rounded-xl" onClick={async () => {setOpen(false);
+                    <button className="w-full hover:bg-components-hover text-button-stop flex items-center gap-2 px-3 py-2 rounded-xl" onClick={async () => {
+                        setOpen(false);
                         await handleDelete();
                         await reloadWorkouts();
 
-                    } /*TODO add delete functionality*/ }>
+                    } /*TODO add delete functionality*/}>
                         <DeleteIcon className="w-5 h-5" /> Delete
                     </button>
                 </div>
