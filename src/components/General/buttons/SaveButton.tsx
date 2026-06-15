@@ -36,7 +36,7 @@ export default function SaveButton() {
         }
 
         if (location.pathname === "/workouts") {
-            navigate("/history");
+            navigate("/session-history");
             return;
         }
 
