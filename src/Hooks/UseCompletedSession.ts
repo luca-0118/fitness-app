@@ -47,7 +47,6 @@ export default function useCompletedSession(sessionId:string) {
         } 
     }
 
-
     useEffect(() => {
       fetchSession();
 
