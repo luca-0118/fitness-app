@@ -13,7 +13,9 @@
 }
 
 
-html, body, #root {
+html,
+body,
+#root {
   height: 100%;
   margin: 0;
 }
@@ -48,15 +50,22 @@ body {
 
 /* Light Theme (default) */
 @theme {
-  --color-background: oklch(0.9631 0.0017 145.56); /* background color for background of app can be used by implementing "bg-background" in your className */
-  --color-components: oklch(0.9167 0.0017 145.64); /* background color for components can be used by implementing "bg-components" in your className */
-  --color-components-hover: oklch(0.791 0.0017 145.64); /* hover color for components can be used by implementing "hover:bg-components-hover" in your className */
-  --color-bordercolor: oklch(0.7507 0.0017 145.64); /* border color for components can be used by implementing "border-bordercolor" in your className */
+  --color-background: oklch(0.9631 0.0017 145.56);
+  /* background color for background of app can be used by implementing "bg-background" in your className */
+  --color-components: oklch(0.9167 0.0017 145.64);
+  /* background color for components can be used by implementing "bg-components" in your className */
+  --color-components-hover: oklch(0.791 0.0017 145.64);
+  /* hover color for components can be used by implementing "hover:bg-components-hover" in your className */
+  --color-bordercolor: oklch(0.7507 0.0017 145.64);
+  /* border color for components can be used by implementing "border-bordercolor" in your className */
 
-  --color-textcolor: oklch(0.1 0 0); /* text color for components can be used by implementing "text-textcolor" in your className */
-  --color-muted: oklch(0.5326 0.0017 145.64); /* muted text color for components can be used by implementing "text-muted" in your className */
+  --color-textcolor: oklch(0.1 0 0);
+  /* text color for components can be used by implementing "text-textcolor" in your className */
+  --color-muted: oklch(0.5326 0.0017 145.64);
+  /* muted text color for components can be used by implementing "text-muted" in your className */
 
-  --color-accent: oklch(0.7064 0.1758 45.51); /* accent color can be used by implementing "bg-accent" in your className */
+  --color-accent: oklch(0.7064 0.1758 45.51);
+  /* accent color can be used by implementing "bg-accent" in your className */
   --color-accent-action: oklch(0.7783 0.1413 48.09);
 
   --color-button-start: oklch(0.7227 0.192 149.58);
@@ -69,6 +78,8 @@ body {
 
   --color-navbar: oklch(0.7721 0.0017 145.64);
   --color-icons: oklch(0.4401 0.0055 196.89);
+
+  --animate-shimmer: shimmer 1.5s linear infinite;
 }
 
 /* Dark theme */
@@ -242,18 +253,73 @@ body {
 }
 
 @keyframes shake {
-  0% { transform: translateX(0) translateY(0); }
-  10% { transform: translateX(-4px) translateY(-1px); }
-  20% { transform: translateX(3px) translateY(2px); }
-  30% { transform: translateX(-2px) translateY(-2px); }
-  40% { transform: translateX(5px) translateY(1px); }
-  50% { transform: translateX(-3px) translateY(1px); }
-  60% { transform: translateX(2px) translateY(-2px); }
-  70% { transform: translateX(-4px) translateY(1px); }
-  80% { transform: translateX(3px) translateY(-1px); }
-  90% { transform: translateX(-1px) translateY(2px); }
-  100% { transform: translateX(0) translateY(0); }
+  0% {
+    transform: translateX(0) translateY(0);
+  }
+
+  10% {
+    transform: translateX(-4px) translateY(-1px);
+  }
+
+  20% {
+    transform: translateX(3px) translateY(2px);
+  }
+
+  30% {
+    transform: translateX(-2px) translateY(-2px);
+  }
+
+  40% {
+    transform: translateX(5px) translateY(1px);
+  }
+
+  50% {
+    transform: translateX(-3px) translateY(1px);
+  }
+
+  60% {
+    transform: translateX(2px) translateY(-2px);
+  }
+
+  70% {
+    transform: translateX(-4px) translateY(1px);
+  }
+
+  80% {
+    transform: translateX(3px) translateY(-1px);
+  }
+
+  90% {
+    transform: translateX(-1px) translateY(2px);
+  }
+
+  100% {
+    transform: translateX(0) translateY(0);
+  }
 }
+
 .animate-shake {
   animation: shake 0.15s ease-in-out infinite;
+}
+
+
+
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.skeleton {
+  background: linear-gradient(90deg,
+      color-mix(in oklab, var(--color-components-hover) 90%, gray),
+      var(--color-components-hover) 50%,
+      color-mix(in oklab, var(--color-components-hover) 90%, gray));
+  background-size: 200% 100%;
+  animation: var(--animate-shimmer);
 }
