@@ -13,6 +13,7 @@ export default function EditWorkout() {
 
   const workout = editContext.workout;
 
+
   useEffect(() => {
     editContext.initializeDraft(workoutId ?? "");
   }, []);
@@ -22,9 +23,10 @@ export default function EditWorkout() {
   }
 
 
-  const updateWorkout = () => {
+  const updateWorkout = async () => {
+    if (!await editContext.saveChanges()) return console.error("could not save workout changes");
 
-    if (!editContext.saveChanges()) return console.error("could not save workout changes");
+
 
 
     // adds a smaller timeout, as should be, in order to make it not feel as instant. Better UX.

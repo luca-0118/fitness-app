@@ -1,12 +1,13 @@
 import React, { createContext, useContext, useState } from "react"
 import API from "../classes/api";
+import useUpdateWorkout from "../Hooks/useUpdateWorkout";
 
 interface EditWorkoutProps {
     workout: IdetailedWorkoutDTO | null;
     initializeDraft: (workoutId: string) => void;
     updateName: (name: string) => void;
     updateExercises: (exerciselist: ExerciseDTO[]) => void;
-    saveChanges: () => boolean;
+    saveChanges: () => Promise<boolean>;
 };
 
 // the actual context which we are using
@@ -21,6 +22,7 @@ const EditWorkoutContext = createContext<EditWorkoutProps | undefined>(undefined
  */
 export default function EditWorkoutProvider({ children }: { children: React.ReactNode }) {
     const [workout, setWorkout] = useState<IdetailedWorkoutDTO | null>(null);
+    const workoutUpdateFunc = useUpdateWorkout();
 
 
     /**
@@ -52,8 +54,24 @@ export default function EditWorkoutProvider({ children }: { children: React.Reac
         setWorkout(prev => prev ? { ...prev, exercises } : prev);
     }
 
-    const saveChanges = () => {
-        console.debug("[TEMP]", workout);
+    const saveChanges = async () => {
+        if (!workout?.name || !workout?.exercises) return false;
+
+
+        const resp = await workoutUpdateFunc({
+            uuid: workout.uuid,
+            name: workout?.name,
+            desc: workout?.desc,
+            exercises: workout?.exercises.map(ex => ex.exercise_id)
+        });
+
+        if (!resp) {
+            console.error("could not save workout.");
+            return false;
+        }
+
+        console.debug("[TEMP] saved workout", workout);
+
         setWorkout(null);
         return true;
     }
