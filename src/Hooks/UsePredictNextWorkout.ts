@@ -13,7 +13,14 @@ export default function usePredictNextWorkout(exercise_id: string): number[] {
         const response = await invoke<GraphResponse>("create_predictive_graph",{exerciseId: exercise_id});
 
         if (response.ok) {
-            setDataPoints(response.data);
+            const plotPoints = response.data
+                    
+            if (plotPoints && plotPoints.find(p => p === null) != 0) {
+                console.warn("null value found. Removed it but be careful. This means a workout hasn't been filled properly.");
+                return setDataPoints(plotPoints.filter(p => p === null));
+            }
+
+            return setDataPoints(response.data);
         }
 
     }

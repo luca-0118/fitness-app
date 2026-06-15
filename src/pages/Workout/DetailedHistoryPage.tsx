@@ -5,7 +5,7 @@ import DbDate from '../../classes/DbDate';
 
 import { ResponsiveContainer, Legend, Line, LineChart, XAxis, YAxis, Tooltip } from 'recharts';
 import usePredictNextWorkout from '../../Hooks/UsePredictNextWorkout';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 export default function DetailedHistoryPage() {
     const params = useParams();
@@ -140,24 +140,32 @@ function PredictiveExerciseGraph({ e1rmList, onclick, exerciseName }: Predictive
             const isLast = idx === arr.length - 1;
             return {
                 session: idx,
-                e1rm: isLast ? undefined : value,
-                predicted: isLast ? value : undefined,
+                e1rm: isLast ? 0 : value,
+                predicted: isLast ? value : 0,
             } as GraphPoint;
         });
-
-    // Bridge: last actual point gets predicted = its own e1rm value
-    graphPoints[lastActualIdx].predicted = e1rmList[lastActualIdx];
-
-    console.log(graphPoints);
-
-    const values = graphPoints
-        .flatMap(p => [p.e1rm, p.predicted])
-        .filter((v): v is number => v !== undefined);
-    const minValue = Math.floor(Math.min(...values) * 0.95); // 5% padding below
 
     const weightForReps = (e1rm: number, reps: number) => {
         return e1rm / (1 + reps / 30);
     }
+
+    let minValue = 0;
+
+    if (graphPoints.length > 0) {
+        // Bridge: last actual point gets predicted = its own e1rm value
+        graphPoints[lastActualIdx].predicted = e1rmList[lastActualIdx];
+
+        console.log(graphPoints);
+
+        const values = graphPoints
+            .flatMap(p => [p.e1rm, p.predicted])
+            .filter((v): v is number => v !== undefined);
+        minValue = Math.floor(Math.min(...values) * 0.95); // 5% padding below
+
+
+    }
+
+
 
     return <>
         <article className='bg-components w-full min-h-20 h-fit rounded-xl border border-bordercolor p-2' onClick={onclick}>

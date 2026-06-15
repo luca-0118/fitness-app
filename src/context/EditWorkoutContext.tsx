@@ -98,9 +98,10 @@ export function useEditWorkout() {
     const context = useContext(EditWorkoutContext);
 
     if (!context) {
-        throw new Error(
+        console.error(
             "useEditWorkout must be used within EditWorkoutProvider"
         );
+        return undefined;
     }
 
     return context;

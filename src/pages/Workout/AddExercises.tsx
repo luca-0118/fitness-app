@@ -112,10 +112,10 @@ export default function AddExercises() {
 
   // ########### Editing/ create workout specific ########### //
 
-  const canEditWorkout: boolean = isEditPage && editContext !== null;
+  const canEditWorkout = () => isEditPage;
 
   const addExerciseToDraft = (exercise: ExerciseDTO) => {
-    if (canEditWorkout && editContext.workout) {
+    if (canEditWorkout() && editContext && editContext.workout) {
       console.log("[EDIT] added exercise");
       editContext.updateExercises([...editContext.workout.exercises, exercise]);
     }
@@ -131,7 +131,7 @@ export default function AddExercises() {
   }
 
   const removeExerciseFromDraft = (exercise: ExerciseDTO) => {
-    if (canEditWorkout && editContext.workout) {
+    if (canEditWorkout() && editContext && editContext.workout) {
       console.log("[EDIT] removed exercise");
       editContext.updateExercises(editContext.workout.exercises.filter(ex => ex.exercise_id !== exercise.exercise_id));
     }
@@ -143,7 +143,7 @@ export default function AddExercises() {
 
   // Double checks if the edit option has the exercises. It's required in order to enable/disable the selected button.
   const editHasExercise = (exercise_id: string) => {
-    if (!canEditWorkout && editContext.workout) return false;
+    if (!canEditWorkout || !editContext || !editContext.workout) return false;
 
     const check = editContext.workout?.exercises.find(ex => ex.exercise_id === exercise_id);
 
