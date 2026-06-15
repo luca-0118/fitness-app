@@ -34,6 +34,7 @@ const routesWithSave = [
   "/edit-workout",
   "/new-workout",
   "/add-exercises",
+  "/workouts",
 ];
 
 // This component will display the title of the current page based on the URL path

@@ -24,7 +24,7 @@ export default function Home() {
           </div>
 
           <button
-            onClick={() => navigate("/food-list")}
+            onClick={() => navigate("/food-page")}
             className="bg-accent hover:bg-accent-action active:bg-accent-action rounded-full p-6 font-bold cursor-pointer col-span-1 text-textcolor"
           >
             Add product

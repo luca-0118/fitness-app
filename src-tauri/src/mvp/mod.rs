@@ -6,3 +6,9 @@ pub use update_stored_product::*;
 
 mod edit_workout;
 pub use edit_workout::*;
+
+mod expected_improvements;
+pub use expected_improvements::*;
+
+mod linear_regression;
+pub use linear_regression::*;
