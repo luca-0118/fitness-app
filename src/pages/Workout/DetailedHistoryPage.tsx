@@ -8,13 +8,8 @@ import usePredictNextWorkout from '../../Hooks/UsePredictNextWorkout';
 import { useState } from 'react';
 
 export default function DetailedHistoryPage() {
-    const navigate = useNavigate();
     const params = useParams();
     const sessionId = params.workoutId;
-
-    const handleArrowClick = () => {
-        navigate(-1);
-    }
 
     const completedSession = useCompletedSession(sessionId ?? "");
 
@@ -31,23 +26,21 @@ export default function DetailedHistoryPage() {
 
 
     return (<>
-        <div className="absolute top-0 left-0 w-dvw h-dvh bg-background z-100 felx flex-col overflow-auto no-scrollbar">
-            <section id="workout-date" className="sticky top-0 bg-components w-full min-h-20 flex flex-col items-center text-xl text-accent py-3 overflow-auto">
-                <h1 className="text-3xl font-bold">{completedSession.workout_name}</h1>
+        <div className="h-full w-full bg-background z-100 felx flex-col overflow-auto no-scrollbar px-4">
+            <section id="workout-date" className="sticky top-0 bg-components w-full min-h-20 flex flex-col items-center text-xl text-textcolor py-3 overflow-auto">
+                <h1 className="text-3xl">{completedSession.workout_name}</h1>
                 <p>{startDate.toDMY()}</p>
                 <div className="flex flex-row gap-1">
                     <p>{startDate.toHS()}</p>
                     <p>-</p>
                     <p>{endDate.toHS()}</p>
-                    <p className='text-accent/50'>({timeDifference.hours}h {timeDifference.minutes}m {timeDifference.seconds}s)</p>
+                    <p className='text-textcolor/50'>({timeDifference.hours}h {timeDifference.minutes}m {timeDifference.seconds}s)</p>
                 </div>
 
 
-                <span className='absolute left-2 top-[35%] text-white' onClick={handleArrowClick}>
-                    <ArrowBackIcon fontSize="large" />
-                </span>
+
             </section>
-            <section id='completed-exercises' className='p-4 flex flex-col gap-4 w-full'>
+            <section id='completed-exercises' className='py-4 flex flex-col gap-4 w-full'>
                 {/* Loops through all completed exercises to create new components for each of them */}
                 {/* Completed passes on all the data of an completed exercise */}
                 {completedSession.exercises.map(_completed => (<CompletedExercise exerciseInfo={_completed} />))}
@@ -77,9 +70,6 @@ interface CompletedExerciseProps {
 }
 function CompletedExercise({ exerciseInfo }: CompletedExerciseProps) {
     const plotPoints = usePredictNextWorkout(exerciseInfo.exercise_id);
-    // if (plotPoints.length > 0) {
-    //     console.log(plotPoints);
-    // }
 
     const [flipped, setFlipped] = useState<boolean>(false);
     const toggleFlip = () => {
@@ -89,10 +79,10 @@ function CompletedExercise({ exerciseInfo }: CompletedExerciseProps) {
     if (flipped && plotPoints.length > 0)
         return <PredictiveExerciseGraph e1rmList={plotPoints} onclick={toggleFlip} exerciseName={exerciseInfo.name} />
 
-    return <article className='bg-components w-full min-h-20 h-fit rounded p-2' onClick={toggleFlip}>
+    return <article className='bg-components w-full min-h-20 h-fit rounded-xl p-2 border border-bordercolor' onClick={toggleFlip}>
         <div id="exerciseInfo" className='flex flex-row gap-2 items-center bg-white/5 rounded'>
             <img src={exerciseInfo.gif_url ?? "https://placecats.com/64/64"} alt="" className='w-16 h-16 rounded-l' />
-            <h2 className='text-3xl mx-auto text-accent'>{exerciseInfo.name}</h2>
+            <h2 className='text-3xl mx-auto text-textcolor'>{exerciseInfo.name}</h2>
         </div>
         <table className='w-full text-textcolor font-normal text-end h-fit'>
             <thead>
@@ -170,8 +160,8 @@ function PredictiveExerciseGraph({ e1rmList, onclick, exerciseName }: Predictive
     }
 
     return <>
-        <article className='bg-components w-full min-h-20 h-fit rounded p-2' onClick={onclick}>
-            <h2 className='text-center text-accent text-2xl font-bold'>{exerciseName}</h2>
+        <article className='bg-components w-full min-h-20 h-fit rounded-xl border border-bordercolor p-2' onClick={onclick}>
+            <h2 className='text-center text-textcolor text-2xl font-bold'>{exerciseName}</h2>
             <p className='text-center text-textcolor text-xl'>Recently completed sessions</p>
             <ResponsiveContainer width={"100%"} height={150}>
                 <LineChart data={graphPoints}>
