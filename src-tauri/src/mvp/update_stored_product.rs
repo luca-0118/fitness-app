@@ -24,7 +24,7 @@ pub fn update_stored_products(
         "[backend][message] preparing to update stored product with values: {:?}",
         values
     );
-    let resp = ctx
+    let _ = ctx
         .db
         .use_conn(|tx| {
             let mut stmt = tx.prepare(

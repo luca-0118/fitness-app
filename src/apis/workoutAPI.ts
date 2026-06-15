@@ -1,4 +1,5 @@
 import { ApiClient } from "../classes/api";
+import DbDate from "../classes/DbDate";
 
 interface createWorkoutInput {
     name:string;
@@ -71,8 +72,8 @@ export default class workoutAPI {
         const data = ApiClient.assertOk(resp);
 
         return data.map(historyObj => {
-            let startDate = new Date(historyObj.start_date.split("+")[0].trimEnd());
-            let endDate = new Date(historyObj.end_date.split("+")[0].trimEnd());
+            let startDate = new DbDate(historyObj.start_date);
+            let endDate = new DbDate(historyObj.end_date);
 
             return {
                 workoutName: historyObj.workout_name,
