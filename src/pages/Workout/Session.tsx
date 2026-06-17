@@ -7,12 +7,24 @@ import Plusknop from "../../components/Workout/buttons/AddSetButton.tsx";
 import CompleteSetButton from "../../components/Workout/buttons/CompleteSetButton.tsx";
 import FinishWorkoutButton from "../../components/Workout/buttons/FinishWorkoutButton.tsx";
 import API from "../../classes/api.ts";
+import UseSetUpdate, { TimedSet, WeightedSet } from "../../Hooks/UseSetUpdate.ts";
 
 export default function Session() {
   const [selectedTimer, setSelectedTimer] = useState("stopwatch");
   const [expandedByExercise, setExpandedByExercise] = useState<boolean[]>([]);
   const [elapsedSeconds, setElapsedSeconds] = useState(0);
   const [session, setSession] = useState<ISessionState>();
+
+  const magicFunction = (exercise_id: string) => {
+    const update = UseSetUpdate(exercise_id);
+
+    const updateSet = async (set_nr: number, data: WeightedSet | TimedSet) => {
+      await update(set_nr, data);
+      updateState();
+    }
+
+    return updateSet
+  }
 
   useEffect(() => {
     const getState = async () => {
@@ -42,7 +54,7 @@ export default function Session() {
     return () => clearInterval(interval);
   }, [session]);
 
-   const updateState = async() => {
+  const updateState = async () => {
     const resp = await API.session.get();
     if (typeof resp === "string") throw new Error(resp);
     setSession(resp);
@@ -50,12 +62,12 @@ export default function Session() {
 
   const handleAddSet = (exerciseIndex: number) => {
     if (!session) return;
-      API.session.addSet(exerciseIndex).then(() => updateState());
+    API.session.addSet(exerciseIndex).then(() => updateState());
   };
 
   const handleDeleteSet = (exerciseIndex: number) => {
-      if (!session) return;
-      API.session.removeSet(exerciseIndex).then(() => updateState());
+    if (!session) return;
+    API.session.removeSet(exerciseIndex).then(() => updateState());
   };
 
   const handleCompleteSet = (exerciseIndex: number) => {
@@ -65,19 +77,19 @@ export default function Session() {
       const exercise = prevSession.exercises[exerciseIndex];
       if (!exercise || exercise.sets.length === 0) return prevSession;
 
-      const areAllCompleted = exercise.sets.every((set) => Boolean(set.time_completed));
+      const areAllCompleted = exercise.sets.every((set) => set.time_completed && set.time_completed !== "");
       const completionTime = areAllCompleted ? "" : new Date().toISOString();
       const isTimedExercise = exercise.sets[0].type === "Timed";
 
       const nextSets = isTimedExercise
         ? (exercise.sets as ITimedSet[]).map((set) => ({
-            ...set,
-            time_completed: completionTime,
-          }))
+          ...set,
+          time_completed: completionTime,
+        }))
         : (exercise.sets as IWeightedSet[]).map((set) => ({
-            ...set,
-            time_completed: completionTime,
-          }));
+          ...set,
+          time_completed: completionTime,
+        }));
 
       if (!areAllCompleted) {
         setExpandedByExercise((prevExpanded) => {
@@ -134,7 +146,10 @@ pb-30
           session.exercises.map((exercise, exerciseIndex) => {
             const isCardio =
               exercise.sets.length > 0 && exercise.sets[0].type === "Timed";
-            const isCompleted = exercise.sets.some((set) => Boolean(set.time_completed));
+
+            const isCompleted =
+              exercise.sets.length > 0 &&
+              exercise.sets.every((set) => set.time_completed !== "");
 
             return (
               <CurrentExercise
@@ -150,6 +165,7 @@ pb-30
                 onDeleteSet={isCompleted ? undefined : () =>
                   handleDeleteSet(exerciseIndex)
                 }
+                updateSet={magicFunction(exercise.exercise_id)}
               >
                 <div className="mt-3 flex items-center gap-2">
                   {!isCardio && (
