@@ -20,12 +20,12 @@ export default function WorkoutHistory() {
 
     }, []);
 
-    if (history.length == 0) return <div><div className="p-2 flex flex-col gap-4"><WorkoutHistorySkeleton /><WorkoutHistorySkeleton /><WorkoutHistorySkeleton /><WorkoutHistorySkeleton /></div></div>
+    if (history.length == 0) return <div><div className="p-2 flex flex-col gap-4 mb-20"><WorkoutHistorySkeleton /><WorkoutHistorySkeleton /><WorkoutHistorySkeleton /></div></div>
 
     return (
         <>
             <div>
-                <div className="pt-2">
+                <div className="pt-2 mb-20">
                     {history.map((workout, idx) => (
                         <WorkoutHistoryWidget key={idx} workout={workout} />
                     ))}
