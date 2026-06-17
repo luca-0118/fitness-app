@@ -42,75 +42,20 @@ export default function Session() {
     return () => clearInterval(interval);
   }, [session]);
 
+   const updateState = async() => {
+    const resp = await API.session.get();
+    if (typeof resp === "string") throw new Error(resp);
+    setSession(resp);
+  }
+
   const handleAddSet = (exerciseIndex: number) => {
-    setSession((prevSession) => {
-      if (!prevSession) return prevSession;
-
-      const exercise = prevSession.exercises[exerciseIndex];
-      if (!exercise) return prevSession;
-
-      if (exercise.sets.length > 0 && exercise.sets[0].type === "Timed") {
-        return prevSession;
-      }
-
-      const lastSet = exercise.sets[exercise.sets.length - 1] as
-        | IWeightedSet
-        | undefined;
-      const newSet: IWeightedSet = lastSet
-        ? { ...lastSet, time_completed: "" }
-        : {
-            type: "Weighted",
-            reps: 0,
-            weight: 0,
-            time_completed: "",
-          };
-
-      const nextExercises = [...prevSession.exercises];
-      nextExercises[exerciseIndex] = {
-        ...exercise,
-        sets: [...exercise.sets, newSet] as IWeightedSet[],
-      };
-
-      return {
-        ...prevSession,
-        exercises: nextExercises,
-      };
-    });
+    if (!session) return;
+      API.session.addSet(exerciseIndex).then(() => updateState());
   };
 
-  const handleDeleteSet = (exerciseIndex: number, setIndex: number) => {
-    setSession((prevSession) => {
-      if (!prevSession) return prevSession;
-
-      const exercise = prevSession.exercises[exerciseIndex];
-      if (!exercise) return prevSession;
-
-      const isCompleted = exercise.sets.some((set) => Boolean(set.time_completed));
-      if (isCompleted) {
-        return prevSession;
-      }
-
-      if (exercise.sets.length > 0 && exercise.sets[0].type === "Timed") {
-        return prevSession;
-      }
-
-      if (exercise.sets.length <= 1) {
-        return prevSession;
-      }
-
-      const nextExercises = [...prevSession.exercises];
-      nextExercises[exerciseIndex] = {
-        ...exercise,
-        sets: exercise.sets.filter((_, idx) => idx !== setIndex) as
-          | IWeightedSet[]
-          | ITimedSet[],
-      };
-
-      return {
-        ...prevSession,
-        exercises: nextExercises,
-      };
-    });
+  const handleDeleteSet = (exerciseIndex: number) => {
+      if (!session) return;
+      API.session.removeSet(exerciseIndex).then(() => updateState());
   };
 
   const handleCompleteSet = (exerciseIndex: number) => {
@@ -202,8 +147,8 @@ pb-30
                   next[exerciseIndex] = !next[exerciseIndex];
                   setExpandedByExercise(next);
                 }}
-                onDeleteSet={isCompleted ? undefined : (setIndex) =>
-                  handleDeleteSet(exerciseIndex, setIndex)
+                onDeleteSet={isCompleted ? undefined : () =>
+                  handleDeleteSet(exerciseIndex)
                 }
               >
                 <div className="mt-3 flex items-center gap-2">

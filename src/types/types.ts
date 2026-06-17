@@ -14,7 +14,9 @@ type backendFunctions =
   | "create_workout_with_exercises"
   | "workout_history"
   | "get_exercise_by_id"
-  | "remove_workout";
+  | "remove_workout"
+  | "add_session_set"
+  | "remove_session_set";
 
 interface WorkoutDTO {
   uuid: string;

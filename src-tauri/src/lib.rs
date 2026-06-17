@@ -107,7 +107,9 @@ pub fn run() {
             mvp::get_single_food_entry,
             mvp::update_stored_products,
             interface::tauri_commands::get_detailed_session_history,
-            mvp::create_predictive_graph
+            mvp::create_predictive_graph,
+            interface::tauri_commands::add_session_set,
+            interface::tauri_commands::remove_session_set
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
