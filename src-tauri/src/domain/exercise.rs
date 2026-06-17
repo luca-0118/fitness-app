@@ -8,6 +8,7 @@ pub struct Exercise {
     pub equipments: String,
     pub secondary_muscles: String,
     pub instructions: Option<String>,
+    pub set_count: i64
 }
 
 pub type Exercises = Vec<Exercise>;

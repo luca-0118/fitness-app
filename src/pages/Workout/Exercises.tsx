@@ -21,6 +21,7 @@ export default function Exercises() {
   useEffect(() => {
     const getData = async () => {
       const hi = await API.workouts.detailed(selectedWorkout);
+      console.log(hi);
       if (typeof hi === "string") {
         return;
       }
@@ -62,6 +63,8 @@ pb-30
                 name={exercise.name}
                 gif={exercise.gif_url}
                 exerciseId={exercise.exercise_id}
+                setCount={exercise.set_count}
+                disabled={true}
               />
             ))}
           </ul>

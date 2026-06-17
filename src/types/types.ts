@@ -31,6 +31,7 @@ interface ExerciseDTO {
     equipments: string;
     secondary_muscles: string;
     instructions: string;
+    set_count: number;
 }
 
 interface linkExerciseDTO {

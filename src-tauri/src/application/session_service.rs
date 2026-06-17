@@ -251,7 +251,7 @@ impl SessionService {
                 exercise_id: exercise.exercise_id,
                 name: exercise.name,
                 gif_url: exercise.gif_url,
-                sets: instantiate_sets(exercise.body_parts),
+                sets: instantiate_sets(exercise.body_parts,exercise.set_count),
             })
             .collect();
 
@@ -274,12 +274,12 @@ impl SessionService {
     }
 }
 
-fn instantiate_sets(body_part: String) -> Vec<Set> {
+fn instantiate_sets(body_part: String,set_count: i64) -> Vec<Set> {
     let mut sets: Vec<Set> = Vec::new();
     // #TODO get the total count from new field in database.
 
     if body_part.contains("cardio") {
-        for _i in 0..1 {
+        for _i in 0..n {
             sets.push(Set::Timed {
                 distance: 0f64,
                 time: 0.0,
@@ -287,7 +287,7 @@ fn instantiate_sets(body_part: String) -> Vec<Set> {
             });
         }
     } else {
-        for _i in 0..3 {
+        for _i in 0..set_count {
             sets.push(Set::Weighted {
                 reps: 0,
                 weight: 0.0,

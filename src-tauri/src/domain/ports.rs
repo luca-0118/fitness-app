@@ -3,6 +3,8 @@ use crate::domain::{
 };
 use crate::infrastructures::sqlite::Db;
 use rusqlite::Error;
+use std::collections::HashMap;
+
 
 pub struct CreateWorkoutParams {
     pub uuid: String,
@@ -38,7 +40,7 @@ pub trait ExerciseRepo {
 pub trait WorkoutExerciseRepo {
     fn new(db: Db) -> Self;
     fn get_detailed(&self, workout_id: &str) -> Result<Workout, Error>; // links exercises in a single bulk query.
-    fn link(&self, workout_id: String, exercise_ids: Vec<String>) -> Result<bool, Error>;
+    fn link(&self, workout_id: String, exercise_ids: HashMap<String,i64>) -> Result<bool, Error>;
 }
 
 pub trait WorkoutHistoryRepo {
