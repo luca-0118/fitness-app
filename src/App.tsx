@@ -4,10 +4,9 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Header from "./components/General/ui/Header.tsx";
 import BottomNavBar from "./components/General/ui/BottomNavBar.tsx";
 import { WorkoutProvider } from "./context/WorkoutContext";
-
+import FoodPage from "./pages/Foodtracker/FoodPage.tsx";
 import FoodList from "./pages/Foodtracker/FoodList.tsx"
 import Home from "./pages/General/Home.tsx";
-import FirstTimeUserSetup from "./pages/General/FirstTimeUserSetup.tsx";
 import WorkoutOverview from "./pages/Workout/WorkoutOverview.tsx";
 import EditWorkout from "./pages/Workout/EditWorkout.tsx";
 import AddExercises from "./pages/Workout/AddExercises.tsx";
@@ -15,7 +14,6 @@ import Session from "./pages/Workout/Session.tsx";
 import NewWorkout from "./pages/Workout/NewWorkout.tsx";
 import Profile from "./pages/General/Profile.tsx";
 import WorkoutHistory from "./pages/Workout/WorkoutHistory.tsx";
-import SessionHistory from "./pages/Workout/SessionHistory.tsx";
 import KcalTracker from "./pages/Foodtracker/KcalTracker.tsx";
 import Exercises from "./pages/Workout/Exercises.tsx";
 import ExerciseDescription from "./pages/Workout/ExerciseDescription.tsx";
@@ -25,17 +23,13 @@ import API from "./classes/api";
 import { SESSION_STORAGE_KEYS } from "./apis/sessionAPI";
 import ProductDetails from "./pages/Foodtracker/ProductDetails.tsx";
 import EditFoodPage from "./pages/EditFoodPage.tsx";
+import DetailedHistoryPage from "./pages/Workout/DetailedHistoryPage.tsx";
 
 function App() {
-  const [isFirstTimeUser, setIsFirstTimeUser] = useState<boolean | null>(null);
-
   useEffect(() => {
-    const hasCompletedFirstTimeSetup = localStorage.getItem('firstTimeUserCompleted');
-    setIsFirstTimeUser(!hasCompletedFirstTimeSetup);
-  }, []);
-
-  useEffect(() => {
-    let unlistenCloseRequested: (() => void) | undefined;
+    
+    let unlistenCloseRequested: (() => void
+  ) | undefined;
     let isClosing = false;
 
     const finishActiveWorkout = async () => {
@@ -106,14 +100,21 @@ function App() {
               <Route path="/new-workout" element={<NewWorkout />} />
               <Route path="/profile" element={<Profile />} />
               <Route path="/history" element={<WorkoutHistory />} />
-              <Route path="/session-history" element={<SessionHistory />} />
+              <Route path="/session-history">
+                <Route index element={<WorkoutHistory />} />
+                <Route path=":workoutId" element={<DetailedHistoryPage />} />
+              </Route>
               <Route path="/kcal-tracker">
                 <Route index element={<KcalTracker />} />
                 <Route path=":foodId" element={<EditFoodPage />} />
               </Route>
               <Route path="/exercises" element={<Exercises />} />
-              <Route path="/food-list" element={<FoodList />} />
-              <Route path="/exercise-description" element={<ExerciseDescription />} />
+              <Route path="/food-page" element={<FoodPage />}>
+                <Route index element={<FoodList />} />
+                {/* <Route path="custom-food" element={<CreatedByMe />} /> */}
+              </Route>
+              {/* <Route path="/create-meal" element={<CreateMeal />} /> */}
+              <Route path="/exercise-description" element={<ExerciseDescription />}/>
               <Route path="/product-details" element={<ProductDetails />} />
             </Routes>
             </main>

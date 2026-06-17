@@ -1,8 +1,8 @@
 use crate::api::{ApiError, ApiErrorResponse};
 use crate::domain::{
     AddExerciseParams, AddTimedSetParams, AddWeighedSetParams, CompletedExerciseRepo,
-    CompletedWorkouts, SaveSessionParams, Session, SessionExercise, Set, WorkoutExerciseRepo,
-    WorkoutHistoryRepo,
+    CompletedWorkouts, DetailedWorkout, SaveSessionParams, Session, SessionExercise, Set,
+    WorkoutExerciseRepo, WorkoutHistoryRepo,
 };
 use crate::repository::completed_exercise_repository::CompletedExerciseRepository;
 use crate::repository::workout_exercise_repository::WorkoutExerciseRepository;
@@ -10,6 +10,7 @@ use crate::repository::workout_history_repository::WorkoutHistoryRepository;
 use serde::{Deserialize, Serialize};
 use tauri::webview::cookie::time::UtcDateTime;
 use uuid::Uuid;
+use chrono::Utc;
 
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(tag = "type")]
@@ -124,6 +125,16 @@ impl SessionService {
             workout_history,
             completed_exercise,
         }
+    }
+
+    pub fn workout_history_detailed(
+        &self,
+        history_id: String,
+    ) -> Result<DetailedWorkout, ApiErrorResponse> {
+        self.workout_history.get_by_id(&history_id).map_err(|e| {
+            println!("could not get history, error: {:?}", e);
+            return ApiError::DatabaseError.into();
+        })
     }
 
     pub fn workout_history(&self) -> Result<CompletedWorkouts, ApiErrorResponse> {
@@ -250,7 +261,7 @@ impl SessionService {
             session_uuid: session_uuid.clone(),
             workout_uuid: workout_details.uuid,
             workout_name: workout_details.name,
-            start_time: UtcDateTime::now().to_string(),
+            start_time: Utc::now().to_rfc3339(),
             end_time: String::new(),
             exercises: session_exercises,
         };

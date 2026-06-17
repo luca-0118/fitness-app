@@ -1,11 +1,20 @@
+import { useNavigate } from "react-router-dom";
+
 interface WorkoutHistoryWidgetProps {
     workout: IworkoutHistory;
 }
 
 export default function WorkoutHistoryWidget({ workout }: WorkoutHistoryWidgetProps) {
+    const navigate = useNavigate();
+    
+    const handleClick = () => {
+        navigate("/session-history/"+workout.sessionUuid);
+
+    }
+
 
     return (
-        <div className="bg-components border-bordercolor border rounded-xl px-2 mb-3 flex w-[90%] items-center mx-auto hover:bg-components-hover active:bg-components-hover cursor-pointer">
+        <div className="bg-components border-bordercolor border rounded-xl px-2 mb-3 flex w-[90%] items-center mx-auto hover:bg-components-hover active:bg-components-hover cursor-pointer" onClick={handleClick}>
             <div className="pl-3 pb-1">
                 <div className="flex-1 text-left cursor-pointer mb-auto">
                     <h2 className="text-lg font-semibold text-textcolor">{workout.workoutName}</h2>

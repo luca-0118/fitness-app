@@ -23,9 +23,10 @@ interface DatabaseFoodItem {
 }
 
 const Categories = [
-    { key: "ochtend", catName: "Breakfast" },
-    { key: "middag", catName: "Lunch" },
-    { key: "avond", catName: "Dinner" },
+    { key: "breakfast", catName: "Breakfast" },
+    { key: "lunch", catName: "Lunch" },
+    { key: "dinner", catName: "Dinner" },
+    { key: "snacks", catName: "Snacks" }
 ] as const;
 
 type MealCategoryKey = typeof Categories[number]["key"];
@@ -284,7 +285,7 @@ export default function EatenTodayList() {
                         <h2 className="font-bold text-lg text-textcolor">Eaten on day</h2>
                         <div className="text-sm text-muted">{date.toDateString()}</div>
                     </div>
-                    <div className="absolute right-10 text-textcolor">
+                    <div className="absolute translate-x-20 text-textcolor">
                         <Calender onDateChange={setDate} />
                     </div>
                 </div>

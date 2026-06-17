@@ -1,5 +1,6 @@
 import SaveIcon from "@mui/icons-material/Save";
 import CheckIcon from "@mui/icons-material/Check";
+import HistoryIcon from '@mui/icons-material/History';
 import API from "../../../classes/api.ts";
 import { useWorkout } from "../../../context/WorkoutContext.tsx";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -14,6 +15,8 @@ export default function SaveButton() {
     function isCheckmark() {
         if (location.pathname === "/add-exercises") {
             return <CheckIcon sx={{ fontSize: 40 }} className="text-button-start" />;
+        } else if (location.pathname === "/workouts") {
+            return <HistoryIcon sx={{ fontSize: 40}} />;
         } else {
             return <SaveIcon sx={{ fontSize: 40 }} />;
         }
@@ -29,6 +32,11 @@ export default function SaveButton() {
 
         if (location.pathname === "/new-workout" && !workoutName) {
             Toast.error("Workout name is required!");
+            return;
+        }
+
+        if (location.pathname === "/workouts") {
+            navigate("/session-history");
             return;
         }
 

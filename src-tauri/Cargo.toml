@@ -28,6 +28,7 @@ openfoodfacts = { git = "https://github.com/openfoodfacts/openfoodfacts-rust.git
 reqwest = { version = "0.13", features = ["json"] }
 serde_json = "1.0.73"
 tauri-plugin-barcode-scanner = "2.0.0"
+chrono = "0.4.45"
 
 [target.'cfg(any(target_os = "android", target_os = "ios"))'.dependencies]
 
