@@ -1,7 +1,7 @@
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import Sets from "./Sets.tsx";
-import UseSetUpdate from "../../Hooks/UseSetUpdate.ts";
+import { TimedSet, WeightedSet } from "../../Hooks/UseSetUpdate.ts";
 
 interface CurrentExerciseProps {
     exerciseData: ISessionExercises;
@@ -10,11 +10,12 @@ interface CurrentExerciseProps {
     onToggle?: () => void;
     onDeleteSet?: (setIndex: number) => void;
     children?: React.ReactNode;
+    updateSet: (set_nr: number, data: WeightedSet | TimedSet) => Promise<void>;
 }
 
-export function CurrentExercise({exerciseData, isCompleted = false, isExpanded = false, onToggle, onDeleteSet, children}: CurrentExerciseProps) {
+export function CurrentExercise({ exerciseData, isCompleted = false, isExpanded = false, onToggle, onDeleteSet, children, updateSet }: CurrentExerciseProps) {
 
-    const updateSet = UseSetUpdate(exerciseData.exercise_id);
+
 
 
     return (
@@ -25,7 +26,7 @@ export function CurrentExercise({exerciseData, isCompleted = false, isExpanded =
             >
                 <h2 className="text-textcolor text-lg font-semibold">{exerciseData.name}</h2>
                 <span className="text-accent">
-                    {isExpanded ? <KeyboardArrowUpIcon/> : <KeyboardArrowDownIcon/>}
+                    {isExpanded ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
                 </span>
             </button>
 
@@ -47,6 +48,7 @@ export function CurrentExercise({exerciseData, isCompleted = false, isExpanded =
                         onDelete={onDeleteSet ? () => onDeleteSet(idx) : undefined}
                         updateFunction={updateSet}
                         data={set}
+                        isCompleted={isCompleted}
                     />
                 ))}
                 {children}

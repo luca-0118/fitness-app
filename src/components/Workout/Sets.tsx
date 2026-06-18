@@ -1,16 +1,16 @@
-import {useEffect, useState} from "react";
+import { useEffect, useState } from "react";
 import DeleteIcon from '@mui/icons-material/Delete';
-import {IUseSetUpdateFunction, TimedSet, WeightedSet} from "../../Hooks/UseSetUpdate.ts";
+import { IUseSetUpdateFunction, TimedSet, WeightedSet } from "../../Hooks/UseSetUpdate.ts";
 
 interface SetsProps {
     setNumber?: number;
     onDelete?: () => void;
-    updateFunction: IUseSetUpdateFunction
-    data: IWeightedSet | ITimedSet
+    updateFunction: IUseSetUpdateFunction;
+    data: IWeightedSet | ITimedSet;
+    isCompleted: boolean;
 }
 
-export default function Sets({updateFunction, setNumber = 1, onDelete, data }: SetsProps) {
-    const isCompleted = Boolean(data.time_completed);
+export default function Sets({ updateFunction, setNumber = 1, onDelete, data, isCompleted }: SetsProps) {
 
     const parseNumberInput = (value: string): number | null => {
         if (value.trim() === "") return 0;
@@ -33,18 +33,18 @@ export default function Sets({updateFunction, setNumber = 1, onDelete, data }: S
         const [reps, setReps] = useState(data.reps);
         const [weightInput, setWeightInput] = useState(data.weight === 0 ? "" : String(data.weight));
 
-            useEffect(() => {
-        console.log("set up setnr:",setNumber);
-        const parsedWeight = parseNumberInput(weightInput);
-        if (!reps || parsedWeight === null || parsedWeight === 0) return;
+        useEffect(() => {
+            console.log("set up setnr:", setNumber);
+            const parsedWeight = parseNumberInput(weightInput);
+            if (!reps || parsedWeight === null || parsedWeight === 0) return;
 
-            const data: WeightedSet = {type:"Weighted",reps,weight: parsedWeight};
+            const data: WeightedSet = { type: "Weighted", reps, weight: parsedWeight };
 
-            updateFunction(setNumber - 1,data)
-                .then(() => {console.log("updated")});
-    }, [reps, weightInput]);
+            updateFunction(setNumber - 1, data)
+                .then(() => { console.log("updated") });
+        }, [reps, weightInput]);
 
-    return ( 
+        return (
             <OuterLayer set_nr={setNumber} onDelete={onDelete} isCompleted={isCompleted}>
                 <>
                     <div className="flex items-center justify-between mb-3">
@@ -90,53 +90,53 @@ export default function Sets({updateFunction, setNumber = 1, onDelete, data }: S
         const [time, setTime] = useState(data.time);
         const [distance, setDistance] = useState(data.distance);
 
-                    useEffect(() => {
-        console.log("set up setnr:",setNumber);
-        if (!time || !distance) return;
+        useEffect(() => {
+            console.log("set up setnr:", setNumber);
+            if (!time || !distance) return;
 
-            const data: TimedSet = {type:"Timed",time,distance};
+            const data: TimedSet = { type: "Timed", time, distance };
 
-            updateFunction(setNumber - 1,data)
-                .then(() => {console.log("updated")});
-    }, [time,distance]);
+            updateFunction(setNumber - 1, data)
+                .then(() => { console.log("updated") });
+        }, [time, distance]);
 
-    return (
-        <OuterLayer set_nr={setNumber} onDelete={onDelete} isCompleted={isCompleted}>
-            <>
-                <div className="flex items-center justify-between mb-3">
-                    <label className="text-textcolor text-base">Time in minutes:</label>
-                    <input
-                        type="text"
-                        inputMode="numeric"
-                        value={time === 0 ? "" : time}
-                        onChange={(e) => {
-                            const parsed = parseNumberInput(e.target.value);
-                            if (parsed !== null) setTime(parsed);
-                        }}
-                        disabled={isCompleted}
-                        className="w-32 bg-components border border-bordercolor rounded-lg px-3 py-2 text-textcolor focus:outline-none focus:border-accent disabled:opacity-50 disabled:cursor-not-allowed"
-                        placeholder="0"
-                    />
-                </div>
+        return (
+            <OuterLayer set_nr={setNumber} onDelete={onDelete} isCompleted={isCompleted}>
+                <>
+                    <div className="flex items-center justify-between mb-3">
+                        <label className="text-textcolor text-base">Time in minutes:</label>
+                        <input
+                            type="text"
+                            inputMode="numeric"
+                            value={time === 0 ? "" : time}
+                            onChange={(e) => {
+                                const parsed = parseNumberInput(e.target.value);
+                                if (parsed !== null) setTime(parsed);
+                            }}
+                            disabled={isCompleted}
+                            className="w-32 bg-components border border-bordercolor rounded-lg px-3 py-2 text-textcolor focus:outline-none focus:border-accent disabled:opacity-50 disabled:cursor-not-allowed"
+                            placeholder="0"
+                        />
+                    </div>
 
-                <div className="flex items-center justify-between">
-                    <label className="text-textcolor text-base">Distance</label>
-                    <input
-                        type="text"
-                        inputMode="decimal"
-                        value={distance === 0 ? "" : distance}
-                        onChange={(e) => {
-                            const parsed = parseNumberInput(e.target.value);
-                            if (parsed !== null) setDistance(parsed);
-                        }}
-                        disabled={isCompleted}
-                        className="w-32 bg-components border border-bordercolor rounded-lg px-3 py-2 text-textcolor focus:outline-none focus:border-accent disabled:opacity-50 disabled:cursor-not-allowed"
-                        placeholder="0.0"
-                    />
-                </div>
-            </>
-        </OuterLayer>
-    )
+                    <div className="flex items-center justify-between">
+                        <label className="text-textcolor text-base">Distance</label>
+                        <input
+                            type="text"
+                            inputMode="decimal"
+                            value={distance === 0 ? "" : distance}
+                            onChange={(e) => {
+                                const parsed = parseNumberInput(e.target.value);
+                                if (parsed !== null) setDistance(parsed);
+                            }}
+                            disabled={isCompleted}
+                            className="w-32 bg-components border border-bordercolor rounded-lg px-3 py-2 text-textcolor focus:outline-none focus:border-accent disabled:opacity-50 disabled:cursor-not-allowed"
+                            placeholder="0.0"
+                        />
+                    </div>
+                </>
+            </OuterLayer>
+        )
 
 
     }
@@ -148,7 +148,7 @@ interface outerLayerProps {
     onDelete?: () => void;
     isCompleted: boolean;
 }
-function OuterLayer({children,set_nr,onDelete,isCompleted}:outerLayerProps) {
+function OuterLayer({ children, set_nr, onDelete, isCompleted }: outerLayerProps) {
     return (
         <div className={`border-t pt-4 mt-3 ${isCompleted ? "border-button-start" : "border-bordercolor"}`}>
             <div className="flex items-center justify-between mb-4">
@@ -167,5 +167,5 @@ function OuterLayer({children,set_nr,onDelete,isCompleted}:outerLayerProps) {
             </div>
             {children}
         </div>
-    );   
+    );
 }
