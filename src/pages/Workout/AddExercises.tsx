@@ -126,6 +126,7 @@ export default function AddExercises() {
         id: exercise.exercise_id,
         name: exercise.name,
         gif: exercise.gif_url,
+        sets: 3
       },
     ])
   }
