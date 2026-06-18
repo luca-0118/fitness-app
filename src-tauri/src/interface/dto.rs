@@ -46,6 +46,7 @@ pub struct ExerciseRecordDTO {
     pub equipments: String,
     pub secondary_muscles: String,
     pub instructions: String,
+    pub set_count: i64
 }
 impl From<Exercise> for ExerciseRecordDTO {
     fn from(e: Exercise) -> Self {
@@ -58,6 +59,7 @@ impl From<Exercise> for ExerciseRecordDTO {
             equipments: e.equipments,
             secondary_muscles: e.secondary_muscles,
             instructions: e.instructions.unwrap_or_else(|| "".to_string()),
+            set_count: e.set_count
         }
     }
 }

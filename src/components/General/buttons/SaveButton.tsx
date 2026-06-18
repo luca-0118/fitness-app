@@ -43,7 +43,10 @@ export default function SaveButton() {
         const workoutUuid = await Toast.promise(
             new Promise(async (resolve, reject) => {
                 try {
-                    const exerciseIds = exercises.map((e) => e.id);
+                    const exerciseIds: Record<string, number> = Object.fromEntries(
+                        exercises.map(e => [e.id, e.sets])
+                    );
+
                     const workoutUuid = await API.workouts.create({
                         name: workoutName,
                         exercises: exerciseIds,

@@ -8,6 +8,8 @@ use crate::repository::workout_exercise_repository::WorkoutExerciseRepository;
 use crate::repository::workout_repository::WorkoutRepository;
 use serde::{Deserialize, Serialize};
 use uuid::Uuid;
+use std::collections::HashMap;
+
 
 pub struct WorkoutService {
     workout: WorkoutRepository,
@@ -20,7 +22,7 @@ pub struct CreateWorkoutRequest {
     pub uuid: String,
     pub name: String,
     pub desc: Option<String>,
-    pub exercises: Option<Vec<String>>,
+    pub exercises: Option<HashMap<String,i64>>,
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone)]

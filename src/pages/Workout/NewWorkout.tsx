@@ -28,15 +28,16 @@ export default function NewWorkout() {
           Selected Exercises:
         </h2>
         <ul className="text-center">
-          {exercises.map((exercise) => {
+          {exercises.map((exercise,idx) => {
             return (
               <ExerciseOverviewWidget
                 id={exercise.id}
                 key={exercise.id}
                 name={exercise.name}
                 gif={exercise.gif}
-                index={1}
+                index={idx}
                 exerciseId={exercise.id}
+                setCount={exercise.sets}
               />
             );
           })}

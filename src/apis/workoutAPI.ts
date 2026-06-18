@@ -4,11 +4,12 @@ import DbDate from "../classes/DbDate";
 interface createWorkoutInput {
     name:string;
     desc?:string;
-    exercises?: string[];
+    exercises?: Record<string, number>;
 }
 
 export default class workoutAPI {
     public async create(dto: createWorkoutInput): Promise<string|{ok: false, msg: string}> {
+        console.log(dto);
         if (!dto.name.trim()) {
             const errMessage = "Workout requires a name"
             console.error(errMessage);
@@ -16,7 +17,7 @@ export default class workoutAPI {
         }
 
         let result: ApiError | ApiSucess<string>;
-        if (!dto.exercises || dto.exercises?.length < 1) return {ok: false, msg:"can't create workout without exercises."};
+        if (!dto.exercises || Object.values(dto.exercises||[]).length < 1) return {ok: false, msg:"can't create workout without exercises."};
 
         const req = {
             uuid: "",

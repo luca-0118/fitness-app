@@ -100,6 +100,7 @@ fn migrate(conn: &mut Connection, state: AppState) {
         orderNr INTEGER NOT NULL,
         WorkoutId TEXT NOT NULL,
         ExerciseId TEXT NOT NULL,
+        SetCount INTEGER NOT NULL,
         FOREIGN KEY (WorkoutId) REFERENCES Workouts(Uuid) ON DELETE CASCADE,
         FOREIGN KEY (ExerciseId) REFERENCES exercises(exerciseid)
         )",
