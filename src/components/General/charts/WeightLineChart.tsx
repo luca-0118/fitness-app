@@ -7,7 +7,7 @@ const getCSSVariable = (name: string) =>
         .getPropertyValue(name)
         .trim();
 
-const WeightLineChart: React.FC = () => {
+const WeightLineChart: React.FC<{ targetWeight?: string; weightData?: number[]; dates?: string[] }> = ({ targetWeight, weightData = [], dates = [] }) => {
     const [themeColors, setThemeColors] = useState({
         borderColor: '',
         textColor: '',
@@ -42,10 +42,14 @@ const WeightLineChart: React.FC = () => {
     }, []);
 
     const series = [
-        {
+        ...(weightData.length > 0 ? [{
             name: 'Weight (kg)',
-            data: [70, 69.8, 69.5, 69.3, 69.2, 69, 69.1],
-        },
+            data: weightData,
+        }] : []),
+        ...(targetWeight ? [{
+            name: 'Target Weight (kg)',
+            data: Array(weightData.length || 7).fill(Number(targetWeight)),
+        }] : []),
     ];
 
     const options: ApexOptions = {
@@ -61,9 +65,9 @@ const WeightLineChart: React.FC = () => {
         markers: {
             size: 4,
         },
-        colors: [themeColors.accentColor], // line color
+        colors: [themeColors.accentColor, themeColors.greenColor], // line colors
         xaxis: {
-            categories: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+            categories: dates.length > 0 ? dates : [],
             labels: {
                 style: {
                     colors: themeColors.textColor,
@@ -71,6 +75,8 @@ const WeightLineChart: React.FC = () => {
             },
         },
         yaxis: {
+            min: targetWeight ? Number(targetWeight) - 5 : undefined,
+            max: targetWeight ? Number(targetWeight) + 5 : undefined,
             title: {
                 text: 'kg',
                 style: { color: themeColors.textColor },
