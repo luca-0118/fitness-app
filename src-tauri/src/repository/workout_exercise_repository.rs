@@ -1,3 +1,4 @@
+use std::collections::HashMap;
 use crate::domain::Workout;
 use crate::domain::{Exercise, WorkoutExerciseRepo};
 use crate::infrastructures;
@@ -31,7 +32,7 @@ impl WorkoutExerciseRepo for WorkoutExerciseRepository {
                 .cloned()
                 .ok_or(rusqlite::Error::InvalidQuery)?;
 
-            let mut exercises_stmt = tx.prepare("SELECT e.* FROM Exercises e
+            let mut exercises_stmt = tx.prepare("SELECT e.*,we.SetCount FROM Exercises e
                                                                INNER JOIN WorkoutExercises we ON e.exerciseid = we.ExerciseId
                                                                WHERE we.WorkoutId = ?
                                                                ORDER BY we.orderNr ASC")?;
@@ -45,6 +46,7 @@ impl WorkoutExerciseRepo for WorkoutExerciseRepository {
                     equipments: row.get(5)?,
                     secondary_muscles: row.get(6)?,
                     instructions: row.get(7)?,
+                    set_count: row.get(8)?
                 })
             })?;
 
@@ -59,30 +61,32 @@ impl WorkoutExerciseRepo for WorkoutExerciseRepository {
     }
 
     // links exercises in a single bulk query.
-    fn link(&self, workout_id: String, exercise_ids: Vec<String>) -> Result<bool, Error> {
+    fn link(&self,workout_id:String,exercise_ids: HashMap<String,i64>) -> Result<bool, Error> {
         //roundabout way to fix an issue where I
         // can't reuse the i to add a numbering for the order of workouts.
         let order_strs: Vec<String> = (0..exercise_ids.len()).map(|i| i.to_string()).collect();
 
         self.db.use_conn(|tx| {
             let mut query = String::from(
-                "INSERT INTO WorkoutExercises (WorkoutId, ExerciseId,orderNr) VALUES ",
+                "INSERT INTO WorkoutExercises (WorkoutId, ExerciseId,orderNr,setCount) VALUES ",
             );
 
             let mut params_vec = Vec::new();
 
-            exercise_ids
-                .iter()
-                .enumerate()
-                .for_each(|(i, exercise_id)| {
-                    if i > 0 {
-                        query.push_str(", ");
-                    }
-                    query.push_str("(?, ?, ?)");
-                    params_vec.push(&workout_id);
-                    params_vec.push(exercise_id);
-                    params_vec.push(&order_strs[i]);
-                });
+            let set_count_strings: Vec<String> = exercise_ids.values()
+                .map(|set| set.to_string())
+                .collect();
+
+            for (i, (exercise_id,set_count)) in exercise_ids.iter().enumerate() {
+                if i > 0 {
+                    query.push_str(", ");
+                }
+                query.push_str("(?, ?, ?, ?)");
+                params_vec.push(&workout_id);
+                params_vec.push(exercise_id);
+                params_vec.push(&order_strs[i]);
+                params_vec.push(&set_count_strings[i]);
+            }
 
             tx.execute(&query, params_from_iter(params_vec))?;
 

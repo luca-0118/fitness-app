@@ -76,6 +76,18 @@ export default  class sessionAPI {
             msg:"cleared"
         }
     }
+
+    public async addSet(exerciseIdx: number): Promise<boolean> {
+        const resp = await ApiClient.send<boolean>("add_session_set",{req: exerciseIdx});
+
+        return ApiClient.assertOk<boolean>(resp);
+    }
+    public async removeSet(exerciseIdx: number): Promise<boolean> {
+        const resp = await ApiClient.send<boolean>("remove_session_set",{req: exerciseIdx});
+
+        return ApiClient.assertOk<boolean>(resp);
+    }
+
 }
 
 const validators = {

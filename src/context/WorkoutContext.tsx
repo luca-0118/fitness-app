@@ -15,6 +15,7 @@ interface WorkoutContextProps {
 
   addExercise: (workout: Iworkout) => void;
   removeExercise: (workout: Iworkout) => void;
+  updateExercise: (index:number, updated: Iworkout) => void;
 
   clearWorkout: () => void;
 
@@ -43,6 +44,7 @@ export type Iworkout = {
   id: string;
   name: string;
   gif: string;
+  sets: number;
 };
 
 export function WorkoutProvider({ children }: { children: ReactNode }) {
@@ -50,6 +52,12 @@ export function WorkoutProvider({ children }: { children: ReactNode }) {
   const [exercises, setExercises] = useState<Iworkout[]>([]);       // saved
   const [draftExercises, setDraftExercises] = useState<Iworkout[]>([]); // editing
   const [selectedWorkout, setSelectedWorkout] = useState("");
+
+    const updateExercise = (index: number, updated: Iworkout) => {
+      console.log("updating set on following index: ",index,updated);
+      console.log(exercises);
+    setExercises(prev => prev.map((exercise, i) => i === index ? updated : exercise));
+  };
 
   const addExercise = (workout: Iworkout) => {
     setExercises(prev => [...prev, workout]);
@@ -101,6 +109,7 @@ export function WorkoutProvider({ children }: { children: ReactNode }) {
             exercises,
             addExercise,
             removeExercise,
+            updateExercise,
             clearWorkout,
             selectedWorkout,
             setSelectedWorkout,

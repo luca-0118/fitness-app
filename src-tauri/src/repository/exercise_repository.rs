@@ -53,5 +53,6 @@ fn map_records(row: &rusqlite::Row) -> Result<Exercise, Error> {
         equipments: row.get(5)?,
         secondary_muscles: row.get(6)?,
         instructions: row.get(7)?,
+        set_count: 0
     })
 }

@@ -7,10 +7,10 @@ use crate::domain::{
 use crate::repository::completed_exercise_repository::CompletedExerciseRepository;
 use crate::repository::workout_exercise_repository::WorkoutExerciseRepository;
 use crate::repository::workout_history_repository::WorkoutHistoryRepository;
+use chrono::Utc;
 use serde::{Deserialize, Serialize};
 use tauri::webview::cookie::time::UtcDateTime;
 use uuid::Uuid;
-use chrono::Utc;
 
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(tag = "type")]
@@ -251,7 +251,7 @@ impl SessionService {
                 exercise_id: exercise.exercise_id,
                 name: exercise.name,
                 gif_url: exercise.gif_url,
-                sets: instantiate_sets(exercise.body_parts),
+                sets: instantiate_sets(exercise.body_parts, exercise.set_count),
             })
             .collect();
 
@@ -272,14 +272,47 @@ impl SessionService {
         // return session_uuid
         Ok(session_uuid)
     }
+
+    pub fn add_set(&mut self, exercise_nr: i64) -> Result<bool, ApiErrorResponse> {
+        let mut session = self.current_session.clone().unwrap();
+        let exercise = session.exercises.get_mut(exercise_nr as usize).ok_or(ApiError::InvalidInput)?;
+        let set = exercise.sets.get(0).ok_or(ApiError::InvalidInput)?;
+
+        match set {
+            Set::Weighted { .. }  => {exercise.sets.push(Set::Weighted {
+                reps: 0,
+                weight: 0.0,
+                time_completed: String::new(),
+            })},
+           Set::Timed { .. } => exercise.sets.push(Set::Timed {
+               distance: 0.0,
+               time: 0.0,
+               time_completed: String::new(),
+           })
+        }
+
+        self.current_session = Some(session);
+        Ok(true)
+    }
+
+    pub fn delete_set(&mut self, exercise_nr: i64) -> Result<bool, ApiErrorResponse> {
+        let mut session = self.current_session.clone().unwrap();
+
+        let exercise = session.exercises.get_mut(exercise_nr as usize).ok_or(ApiError::InvalidInput)?;
+
+        exercise.sets.pop();
+
+        self.current_session = Option::from(session);
+        Ok(true)
+    }
 }
 
-fn instantiate_sets(body_part: String) -> Vec<Set> {
+fn instantiate_sets(body_part: String, set_count: i64) -> Vec<Set> {
     let mut sets: Vec<Set> = Vec::new();
     // #TODO get the total count from new field in database.
 
     if body_part.contains("cardio") {
-        for _i in 0..1 {
+        for _i in 0..set_count {
             sets.push(Set::Timed {
                 distance: 0f64,
                 time: 0.0,
@@ -287,7 +320,7 @@ fn instantiate_sets(body_part: String) -> Vec<Set> {
             });
         }
     } else {
-        for _i in 0..3 {
+        for _i in 0..set_count {
             sets.push(Set::Weighted {
                 reps: 0,
                 weight: 0.0,
