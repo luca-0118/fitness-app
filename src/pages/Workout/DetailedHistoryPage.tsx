@@ -26,7 +26,7 @@ export default function DetailedHistoryPage() {
 
 
     return (<>
-        <div className="h-full w-full bg-background z-100 felx flex-col overflow-auto no-scrollbar px-4">
+        <div className="h-full w-full bg-background z-100 felx flex-col overflow-auto no-scrollbar px-4 mb-20">
             <section id="workout-date" className="sticky top-0 bg-components w-full min-h-20 flex flex-col items-center text-xl text-textcolor py-3 overflow-auto">
                 <h1 className="text-3xl">{completedSession.workout_name}</h1>
                 <p>{startDate.toDMY()}</p>
@@ -73,6 +73,8 @@ function CompletedExercise({ exerciseInfo }: CompletedExerciseProps) {
 
     const [flipped, setFlipped] = useState<boolean>(false);
     const toggleFlip = () => {
+        console.log("flip");
+        console.log(plotPoints);
         setFlipped(prev => !prev);
     }
 
